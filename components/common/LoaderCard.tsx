@@ -1,6 +1,5 @@
 import { Paper, createStyles } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
-import Link from "next/link";
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -31,13 +30,11 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export interface ImageCardProps {
-  imageURL: string;
+export interface LoaderCardProps {
   vertical?: boolean;
-  href?: string;
 }
 
-const ImageCard = ({ imageURL, vertical, href }: ImageCardProps) => {
+const LoaderCard = ({ vertical }: LoaderCardProps) => {
   const { classes } = useStyles();
   const { hovered, ref } = useHover();
 
@@ -52,28 +49,16 @@ const ImageCard = ({ imageURL, vertical, href }: ImageCardProps) => {
   const sx = hovered
     ? {
         transform: "scale(1.05)",
-        backgroundImage: `url(${imageURL})`,
+
         height,
         width,
       }
     : {
-        backgroundImage: `url(${imageURL})`,
         height,
         width,
       };
 
-  return href ? (
-    <Link href={href}>
-      <Paper
-        ref={ref}
-        shadow="md"
-        p="xl"
-        radius="md"
-        sx={sx}
-        className={classes.card}
-      ></Paper>
-    </Link>
-  ) : (
+  return (
     <Paper
       ref={ref}
       shadow="md"
@@ -85,4 +70,4 @@ const ImageCard = ({ imageURL, vertical, href }: ImageCardProps) => {
   );
 };
 
-export default ImageCard;
+export default LoaderCard;
