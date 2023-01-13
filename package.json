@@ -10,6 +10,8 @@
     "fmt": "prettier --write ."
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.245.0",
+    "@aws-sdk/s3-request-presigner": "^3.245.0",
     "@emotion/react": "^11.10.5",
     "@emotion/server": "^11.10.0",
     "@mantine/core": "^5.10.0",
