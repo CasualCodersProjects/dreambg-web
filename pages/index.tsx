@@ -1,12 +1,14 @@
 import Head from "next/head";
+import { useEffect, useState } from "react";
 import { useImages } from "@/hooks/useImages";
 import ImageCard from "@/components/common/ImageCard";
-import { Loader, Center, SimpleGrid, Stack } from "@mantine/core";
+import { Loader, Center, SimpleGrid, Stack, Button } from "@mantine/core";
 import { createImageURL } from "@/utils/createImageURL";
 
 const PER_PAGE = 100;
 
 export default function Home() {
+  const [pageSize, setPageSize] = useState(PER_PAGE);
   const { images } = useImages(1, PER_PAGE);
 
   const generateImages = () => {
@@ -22,6 +24,15 @@ export default function Home() {
 
     return <Loader />;
   };
+
+  const loadMore = () => {
+    setPageSize(pageSize + PER_PAGE);
+  };
+
+  useEffect(() => {
+    console.log("page size changed");
+    console.log({ pageSize });
+  }, [pageSize]);
 
   return (
     <>
@@ -45,6 +56,7 @@ export default function Home() {
           >
             {generateImages()}
           </SimpleGrid>
+          <Button onClick={loadMore}>Load More</Button>
         </Stack>
       </Center>
     </>
