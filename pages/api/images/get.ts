@@ -2,10 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-export const config = {
-  runtime: 'edge',
-}
-
 const ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
 const ACCESS_KEY_ID = process.env.CLOUDFLARE_ACCESS_KEY_ID as string;
 const SECRET_ACCESS_KEY = process.env.CLOUDFLARE_SECRET_ACCESS_KEY as string;
