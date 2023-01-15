@@ -1,9 +1,13 @@
-import { AppShell } from "@mantine/core";
+import { AppShell, MantineProvider } from "@mantine/core";
 import type { AppProps } from "next/app";
-import { MantineProvider } from "@mantine/core";
+import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import { useState } from "react";
 
 import NavBar from "@/components/modules/NavBar";
 import Footer from "@/components/modules/Footer";
+import { Database } from "@/types/database.types";
+import { NotificationsProvider } from "@mantine/notifications";
 
 const footerProps = {
   links: [
@@ -21,29 +25,34 @@ const footerProps = {
   twitterLink: "https://twitter.com/casualcoders",
 };
 
-const navLinks = [
-  { link: "/", label: "Home" },
-  { link: "/about", label: "About" },
-  { link: "/contact", label: "Contact" },
-];
+const navLinks: any = [];
 
 export default function App({ Component, pageProps }: AppProps) {
+  // Create a new supabase browser client on every first render.
+  const [supabaseClient] = useState(() =>
+    createBrowserSupabaseClient<Database>()
+  );
+
   return (
-    <MantineProvider
-      withGlobalStyles
-      withNormalizeCSS
-      theme={{
-        colorScheme: "dark",
-        fontFamily: "Open Sans, sans-serif",
-        cursorType: "pointer",
-      }}
-    >
-      <AppShell
-        header={<NavBar links={navLinks} />}
-        footer={<Footer {...footerProps} />}
+    <SessionContextProvider supabaseClient={supabaseClient}>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{
+          colorScheme: "dark",
+          fontFamily: "Open Sans, sans-serif",
+          cursorType: "pointer",
+        }}
       >
-        <Component {...pageProps} />
-      </AppShell>
-    </MantineProvider>
+        <NotificationsProvider>
+          <AppShell
+            header={<NavBar links={navLinks} />}
+            footer={<Footer {...footerProps} />}
+          >
+            <Component {...pageProps} />
+          </AppShell>
+        </NotificationsProvider>
+      </MantineProvider>
+    </SessionContextProvider>
   );
 }

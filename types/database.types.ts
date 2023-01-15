@@ -27,21 +27,21 @@ export interface Database {
         Row: {
           height: number
           id: number
-          image: number
+          image: string
           link: string
           width: number
         }
         Insert: {
           height: number
           id?: number
-          image: number
+          image: string
           link: string
           width: number
         }
         Update: {
           height?: number
           id?: number
-          image?: number
+          image?: string
           link?: string
           width?: number
         }
@@ -66,38 +66,27 @@ export interface Database {
           views?: number
         }
       }
-      image_tags: {
-        Row: {
-          id: number
-          image: number
-          tag: number
-        }
-        Insert: {
-          id?: number
-          image: number
-          tag: number
-        }
-        Update: {
-          id?: number
-          image?: number
-          tag?: number
-        }
-      }
       images: {
         Row: {
           aspect_ratio: string
+          created_at: string
           id: number
           prompt: number
+          uuid: string
         }
         Insert: {
           aspect_ratio: string
+          created_at: string
           id?: number
           prompt: number
+          uuid: string
         }
         Update: {
           aspect_ratio?: string
+          created_at?: string
           id?: number
           prompt?: number
+          uuid?: string
         }
       }
       profiles: {
@@ -121,6 +110,23 @@ export interface Database {
           updated_at?: string | null
           username?: string | null
           website?: string | null
+        }
+      }
+      prompt_tags: {
+        Row: {
+          id: number
+          prompt: number
+          tag: number
+        }
+        Insert: {
+          id?: number
+          prompt: number
+          tag: number
+        }
+        Update: {
+          id?: number
+          prompt?: number
+          tag?: number
         }
       }
       prompts: {
@@ -177,13 +183,27 @@ export interface Database {
       }
     }
     Views: {
-      image_view: {
+      random_tags: {
         Row: {
-          height: number | null
-          image_id: number | null
+          id: number | null
+          tag: string | null
+        }
+        Insert: {
+          id?: number | null
+          tag?: string | null
+        }
+        Update: {
+          id?: number | null
+          tag?: string | null
+        }
+      }
+      single_images: {
+        Row: {
+          id: number | null
           link: string | null
           prompt: string | null
-          width: number | null
+          prompt_id: number | null
+          uuid: string | null
         }
       }
     }
