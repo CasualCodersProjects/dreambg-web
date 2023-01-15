@@ -2,9 +2,9 @@ import { randomTagsFetcher, tagsFetcher } from '@/services/tagFetcher';
 import useSWR from 'swr';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
-export const useTags = (limit: number = 10) => {
+export const useTags = (page: number = 0, limit: number = 10) => {
   const supabase = useSupabaseClient();
-  const { data, error } = useSWR([limit], ([limit]) => tagsFetcher(supabase, limit));
+  const { data, error } = useSWR([page, limit], ([page, limit]) => tagsFetcher(supabase, page, limit));
 
   return {
       tags: data ? data.map((tag) => tag.tag as string) : [],

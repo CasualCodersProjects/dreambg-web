@@ -1,12 +1,14 @@
+import { getPagination } from '@/utils/pagination';
 import { Database } from "@/types/database.types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export async function tagsFetcher(supabase: SupabaseClient<Database>, limit: number = 10) {
+export async function tagsFetcher(supabase: SupabaseClient<Database>, page: number, limit: number = 10) {
+  const { from, to } = getPagination(page, limit)
   const { data: tags, error: tagsError } = await supabase
     .from("tags")
     .select("tag")
     .order("id", { ascending: false })
-    .limit(limit);
+    .range(from, to);
 
   if (tagsError) {
     throw tagsError;
