@@ -23,15 +23,15 @@ export async function imagesFetcher(
   return images;
 }
 
-export async function imageFetcher(supabase: SupabaseClient, id: number) {
+export async function imageFetcher(supabase: SupabaseClient, uuid: string) {
   const { data, error } = await supabase
     .from("image_links")
     .select("link, width, height")
     // @ts-ignore
-    .eq("image", id)
+    .eq("image", uuid)
     .order("width", { ascending: false })
     .order("height", { ascending: false })
-    .single();
+    .limit(1);
 
   if (error) {
     throw error;
@@ -41,5 +41,5 @@ export async function imageFetcher(supabase: SupabaseClient, id: number) {
     return null;
   }
     
-  return data;
+  return data?.[0];
 }

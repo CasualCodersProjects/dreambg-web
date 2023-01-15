@@ -2,9 +2,9 @@ import { imageFetcher, imagesFetcher } from '@/services/imageFetcher';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSWR from 'swr';
 
-export const useImage = (id: number) => {
+export const useImage = (uuid: string) => {
     const supabase = useSupabaseClient();
-    const { data, error } = useSWR([id], ([id]) => imageFetcher(supabase, id));
+    const { data, error } = useSWR([uuid], ([uuid]) => imageFetcher(supabase, uuid));
 
     return {
         image: data,

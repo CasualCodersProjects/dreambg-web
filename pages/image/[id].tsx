@@ -1,36 +1,13 @@
 import { useImage } from "@/hooks/useImages";
-import { useState } from "react";
 import { Center, Loader, Stack, Image, Button } from "@mantine/core";
 import { IconDownload } from "@tabler/icons";
 import { useRouter } from "next/router";
 import { createImageURL } from "@/utils/createImageURL";
-import useAsyncEffect from "use-async-effect";
-import { supabase } from "@/db/supabaseClient";
 
 export default function ImagePage() {
-  const [image, setImage] = useState<any>(null);
   const router = useRouter();
   const { id } = router.query;
-
-  useAsyncEffect(async () => {
-    console.log(id);
-    const { data, error } = await supabase
-      .from("image_links")
-      .select("*")
-      .eq("image", id)
-      .order("width", { ascending: false })
-      .order("height", { ascending: false })
-      .order("id", { ascending: false })
-      .limit(1);
-
-    if (error) {
-      console.log(error);
-    }
-
-    if (data) {
-      setImage(data[0]);
-    }
-  }, [id]);
+  const { image } = useImage(id as string);
 
   return (
     <Center>
