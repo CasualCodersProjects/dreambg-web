@@ -6,7 +6,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 
-const IMAGE_LIST = ["cyberpunkMountains.png", "cyberpunkMountains2.png"];
+const IMAGE_LIST = ["cyberpunkMountains.jpg", "cyberpunkMountains2.jpg"];
 
 const RANDOM_IMAGE = IMAGE_LIST[Math.floor(Math.random() * IMAGE_LIST.length)];
 

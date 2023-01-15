@@ -22,6 +22,7 @@ import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { showNotification } from "@mantine/notifications";
 import { useRandomTags } from "@/hooks/useTags";
+import { useProfile } from "@/hooks/useProfile";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -83,6 +84,7 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
   const supabase = useSupabaseClient();
   const user = useUser();
   const { tags } = useRandomTags(5);
+  const { profile } = useProfile(user?.id);
 
   const items = links.map((link) => (
     <Link
@@ -164,16 +166,6 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
                 Login{" "}
               </Link>
             )}
-            {!user &&
-              (colorScheme === "dark" ? (
-                <ActionIcon onClick={setLightMode}>
-                  <IconSun size={20} />
-                </ActionIcon>
-              ) : (
-                <ActionIcon onClick={setDarkMode}>
-                  <IconMoon />
-                </ActionIcon>
-              ))}
           </Group>
           {user && (
             <Menu shadow="md" opened={burgerOpen} onChange={setBurgerOpen}>
@@ -187,22 +179,7 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
               </Menu.Target>
 
               <Menu.Dropdown>
-                <Menu.Label>{user?.email}</Menu.Label>
-                {colorScheme === "dark" ? (
-                  <Menu.Item
-                    onClick={setLightMode}
-                    icon={<IconSun size={14} />}
-                  >
-                    Light Mode
-                  </Menu.Item>
-                ) : (
-                  <Menu.Item
-                    onClick={setDarkMode}
-                    icon={<IconMoon size={14} />}
-                  >
-                    Dark Mode
-                  </Menu.Item>
-                )}
+                <Menu.Label>{profile?.username || user?.email}</Menu.Label>
                 <Menu.Item
                   onClick={() => {
                     router.push("/settings");
@@ -216,6 +193,15 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
                 </Menu.Item>
               </Menu.Dropdown>
             </Menu>
+          )}
+          {colorScheme === "dark" ? (
+            <ActionIcon onClick={setLightMode}>
+              <IconSun size={20} />
+            </ActionIcon>
+          ) : (
+            <ActionIcon onClick={setDarkMode}>
+              <IconMoon />
+            </ActionIcon>
           )}
         </Group>
       </div>
