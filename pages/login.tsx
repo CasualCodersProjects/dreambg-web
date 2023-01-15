@@ -1,19 +1,20 @@
 import { Paper, createStyles } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 
-// this page needs improved
+const IMAGE_LIST = ["cyberpunkMountains.png", "cyberpunkMountains2.png"];
+
+const RANDOM_IMAGE = IMAGE_LIST[Math.floor(Math.random() * IMAGE_LIST.length)];
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
     backgroundSize: "cover",
-    backgroundImage:
-      "url(https://pub-b40b2b1230da43ca8e747ec1ee3e2be1.r2.dev/ai-images/6771e53f-1b52-4174-9197-018edd37bf26.jpg)",
+    backgroundImage: `url(/images/${RANDOM_IMAGE})`,
   },
 
   form: {

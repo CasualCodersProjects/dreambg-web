@@ -36,6 +36,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 # Implementation Notes
-* Images should be forwarded through a NextJS API that validates that the user has the rights to view the image.
+* ~~Images should be forwarded through a NextJS API that validates that the user has the rights to view the image.~~
+* Since all the images are UUIDs, we can just prevent the user from being able to access the UUIDs with higher resolutions.
 * There will be lots of API calls.
 * Caching via SWR

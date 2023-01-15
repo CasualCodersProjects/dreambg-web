@@ -6,9 +6,17 @@ import {
   Menu,
   ActionIcon,
   Autocomplete,
+  Burger,
 } from "@mantine/core";
 import { useUser } from "@supabase/auth-helpers-react";
-import { IconLogout, IconMenu2, IconSettings, IconSearch } from "@tabler/icons";
+import { useState } from "react";
+import {
+  IconLogout,
+  IconSettings,
+  IconSearch,
+  IconSun,
+  IconMoon,
+} from "@tabler/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -64,9 +72,12 @@ const useStyles = createStyles((theme) => ({
 
 interface NavBarProps {
   links: Array<{ link: string; label: string }>;
+  colorScheme: string;
+  setColorScheme: (value: string) => void;
 }
 
-function NavBar({ links }: NavBarProps) {
+function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
+  const [burgerOpen, setBurgerOpen] = useState(false);
   const { classes } = useStyles();
   const router = useRouter();
   const supabase = useSupabaseClient();
@@ -96,6 +107,14 @@ function NavBar({ links }: NavBarProps) {
       title: "Logged out",
       message: "You have been logged out.",
     });
+  };
+
+  const setDarkMode = () => {
+    setColorScheme("dark");
+  };
+
+  const setLightMode = () => {
+    setColorScheme("light");
   };
 
   return (
@@ -145,17 +164,45 @@ function NavBar({ links }: NavBarProps) {
                 Login{" "}
               </Link>
             )}
+            {!user &&
+              (colorScheme === "dark" ? (
+                <ActionIcon onClick={setLightMode}>
+                  <IconSun size={20} />
+                </ActionIcon>
+              ) : (
+                <ActionIcon onClick={setDarkMode}>
+                  <IconMoon />
+                </ActionIcon>
+              ))}
           </Group>
           {user && (
-            <Menu shadow="md">
+            <Menu shadow="md" opened={burgerOpen} onChange={setBurgerOpen}>
               <Menu.Target>
-                <ActionIcon variant="filled">
-                  <IconMenu2 />
-                </ActionIcon>
+                <Burger
+                  opened={burgerOpen}
+                  onClick={() => {
+                    setBurgerOpen(!burgerOpen);
+                  }}
+                />
               </Menu.Target>
 
               <Menu.Dropdown>
                 <Menu.Label>{user?.email}</Menu.Label>
+                {colorScheme === "dark" ? (
+                  <Menu.Item
+                    onClick={setLightMode}
+                    icon={<IconSun size={14} />}
+                  >
+                    Light Mode
+                  </Menu.Item>
+                ) : (
+                  <Menu.Item
+                    onClick={setDarkMode}
+                    icon={<IconMoon size={14} />}
+                  >
+                    Dark Mode
+                  </Menu.Item>
+                )}
                 <Menu.Item
                   onClick={() => {
                     router.push("/settings");

@@ -2,6 +2,7 @@ import { AppShell, MantineProvider } from "@mantine/core";
 import type { AppProps } from "next/app";
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
 import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import { useLocalStorage } from "@mantine/hooks";
 import { useState } from "react";
 
 import NavBar from "@/components/modules/NavBar";
@@ -28,6 +29,11 @@ const footerProps = {
 const navLinks: any = [];
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [colorScheme, setColorScheme] = useLocalStorage({
+    key: "color-scheme",
+    defaultValue: "dark",
+  });
+
   // Create a new supabase browser client on every first render.
   const [supabaseClient] = useState(() =>
     createBrowserSupabaseClient<Database>()
@@ -39,14 +45,20 @@ export default function App({ Component, pageProps }: AppProps) {
         withGlobalStyles
         withNormalizeCSS
         theme={{
-          colorScheme: "dark",
+          colorScheme: colorScheme as "dark" | "light",
           fontFamily: "Open Sans, sans-serif",
           cursorType: "pointer",
         }}
       >
         <NotificationsProvider>
           <AppShell
-            header={<NavBar links={navLinks} />}
+            header={
+              <NavBar
+                colorScheme={colorScheme}
+                setColorScheme={setColorScheme}
+                links={navLinks}
+              />
+            }
             footer={<Footer {...footerProps} />}
           >
             <Component {...pageProps} />
