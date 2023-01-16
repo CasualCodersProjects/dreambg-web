@@ -91,21 +91,18 @@ export interface Database {
       }
       profiles: {
         Row: {
-          avatar_url: string | null
           id: string
           updated_at: string | null
           username: string | null
           website: string | null
         }
         Insert: {
-          avatar_url?: string | null
           id: string
           updated_at?: string | null
           username?: string | null
           website?: string | null
         }
         Update: {
-          avatar_url?: string | null
           id?: string
           updated_at?: string | null
           username?: string | null
@@ -179,6 +176,26 @@ export interface Database {
           negative?: number
           tag?: string
           visible?: number
+        }
+      }
+      user_saved_images: {
+        Row: {
+          created_at: string
+          id: number
+          image_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          image_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          image_id?: string
+          user_id?: string
         }
       }
     }

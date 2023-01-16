@@ -2,8 +2,10 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useImages } from "@/hooks/useImages";
 import ImageCard from "@/components/common/ImageCard";
+import LoaderCard from "@/components/common/LoaderCard";
 import { Loader, Center, SimpleGrid, Stack, Button } from "@mantine/core";
 import { createImageURL } from "@/utils/createImageURL";
+import range from "@/utils/range";
 
 const PER_PAGE = 26;
 
@@ -27,7 +29,13 @@ export default function Home() {
       });
     }
 
-    return <Loader />;
+    return range(PER_PAGE - 1).map((i) => {
+      return (
+        <div key={i}>
+          <LoaderCard />
+        </div>
+      );
+    });
   };
 
   const nextPage = () => {
