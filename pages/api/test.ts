@@ -1,6 +1,8 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+export const config = {
+  runtime: 'edge',
+}
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default function handler(req: Request) {
   // send json response
-  res.status(200).json({ name: "John Doe" });
+  return new Response(JSON.stringify({ hello: 'world' }));
 }
