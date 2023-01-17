@@ -7,6 +7,7 @@ import {
   ActionIcon,
   Autocomplete,
   Burger,
+  Image,
 } from "@mantine/core";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useState } from "react";
@@ -16,7 +17,7 @@ import {
   IconSearch,
   IconSun,
   IconMoon,
-  IconDeviceFloppy,
+  IconDeviceFloppy
 } from "@tabler/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -39,13 +40,32 @@ const useStyles = createStyles((theme) => ({
   },
 
   links: {
-    [theme.fn.smallerThan("md")]: {
+    // [theme.fn.smallerThan("md")]: {
+    //   display: "none",
+    // },
+  },
+
+  search: {
+    // [theme.fn.smallerThan("xs")]: {
+    //   display: "none",
+    // },
+  },
+
+  title: {
+    [theme.fn.smallerThan(700)]: {
       display: "none",
     },
   },
 
-  search: {
-    [theme.fn.smallerThan("xs")]: {
+  icon: {
+    [theme.fn.largerThan(700)]: {
+      display: "none",
+    },
+    paddingRight: "8px",
+  },
+
+  darkmode: {
+    [theme.fn.smallerThan(600)]: {
       display: "none",
     },
   },
@@ -123,7 +143,7 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
   return (
     <Header height={56} className={classes.header} mb={120}>
       <div className={classes.inner}>
-        <Group>
+        <Group className={classes.title}>
           <Title
             onClick={() => {
               router.push("/");
@@ -140,6 +160,15 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
           >
             DreamBG
           </Title>
+        </Group>
+        <Group className={classes.icon}>
+          <ActionIcon
+            onClick={() => {
+              router.push("/");
+            }}
+          >
+            <Image src="/favicon.ico" alt="DreamBG" />
+          </ActionIcon>
         </Group>
         <Autocomplete
           className={classes.search}
@@ -204,11 +233,11 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
             </Menu>
           )}
           {colorScheme === "dark" ? (
-            <ActionIcon onClick={setLightMode}>
+            <ActionIcon onClick={setLightMode} className={classes.darkmode}>
               <IconSun size={20} />
             </ActionIcon>
           ) : (
-            <ActionIcon onClick={setDarkMode}>
+            <ActionIcon onClick={setDarkMode} className={classes.darkmode}>
               <IconMoon />
             </ActionIcon>
           )}
