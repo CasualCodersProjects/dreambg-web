@@ -17,8 +17,7 @@ import {
   IconSearch,
   IconSun,
   IconMoon,
-  IconGardenCart,
-  IconHome,
+  IconDeviceFloppy
 } from "@tabler/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -168,7 +167,7 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
               router.push("/");
             }}
           >
-            <Image src="/favicon.ico" />
+            <Image src="/favicon.ico" alt="DreamBG" />
           </ActionIcon>
         </Group>
         <Autocomplete
