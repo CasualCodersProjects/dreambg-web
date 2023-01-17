@@ -16,6 +16,7 @@ import {
   IconSearch,
   IconSun,
   IconMoon,
+  IconDeviceFloppy,
 } from "@tabler/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -180,6 +181,14 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
 
               <Menu.Dropdown>
                 <Menu.Label>{profile?.username || user?.email}</Menu.Label>
+                <Menu.Item
+                  onClick={() => {
+                    router.push("/saved");
+                  }}
+                  icon={<IconDeviceFloppy size={14} />}
+                >
+                  Saved Images
+                </Menu.Item>
                 <Menu.Item
                   onClick={() => {
                     router.push("/settings");

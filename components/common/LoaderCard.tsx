@@ -1,4 +1,4 @@
-import { Paper, createStyles } from "@mantine/core";
+import { Paper, createStyles, Skeleton } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
@@ -49,7 +49,6 @@ const LoaderCard = ({ vertical }: LoaderCardProps) => {
   const sx = hovered
     ? {
         transform: "scale(1.05)",
-
         height,
         width,
       }
@@ -59,14 +58,16 @@ const LoaderCard = ({ vertical }: LoaderCardProps) => {
       };
 
   return (
-    <Paper
-      ref={ref}
-      shadow="md"
-      p="xl"
-      radius="md"
-      sx={sx}
-      className={classes.card}
-    ></Paper>
+    <Skeleton radius="md">
+      <Paper
+        ref={ref}
+        shadow="md"
+        p="xl"
+        radius="md"
+        sx={sx}
+        className={classes.card}
+      ></Paper>
+    </Skeleton>
   );
 };
 

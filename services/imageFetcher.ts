@@ -1,8 +1,9 @@
+import { Database } from "@/types/database.types";
 import { getPagination } from "@/utils/pagination";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export async function imagesFetcher(
-  supabase: SupabaseClient,
+  supabase: SupabaseClient<Database>,
   page: number = 1,
   limit: number = 20,
   vertical: boolean = false
@@ -23,14 +24,13 @@ export async function imagesFetcher(
   return images;
 }
 
-export async function imageFetcher(supabase: SupabaseClient, uuid: string) {
+export async function imageFetcher(supabase: SupabaseClient<Database>, uuid: string) {
   const { data, error } = await supabase
     .from("image_links")
     .select("link, width, height")
     // @ts-ignore
     .eq("image", uuid)
-    .order("width", { ascending: false })
-    .order("height", { ascending: false })
+    .or('height.eq.1280,width.eq.1280')
     .limit(1);
 
   if (error) {

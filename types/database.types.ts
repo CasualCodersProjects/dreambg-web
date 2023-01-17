@@ -91,21 +91,18 @@ export interface Database {
       }
       profiles: {
         Row: {
-          avatar_url: string | null
           id: string
           updated_at: string | null
           username: string | null
           website: string | null
         }
         Insert: {
-          avatar_url?: string | null
           id: string
           updated_at?: string | null
           username?: string | null
           website?: string | null
         }
         Update: {
-          avatar_url?: string | null
           id?: string
           updated_at?: string | null
           username?: string | null
@@ -181,6 +178,26 @@ export interface Database {
           visible?: number
         }
       }
+      user_saved_images: {
+        Row: {
+          created_at: string
+          id: number
+          image_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          image_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          image_id?: string
+          user_id?: string
+        }
+      }
     }
     Views: {
       random_tags: {
@@ -195,6 +212,13 @@ export interface Database {
         Update: {
           id?: number | null
           tag?: string | null
+        }
+      }
+      saved_image_links: {
+        Row: {
+          link: string | null
+          user_id: string | null
+          uuid: string | null
         }
       }
       single_images: {
