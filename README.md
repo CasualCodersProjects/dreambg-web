@@ -40,3 +40,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 * Since all the images are UUIDs, we can just prevent the user from being able to access the UUIDs with higher resolutions.
 * There will be lots of API calls.
 * Caching via SWR
+# Random related notes
+* Using Mantine for components
+* When customizing colors, use [Omatsuri shades generator](https://omatsuri.app/color-shades-generator)
