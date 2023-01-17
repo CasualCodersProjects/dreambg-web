@@ -213,6 +213,14 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
                 <Menu.Label>{profile?.username || user?.email}</Menu.Label>
                 <Menu.Item
                   onClick={() => {
+                    router.push("/saved");
+                  }}
+                  icon={<IconDeviceFloppy size={14} />}
+                >
+                  Saved Images
+                </Menu.Item>
+                <Menu.Item
+                  onClick={() => {
                     router.push("/settings");
                   }}
                   icon={<IconSettings size={14} />}
