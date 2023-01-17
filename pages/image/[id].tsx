@@ -7,6 +7,7 @@ import { createImageURL } from "@/utils/createImageURL";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { showNotification } from "@mantine/notifications";
+import ShareButton from "@/components/common/ShareButton";
 import { useSavedImage } from "@/hooks/useSavedImages";
 
 export default function ImagePage() {
@@ -93,7 +94,7 @@ export default function ImagePage() {
                     onClick={saveImage}
                     leftIcon={<IconDeviceFloppy size={18} />}
                   >
-                    Save Image
+                    {user ? "Save Image" : "Login to save"}
                   </Button>
                 ) : (
                   <Button
@@ -105,6 +106,8 @@ export default function ImagePage() {
                     Unsave Image
                   </Button>
                 )}
+
+                <ShareButton />
               </Group>
             </Stack>
           </>

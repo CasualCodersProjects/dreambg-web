@@ -9,6 +9,7 @@ import NavBar from "@/components/modules/NavBar";
 import Footer from "@/components/modules/Footer";
 import { Database } from "@/types/database.types";
 import { NotificationsProvider } from "@mantine/notifications";
+import { ModalsProvider } from "@mantine/modals";
 
 const footerProps = {
   links: [
@@ -48,21 +49,37 @@ export default function App({ Component, pageProps }: AppProps) {
           colorScheme: colorScheme as "dark" | "light",
           fontFamily: "Open Sans, sans-serif",
           cursorType: "pointer",
+          colors: {
+            "twitter-blue": [
+              "#90C7E8",
+              "#7FC0E8",
+              "#6DB9E8",
+              "#5CB4EA",
+              "#4AAEEC",
+              "#38A9EF",
+              "#26A5F3",
+              "#1E9EED",
+              "#1897E5",
+              "#1C8FD5",
+            ],
+          },
         }}
       >
         <NotificationsProvider>
-          <AppShell
-            header={
-              <NavBar
-                colorScheme={colorScheme}
-                setColorScheme={setColorScheme}
-                links={navLinks}
-              />
-            }
-            footer={<Footer {...footerProps} />}
-          >
-            <Component {...pageProps} />
-          </AppShell>
+          <ModalsProvider>
+            <AppShell
+              header={
+                <NavBar
+                  colorScheme={colorScheme}
+                  setColorScheme={setColorScheme}
+                  links={navLinks}
+                />
+              }
+              footer={<Footer {...footerProps} />}
+            >
+              <Component {...pageProps} />
+            </AppShell>
+          </ModalsProvider>
         </NotificationsProvider>
       </MantineProvider>
     </SessionContextProvider>
