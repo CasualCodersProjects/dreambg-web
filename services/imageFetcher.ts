@@ -30,8 +30,7 @@ export async function imageFetcher(supabase: SupabaseClient<Database>, uuid: str
     .select("link, width, height")
     // @ts-ignore
     .eq("image", uuid)
-    .order("width", { ascending: false })
-    .order("height", { ascending: false })
+    .or('height.eq.1280,width.eq.1280')
     .limit(1);
 
   if (error) {

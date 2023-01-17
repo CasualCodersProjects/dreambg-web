@@ -1,35 +1,6 @@
-import { Paper, createStyles } from "@mantine/core";
+import { Image, Text } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import Link from "next/link";
-
-const useStyles = createStyles((theme) => ({
-  card: {
-    height: 200,
-    width: 356,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  },
-
-  title: {
-    fontFamily: `${theme.fontFamily}`,
-    fontWeight: 900,
-    color: theme.white,
-    lineHeight: 1.2,
-    fontSize: 32,
-    marginTop: theme.spacing.xs,
-  },
-
-  category: {
-    color: theme.white,
-    opacity: 0.7,
-    fontWeight: 700,
-    textTransform: "uppercase",
-  },
-}));
 
 export interface ImageCardProps {
   imageURL: string;
@@ -38,7 +9,6 @@ export interface ImageCardProps {
 }
 
 const ImageCard = ({ imageURL, vertical, href }: ImageCardProps) => {
-  const { classes } = useStyles();
   const { hovered, ref } = useHover();
 
   let height = 200;
@@ -52,36 +22,35 @@ const ImageCard = ({ imageURL, vertical, href }: ImageCardProps) => {
   const sx = hovered
     ? {
         transform: "scale(1.05)",
-        backgroundImage: `url(${imageURL})`,
-        height,
-        width,
       }
-    : {
-        backgroundImage: `url(${imageURL})`,
-        height,
-        width,
-      };
+    : {};
 
   return href ? (
     <Link href={href}>
-      <Paper
+      <Image
         ref={ref}
-        shadow="md"
-        p="xl"
         radius="md"
+        src={imageURL}
+        alt=""
+        height={height}
+        width={width}
         sx={sx}
-        className={classes.card}
-      ></Paper>
+        withPlaceholder
+        placeholder={<Text align="center">Image failed to load.</Text>}
+      />
     </Link>
   ) : (
-    <Paper
+    <Image
       ref={ref}
-      shadow="md"
-      p="xl"
       radius="md"
+      src={imageURL}
+      alt=""
+      height={height}
+      width={width}
       sx={sx}
-      className={classes.card}
-    ></Paper>
+      withPlaceholder
+      placeholder={<Text align="center">Image failed to load.</Text>}
+    />
   );
 };
 

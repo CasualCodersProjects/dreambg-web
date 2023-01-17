@@ -1,6 +1,13 @@
 import { useSearch } from "@/hooks/useSearch";
 import ImageCard from "@/components/common/ImageCard";
-import { Center, SimpleGrid, Stack, Loader, Button } from "@mantine/core";
+import {
+  Center,
+  SimpleGrid,
+  Stack,
+  Loader,
+  Button,
+  Title,
+} from "@mantine/core";
 import Head from "next/head";
 import { createImageURL } from "@/utils/createImageURL";
 import { useState } from "react";
@@ -45,6 +52,7 @@ export default function Search() {
 
       <Center>
         <Stack align="center">
+          <Title>Search Results</Title>
           <SimpleGrid
             cols={4}
             spacing="xl"

@@ -1,42 +1,22 @@
 import { useImage } from "@/hooks/useImages";
 import Head from "next/head";
-import { Center, Loader, Stack, Image, Button, Group } from "@mantine/core";
+import { Center, Stack, Image, Button, Group, Skeleton } from "@mantine/core";
 import { IconDeviceFloppy, IconDownload, IconTrash } from "@tabler/icons";
 import { useRouter } from "next/router";
 import { createImageURL } from "@/utils/createImageURL";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { showNotification } from "@mantine/notifications";
-import { useAsync } from "react-use";
+import { useSavedImage } from "@/hooks/useSavedImages";
 
 export default function ImagePage() {
   const [loading, setLoading] = useState<boolean>(false);
-  const [isImageSaved, setIsImageSaved] = useState<boolean>(false);
   const router = useRouter();
   const supabase = useSupabaseClient();
   const user = useUser();
   const { id } = router.query;
   const { image } = useImage(id as string);
-
-  useAsync(async () => {
-    if (!user) return;
-    const { data, error } = await supabase
-      .from("user_saved_images")
-      .select()
-      .eq("user_id", user?.id)
-      .eq("image_id", id);
-
-    if (error) {
-      console.error(error);
-    }
-
-    if (data && data.length > 0) {
-      setIsImageSaved(true);
-      console.log(data);
-    } else {
-      setIsImageSaved(false);
-    }
-  }, [id, loading]);
+  const { image: savedImage, mutate } = useSavedImage(id as string);
 
   const saveImage = async () => {
     setLoading(true);
@@ -51,6 +31,7 @@ export default function ImagePage() {
       title: "Image saved",
       message: "The image has been saved to your profile.",
     });
+    await mutate();
     setLoading(false);
   };
 
@@ -69,6 +50,7 @@ export default function ImagePage() {
       title: "Image unsaved",
       message: "The image has been unsaved from your profile.",
     });
+    await mutate();
     setLoading(false);
   };
 
@@ -80,13 +62,17 @@ export default function ImagePage() {
       </Head>
       <Center>
         {!image ? (
-          <Loader size="xl" />
+          <Skeleton sx={{ maxWidth: "95vw" }} height={"75vh"} radius="xl" />
         ) : (
           <>
             <Stack spacing="xl" align="center" justify="center">
               <Image
                 src={createImageURL("ai-images", image.link)}
                 alt={image.link}
+                height={"75vh"}
+                sx={{ maxWidth: "95vw" }}
+                fit="contain"
+                radius="xl"
               />
               <Group>
                 <Button
@@ -99,7 +85,8 @@ export default function ImagePage() {
                   {" "}
                   Download{" "}
                 </Button>
-                {!isImageSaved ? (
+
+                {!savedImage ? (
                   <Button
                     loading={loading}
                     disabled={!user}

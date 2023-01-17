@@ -214,6 +214,13 @@ export interface Database {
           tag?: string | null
         }
       }
+      saved_image_links: {
+        Row: {
+          link: string | null
+          user_id: string | null
+          uuid: string | null
+        }
+      }
       single_images: {
         Row: {
           id: number | null
