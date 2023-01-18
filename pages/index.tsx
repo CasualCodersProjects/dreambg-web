@@ -1,21 +1,51 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
-import { useImages } from "@/hooks/useImages";
+import { useEffect } from "react";
+import { useInfiniteImages } from "@/hooks/useImages";
 import ImageCard from "@/components/common/ImageCard";
 import LoaderCard from "@/components/common/LoaderCard";
-import { Loader, Center, SimpleGrid, Stack, Button } from "@mantine/core";
+import { Center, SimpleGrid, Stack, Button } from "@mantine/core";
 import { createImageURL } from "@/utils/createImageURL";
 import range from "@/utils/range";
+import { useWindowScroll } from "@mantine/hooks";
 
-const PER_PAGE = 26;
+const genLoaders = (n: number) =>
+  range(n).map((i) => {
+    return (
+      <div key={i}>
+        <LoaderCard />
+      </div>
+    );
+  });
 
 export default function Home() {
-  const [page, setPage] = useState(0);
-  const { images } = useImages(page, PER_PAGE);
+  const [scroll] = useWindowScroll();
+  const { images: infiniteImages, size, setSize } = useInfiniteImages();
+
+  const loadMore = () => {
+    setSize(size + 1);
+  };
+
+  // doesn't work on mobile
+  // need to fix
+  useEffect(() => {
+    const scrollMaxY =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight -
+      600;
+    if (window.scrollY >= scrollMaxY - 10) {
+      loadMore();
+    }
+  }, [scroll]);
+
+  // flatten infinite images
+  const images = infiniteImages?.flat();
 
   const generateImages = () => {
+    // check if images is an array of falsy values
+
     if (images) {
       return images.map((image, i) => {
+        if (!image) return null;
         const vertical = image.height > image.width;
         return (
           <div key={i}>
@@ -29,27 +59,8 @@ export default function Home() {
       });
     }
 
-    return range(PER_PAGE - 1).map((i) => {
-      return (
-        <div key={i}>
-          <LoaderCard />
-        </div>
-      );
-    });
+    return genLoaders(24);
   };
-
-  const nextPage = () => {
-    setPage(page + 1);
-  };
-
-  const prevPage = () => {
-    if (page === 0) return;
-    setPage(page - 1);
-  };
-
-  useEffect(() => {
-    console.log({ page });
-  }, [page]);
 
   return (
     <>
@@ -71,10 +82,9 @@ export default function Home() {
               { maxWidth: 2000, cols: 3, spacing: "lg" },
             ]}
           >
-            {generateImages()}
+            {generateImages().concat(genLoaders(12))}
           </SimpleGrid>
-          <Button onClick={nextPage}>Load More</Button>
-          <Button onClick={prevPage}>Previous Page</Button>
+          <Button onClick={loadMore}>Load More</Button>
         </Stack>
       </Center>
     </>
