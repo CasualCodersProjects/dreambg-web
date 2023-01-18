@@ -5,7 +5,7 @@ import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { useLocalStorage } from "@mantine/hooks";
 import { useState } from "react";
 
-import NavBar from "@/components/modules/NavBar";
+import NavBar from "@/components/modules/NavBar2";
 import Footer from "@/components/modules/Footer";
 import { Database } from "@/types/database.types";
 import { NotificationsProvider } from "@mantine/notifications";
