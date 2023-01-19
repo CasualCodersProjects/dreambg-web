@@ -3,10 +3,10 @@ import { useEffect } from "react";
 import { useInfiniteImages } from "@/hooks/useImages";
 import ImageCard from "@/components/common/ImageCard";
 import LoaderCard from "@/components/common/LoaderCard";
-import { Center, SimpleGrid, Stack, Button } from "@mantine/core";
+import { Center, SimpleGrid, Stack } from "@mantine/core";
 import { createImageURL } from "@/utils/createImageURL";
 import range from "@/utils/range";
-import { useWindowScroll } from "@mantine/hooks";
+import { useIntersection } from "@mantine/hooks";
 
 const genLoaders = (n: number) =>
   range(n).map((i) => {
@@ -18,24 +18,18 @@ const genLoaders = (n: number) =>
   });
 
 export default function Home() {
-  const [scroll] = useWindowScroll();
+  const { ref, entry } = useIntersection();
   const { images: infiniteImages, size, setSize } = useInfiniteImages();
 
   const loadMore = () => {
     setSize(size + 1);
   };
 
-  // doesn't work on mobile
-  // need to fix
   useEffect(() => {
-    const scrollMaxY =
-      document.documentElement.scrollHeight -
-      document.documentElement.clientHeight -
-      600;
-    if (window.scrollY >= scrollMaxY - 10) {
+    if (entry?.isIntersecting) {
       loadMore();
     }
-  }, [scroll]);
+  }, [entry]);
 
   // flatten infinite images
   const images = infiniteImages?.flat();
@@ -82,9 +76,20 @@ export default function Home() {
               { maxWidth: 2000, cols: 3, spacing: "lg" },
             ]}
           >
-            {generateImages().concat(genLoaders(12))}
+            {generateImages()}
           </SimpleGrid>
-          <Button onClick={loadMore}>Load More</Button>
+          <div ref={ref}></div>
+          <SimpleGrid
+            cols={4}
+            spacing="xl"
+            breakpoints={[
+              { maxWidth: "sm", cols: 1, spacing: "sm" },
+              { maxWidth: "lg", cols: 2, spacing: "md" },
+              { maxWidth: 2000, cols: 3, spacing: "lg" },
+            ]}
+          >
+            {genLoaders(12)}
+          </SimpleGrid>
         </Stack>
       </Center>
     </>
