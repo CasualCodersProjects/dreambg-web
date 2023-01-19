@@ -89,6 +89,26 @@ export interface Database {
           uuid?: string
         }
       }
+      likes: {
+        Row: {
+          created_at: string
+          id: number
+          image: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          image: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          image?: string
+          user_id?: string
+        }
+      }
       profiles: {
         Row: {
           id: string
@@ -200,6 +220,12 @@ export interface Database {
       }
     }
     Views: {
+      likes_count: {
+        Row: {
+          image: string | null
+          likes_count: number | null
+        }
+      }
       random_tags: {
         Row: {
           id: number | null

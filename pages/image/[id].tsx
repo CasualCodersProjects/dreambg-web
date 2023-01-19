@@ -1,7 +1,22 @@
 import { useImage } from "@/hooks/useImages";
 import Head from "next/head";
-import { Center, Stack, Image, Button, Group, Skeleton, ActionIcon, Tooltip } from "@mantine/core";
-import { IconDeviceFloppy, IconDownload, IconTrash } from "@tabler/icons";
+import {
+  Center,
+  Stack,
+  Image,
+  Text,
+  Group,
+  Skeleton,
+  ActionIcon,
+  Tooltip,
+} from "@mantine/core";
+import {
+  IconDeviceFloppy,
+  IconDownload,
+  IconHeart,
+  IconHeartOff,
+  IconTrash,
+} from "@tabler/icons";
 import { useRouter } from "next/router";
 import { createImageURL } from "@/utils/createImageURL";
 import { useUser, useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -9,26 +24,82 @@ import { useState } from "react";
 import { showNotification } from "@mantine/notifications";
 import ShareButton from "@/components/common/ShareButton";
 import { useSavedImage } from "@/hooks/useSavedImages";
+import { useLikes, useUserLiked } from "@/hooks/useLikes";
+import abbrNum from "@/utils/abbrNumber";
 
 export default function ImagePage() {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingSaved, setLoadingSaved] = useState<boolean>(false);
+  const [loadingLiked, setLoadingLiked] = useState<boolean>(false);
   const router = useRouter();
   const supabase = useSupabaseClient();
   const user = useUser();
   const { id } = router.query;
   const { image } = useImage(id as string);
   const { image: savedImage, mutate } = useSavedImage(id as string);
+  const { liked, mutate: mutateLike } = useUserLiked(id as string);
+  const { likes, mutate: mutateLikes } = useLikes(id as string);
+
+  const likeImage = async () => {
+    if (!user) {
+      showNotification({
+        title: "Not Logged In",
+        message: "Please log in to like images.",
+      });
+      router.push("/login");
+      return;
+    }
+
+    setLoadingLiked(true);
+    const { error } = await supabase
+      .from("likes")
+      .insert({ user_id: user?.id, image: id });
+
+    if (error) {
+      console.error(error);
+    }
+
+    showNotification({
+      title: "Image liked",
+      message: "The image has been liked.",
+    });
+
+    mutateLikes();
+    await mutateLike();
+    setLoadingLiked(false);
+  };
+
+  const unlikeImage = async () => {
+    setLoadingLiked(true);
+    const { error } = await supabase
+      .from("likes")
+      .delete()
+      .eq("user_id", user?.id)
+      .eq("image", id);
+
+    if (error) {
+      console.error(error);
+    }
+
+    showNotification({
+      title: "Image unliked",
+      message: "The image has been unliked.",
+    });
+
+    mutateLikes();
+    await mutateLike();
+    setLoadingLiked(false);
+  };
 
   const saveImage = async () => {
     if (!user) {
       showNotification({
         title: "Not Logged In",
-        message: "Please log in to save images."
-      })
+        message: "Please log in to save images.",
+      });
       router.push("/login");
       return;
     }
-    setLoading(true);
+    setLoadingSaved(true);
     const { error } = await supabase
       .from("user_saved_images")
       .insert({ user_id: user?.id, image_id: id });
@@ -41,11 +112,11 @@ export default function ImagePage() {
       message: "The image has been saved to your profile.",
     });
     await mutate();
-    setLoading(false);
+    setLoadingSaved(false);
   };
 
   const unSaveImage = async () => {
-    setLoading(true);
+    setLoadingSaved(true);
     const { error } = await supabase
       .from("user_saved_images")
       .delete()
@@ -60,7 +131,7 @@ export default function ImagePage() {
       message: "The image has been unsaved from your profile.",
     });
     await mutate();
-    setLoading(false);
+    setLoadingSaved(false);
   };
 
   return (
@@ -84,46 +155,40 @@ export default function ImagePage() {
                 radius="xl"
               />
               <Group>
+                {typeof likes === "number" && (
+                  <Text fw={700}>{abbrNum(likes, 0)}</Text>
+                )}
+                <Tooltip label={liked ? "Unlike" : "Like"}>
+                  <ActionIcon
+                    onClick={liked ? unlikeImage : likeImage}
+                    loading={loadingLiked}
+                    variant={liked ? "filled" : "subtle"}
+                    color={"red"}
+                  >
+                    {liked ? <IconHeartOff /> : <IconHeart />}
+                  </ActionIcon>
+                </Tooltip>
                 <Tooltip label="Download">
                   <ActionIcon
-                  component="a"
-                  href={createImageURL("ai-images", image.link)}
-                  target="_blank"
+                    color="violet"
+                    component="a"
+                    href={createImageURL("ai-images", image.link)}
+                    target="_blank"
                   >
-                    <IconDownload/>
+                    <IconDownload />
                   </ActionIcon>
                 </Tooltip>
 
-                {!savedImage ? (
-                  <Tooltip label="Save Image">
-                    <ActionIcon
-                    loading={loading}
-                    onClick={saveImage}
-                    >
-                      <IconDeviceFloppy/>
-                    </ActionIcon>
-                  </Tooltip>
-                  // <Button
-                  //   loading={loading}
-                  //   disabled={!user}
-                  //   onClick={saveImage}
-                  //   leftIcon={<IconDeviceFloppy size={18} />}
-                  // >
-                  //   {user ? "Save Image" : "Login to save"}
-                  // </Button>
-                ) : (
-                  <Tooltip label="Unsave image">
-                    <ActionIcon
-                      loading={loading}
-                      onClick={unSaveImage}
-                      variant="filled"
-                      color="red"
-                    >
-                      <IconTrash />
-                    </ActionIcon>
-                  </Tooltip>
-                )}
-
+                <Tooltip label={savedImage ? "Unsave image" : "Save Image"}>
+                  <ActionIcon
+                    loading={loadingSaved}
+                    onClick={savedImage ? unSaveImage : saveImage}
+                    variant={savedImage ? "filled" : "subtle"}
+                    color={savedImage ? "red" : "green"}
+                  >
+                    {savedImage ? <IconTrash /> : <IconDeviceFloppy />}
+                  </ActionIcon>
+                </Tooltip>
                 <ShareButton />
               </Group>
             </Stack>
