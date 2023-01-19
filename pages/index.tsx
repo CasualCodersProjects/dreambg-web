@@ -1,21 +1,37 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
-import { useImages } from "@/hooks/useImages";
+import { useEffect } from "react";
+import { useInfiniteImages } from "@/hooks/useImages";
 import ImageCard from "@/components/common/ImageCard";
 import LoaderCard from "@/components/common/LoaderCard";
-import { Loader, Center, SimpleGrid, Stack, Button } from "@mantine/core";
+import { Center, SimpleGrid, Stack } from "@mantine/core";
 import { createImageURL } from "@/utils/createImageURL";
 import range from "@/utils/range";
-
-const PER_PAGE = 26;
+import { useIntersection } from "@mantine/hooks";
+import genLoaders from "@/utils/genLoaders";
 
 export default function Home() {
-  const [page, setPage] = useState(0);
-  const { images } = useImages(page, PER_PAGE);
+  const { ref, entry } = useIntersection();
+  const { images: infiniteImages, size, setSize } = useInfiniteImages();
+
+  const loadMore = () => {
+    setSize(size + 1);
+  };
+
+  useEffect(() => {
+    if (entry?.isIntersecting) {
+      loadMore();
+    }
+  }, [entry]);
+
+  // flatten infinite images
+  const images = infiniteImages?.flat();
 
   const generateImages = () => {
+    // check if images is an array of falsy values
+
     if (images) {
       return images.map((image, i) => {
+        if (!image) return null;
         const vertical = image.height > image.width;
         return (
           <div key={i}>
@@ -29,27 +45,8 @@ export default function Home() {
       });
     }
 
-    return range(PER_PAGE - 1).map((i) => {
-      return (
-        <div key={i}>
-          <LoaderCard />
-        </div>
-      );
-    });
+    return genLoaders(24);
   };
-
-  const nextPage = () => {
-    setPage(page + 1);
-  };
-
-  const prevPage = () => {
-    if (page === 0) return;
-    setPage(page - 1);
-  };
-
-  useEffect(() => {
-    console.log({ page });
-  }, [page]);
 
   return (
     <>
@@ -73,8 +70,18 @@ export default function Home() {
           >
             {generateImages()}
           </SimpleGrid>
-          <Button onClick={nextPage}>Load More</Button>
-          <Button onClick={prevPage}>Previous Page</Button>
+          <div ref={ref}></div>
+          <SimpleGrid
+            cols={4}
+            spacing="xl"
+            breakpoints={[
+              { maxWidth: "sm", cols: 1, spacing: "sm" },
+              { maxWidth: "lg", cols: 2, spacing: "md" },
+              { maxWidth: 2000, cols: 3, spacing: "lg" },
+            ]}
+          >
+            {genLoaders(12)}
+          </SimpleGrid>
         </Stack>
       </Center>
     </>

@@ -43,3 +43,25 @@ export async function imageFetcher(supabase: SupabaseClient<Database>, uuid: str
     
   return data?.[0];
 }
+
+export async function infiniteImagesFetcher(supabase: SupabaseClient<Database>, page: number, vertical: boolean = false) {
+    const or = vertical ? 'height.eq.1280' : 'height.eq.725';
+    const { from, to } = getPagination(page, 23);
+    const { data, error } = await supabase
+    .from("image_links")
+    .select("link, width, height, image")
+    // @ts-ignore
+    .or(or)
+    .order("id", { ascending: false })
+    .range(from, to);
+
+    if (error) {
+        throw error;
+    }
+
+    if (!data) {
+        return null;
+    }
+
+    return data;
+}
