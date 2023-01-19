@@ -136,12 +136,13 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
     });
   };
 
-  const setDarkMode = () => {
-    setColorScheme("dark");
-  };
-
-  const setLightMode = () => {
-    setColorScheme("light");
+  const toggleColorScheme = () => {
+    if (colorScheme == "dark") {
+      setColorScheme("light");
+    }
+    else{
+      setColorScheme("dark");
+    }
   };
 
   return (
@@ -175,72 +176,32 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
 
           <Menu.Dropdown>
             <Menu.Label>DreamBG</Menu.Label>
-            <Menu.Item icon={<IconSun/>}>Toggle Theme</Menu.Item>
-            <Menu.Item icon={<IconLogin/>}>Sign In / Sign Up</Menu.Item>
+            
+            <Menu.Item icon={<IconSun/>} onClick={toggleColorScheme}>Toggle Theme</Menu.Item>
+            { !user && <Menu.Item
+            icon={<IconLogin/>}
+            onClick={() => {
+              router.push("/login");
+              }}>Sign In / Sign Up</Menu.Item>}
+
+            {user && <Menu.Item
+            icon={<IconDeviceFloppy/>}
+            onClick={() => {
+              router.push("/saved");
+              }}>Saved Images</Menu.Item>}
+
+            {user && <Menu.Item
+            icon={<IconSettings/>}
+            onClick={() => {
+              router.push("/settings");
+              }}>Settings</Menu.Item>}
+
+            {user && <Menu.Item
+            icon={<IconLogout/>}
+            onClick={logOutUser}>Log Out</Menu.Item>}
+          
           </Menu.Dropdown>
         </Menu>
-
-        {/* <Group>
-          <Group ml={50} spacing={5} className={classes.links}>
-            {items}
-            {!user && (
-              <Link
-                style={{
-                  fontWeight: "bold",
-                }}
-                className={classes.link}
-                href="/login"
-              >
-                {" "}
-                Login{" "}
-              </Link>
-            )}
-          </Group>
-          {user && (
-            <Menu shadow="md" opened={burgerOpen} onChange={setBurgerOpen}>
-              <Menu.Target>
-                <Burger
-                  opened={burgerOpen}
-                  onClick={() => {
-                    setBurgerOpen(!burgerOpen);
-                  }}
-                />
-              </Menu.Target>
-
-              <Menu.Dropdown>
-                <Menu.Label>{profile?.username || user?.email}</Menu.Label>
-                <Menu.Item
-                  onClick={() => {
-                    router.push("/saved");
-                  }}
-                  icon={<IconDeviceFloppy size={14} />}
-                >
-                  Saved Images
-                </Menu.Item>
-                <Menu.Item
-                  onClick={() => {
-                    router.push("/settings");
-                  }}
-                  icon={<IconSettings size={14} />}
-                >
-                  Settings
-                </Menu.Item>
-                <Menu.Item onClick={logOutUser} icon={<IconLogout size={14} />}>
-                  Log Out
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          )}
-          {colorScheme === "dark" ? (
-            <ActionIcon onClick={setLightMode} className={classes.darkmode}>
-              <IconSun size={20} />
-            </ActionIcon>
-          ) : (
-            <ActionIcon onClick={setDarkMode} className={classes.darkmode}>
-              <IconMoon />
-            </ActionIcon>
-          )}
-        </Group> */}
       </div>
     </Header>
   );
