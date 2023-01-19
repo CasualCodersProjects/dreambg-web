@@ -1,6 +1,6 @@
 import { useImage } from "@/hooks/useImages";
 import Head from "next/head";
-import { Center, Stack, Image, Button, Group, Skeleton } from "@mantine/core";
+import { Center, Stack, Image, Button, Group, Skeleton, ActionIcon, Tooltip } from "@mantine/core";
 import { IconDeviceFloppy, IconDownload, IconTrash } from "@tabler/icons";
 import { useRouter } from "next/router";
 import { createImageURL } from "@/utils/createImageURL";
@@ -20,6 +20,14 @@ export default function ImagePage() {
   const { image: savedImage, mutate } = useSavedImage(id as string);
 
   const saveImage = async () => {
+    if (!user) {
+      showNotification({
+        title: "Not Logged In",
+        message: "Please log in to save images."
+      })
+      router.push("/login");
+      return;
+    }
     setLoading(true);
     const { error } = await supabase
       .from("user_saved_images")
@@ -76,35 +84,44 @@ export default function ImagePage() {
                 radius="xl"
               />
               <Group>
-                <Button
+                <Tooltip label="Download">
+                  <ActionIcon
                   component="a"
                   href={createImageURL("ai-images", image.link)}
                   target="_blank"
-                  about="Download the image."
-                  leftIcon={<IconDownload size={18} />}
-                >
-                  {" "}
-                  Download{" "}
-                </Button>
+                  >
+                    <IconDownload/>
+                  </ActionIcon>
+                </Tooltip>
 
                 {!savedImage ? (
-                  <Button
+                  <Tooltip label="Save Image">
+                    <ActionIcon
                     loading={loading}
-                    disabled={!user}
                     onClick={saveImage}
-                    leftIcon={<IconDeviceFloppy size={18} />}
-                  >
-                    {user ? "Save Image" : "Login to save"}
-                  </Button>
+                    >
+                      <IconDeviceFloppy/>
+                    </ActionIcon>
+                  </Tooltip>
+                  // <Button
+                  //   loading={loading}
+                  //   disabled={!user}
+                  //   onClick={saveImage}
+                  //   leftIcon={<IconDeviceFloppy size={18} />}
+                  // >
+                  //   {user ? "Save Image" : "Login to save"}
+                  // </Button>
                 ) : (
-                  <Button
-                    loading={loading}
-                    disabled={!user}
-                    onClick={unSaveImage}
-                    leftIcon={<IconTrash size={18} />}
-                  >
-                    Unsave Image
-                  </Button>
+                  <Tooltip label="Unsave image">
+                    <ActionIcon
+                      loading={loading}
+                      onClick={unSaveImage}
+                      variant="filled"
+                      color="red"
+                    >
+                      <IconTrash />
+                    </ActionIcon>
+                  </Tooltip>
                 )}
 
                 <ShareButton />
