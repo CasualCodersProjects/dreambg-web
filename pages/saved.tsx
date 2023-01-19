@@ -10,8 +10,6 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { showNotification } from "@mantine/notifications";
 
-const PER_PAGE = 27;
-
 export default function Saved() {
   const router = useRouter();
   const user = useUser();
@@ -41,7 +39,7 @@ export default function Saved() {
       });
     }
 
-    return range(PER_PAGE).map((i) => {
+    return range(24).map((i) => {
       return (
         <div key={i}>
           <LoaderCard />

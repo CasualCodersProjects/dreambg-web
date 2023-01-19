@@ -7,15 +7,7 @@ import { Center, SimpleGrid, Stack } from "@mantine/core";
 import { createImageURL } from "@/utils/createImageURL";
 import range from "@/utils/range";
 import { useIntersection } from "@mantine/hooks";
-
-const genLoaders = (n: number) =>
-  range(n).map((i) => {
-    return (
-      <div key={i}>
-        <LoaderCard />
-      </div>
-    );
-  });
+import genLoaders from "@/utils/genLoaders";
 
 export default function Home() {
   const { ref, entry } = useIntersection();
