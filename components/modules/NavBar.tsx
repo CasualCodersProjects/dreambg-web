@@ -8,6 +8,7 @@ import {
   Autocomplete,
   Burger,
   Image,
+  Text
 } from "@mantine/core";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useState } from "react";
@@ -16,8 +17,11 @@ import {
   IconSettings,
   IconSearch,
   IconSun,
+  IconLogin,
   IconMoon,
-  IconDeviceFloppy
+  IconDeviceFloppy,
+  IconMenu2,
+  IconAdjustments
 } from "@tabler/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -132,44 +136,25 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
     });
   };
 
-  const setDarkMode = () => {
-    setColorScheme("dark");
-  };
-
-  const setLightMode = () => {
-    setColorScheme("light");
+  const toggleColorScheme = () => {
+    if (colorScheme == "dark") {
+      setColorScheme("light");
+    }
+    else{
+      setColorScheme("dark");
+    }
   };
 
   return (
     <Header height={56} className={classes.header} mb={120}>
       <div className={classes.inner}>
-        <Group className={classes.title}>
-          <Title
-            onClick={() => {
-              router.push("/");
-            }}
-            style={{
-              cursor: "pointer",
-            }}
-            styles={(theme) => ({
-              color:
-                theme.colorScheme === "dark"
-                  ? theme.colors.white[0]
-                  : theme.colors.gray[0],
-            })}
-          >
-            DreamBG
-          </Title>
-        </Group>
-        <Group className={classes.icon}>
-          <ActionIcon
-            onClick={() => {
-              router.push("/");
-            }}
-          >
-            <Image src="/favicon.ico" alt="DreamBG" />
-          </ActionIcon>
-        </Group>
+        <ActionIcon
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          <Image src="/favicon.ico" alt="DreamBG" />
+        </ActionIcon>
         <Autocomplete
           className={classes.search}
           placeholder="Search"
@@ -181,67 +166,42 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
             }
           }}
         />
-        <Group>
-          <Group ml={50} spacing={5} className={classes.links}>
-            {items}
-            {!user && (
-              <Link
-                style={{
-                  fontWeight: "bold",
-                }}
-                className={classes.link}
-                href="/login"
-              >
-                {" "}
-                Login{" "}
-              </Link>
-            )}
-          </Group>
-          {user && (
-            <Menu shadow="md" opened={burgerOpen} onChange={setBurgerOpen}>
-              <Menu.Target>
-                <Burger
-                  opened={burgerOpen}
-                  onClick={() => {
-                    setBurgerOpen(!burgerOpen);
-                  }}
-                />
-              </Menu.Target>
 
-              <Menu.Dropdown>
-                <Menu.Label>{profile?.username || user?.email}</Menu.Label>
-                <Menu.Item
-                  onClick={() => {
-                    router.push("/saved");
-                  }}
-                  icon={<IconDeviceFloppy size={14} />}
-                >
-                  Saved Images
-                </Menu.Item>
-                <Menu.Item
-                  onClick={() => {
-                    router.push("/settings");
-                  }}
-                  icon={<IconSettings size={14} />}
-                >
-                  Settings
-                </Menu.Item>
-                <Menu.Item onClick={logOutUser} icon={<IconLogout size={14} />}>
-                  Log Out
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          )}
-          {colorScheme === "dark" ? (
-            <ActionIcon onClick={setLightMode} className={classes.darkmode}>
-              <IconSun size={20} />
+        <Menu shadow="md" width={300}>
+          <Menu.Target>
+            <ActionIcon>
+              <IconMenu2/>
             </ActionIcon>
-          ) : (
-            <ActionIcon onClick={setDarkMode} className={classes.darkmode}>
-              <IconMoon />
-            </ActionIcon>
-          )}
-        </Group>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Label>DreamBG</Menu.Label>
+            
+            <Menu.Item icon={colorScheme === "dark" ? <IconSun/> : <IconMoon />} onClick={toggleColorScheme}>Toggle Theme</Menu.Item>
+            { !user && <Menu.Item
+            icon={<IconLogin/>}
+            onClick={() => {
+              router.push("/login");
+              }}>Sign In / Sign Up</Menu.Item>}
+
+            {user && <Menu.Item
+            icon={<IconDeviceFloppy/>}
+            onClick={() => {
+              router.push("/saved");
+              }}>Saved Images</Menu.Item>}
+
+            {user && <Menu.Item
+            icon={<IconSettings/>}
+            onClick={() => {
+              router.push("/settings");
+              }}>Settings</Menu.Item>}
+
+            {user && <Menu.Item
+            icon={<IconLogout/>}
+            onClick={logOutUser}>Log Out</Menu.Item>}
+          
+          </Menu.Dropdown>
+        </Menu>
       </div>
     </Header>
   );

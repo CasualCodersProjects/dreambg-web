@@ -6,7 +6,9 @@ import {
   Group,
   Stack,
   TextInput,
+  Tooltip
 } from "@mantine/core";
+import { TooltipFloating } from "@mantine/core/lib/Tooltip/TooltipFloating/TooltipFloating";
 import { useClipboard } from "@mantine/hooks";
 import { openModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
@@ -62,17 +64,18 @@ const ShareButton = () => {
   );
 
   return (
-    <Button
+    <Tooltip label="Share Image">
+      <ActionIcon
       onClick={() => {
         openModal({
           title: "Share",
           children: ModalContent,
         });
       }}
-      leftIcon={<IconShare size={18} />}
-    >
-      Share
-    </Button>
+      >
+        <IconShare/>
+      </ActionIcon>
+    </Tooltip>
   );
 };
 
