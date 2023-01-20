@@ -32,10 +32,7 @@ export default function Search() {
       return images.map((image, i) => {
         return (
           <div key={i}>
-            <ImageCard
-              imageURL={createImageURL("ai-images", image?.link as string)}
-              href={`/image/${image.uuid}`}
-            />
+            <ImageCard id={image.uuid as string} />
           </div>
         );
       });

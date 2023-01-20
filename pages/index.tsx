@@ -32,10 +32,9 @@ export default function Home() {
     if (images) {
       return images.map((image, i) => {
         if (!image) return null;
-        const vertical = image.height > image.width;
         return (
           <div key={i}>
-            <ImageCard vertical={vertical} id={image.image as string} />
+            <ImageCard id={image.image as string} />
           </div>
         );
       });
