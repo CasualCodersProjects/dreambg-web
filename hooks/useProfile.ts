@@ -4,7 +4,7 @@ import useSWR from "swr";
 
 export const useProfile = (user_id: string | undefined) => {
   const supabase = useSupabaseClient();
-  const { data, error } = useSWR([user_id], ([user_id]) =>
+  const { data, error } = useSWR([user_id, 'profile'], ([user_id]) =>
     profileFetcher(supabase, user_id)
   );
 

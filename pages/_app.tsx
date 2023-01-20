@@ -27,8 +27,6 @@ const footerProps = {
   twitterLink: "https://twitter.com/casualcoders",
 };
 
-const navLinks: any = [];
-
 export default function App({ Component, pageProps }: AppProps) {
   const [colorScheme, setColorScheme] = useLocalStorage({
     key: "color-scheme",
@@ -72,7 +70,6 @@ export default function App({ Component, pageProps }: AppProps) {
                 <NavBar
                   colorScheme={colorScheme}
                   setColorScheme={setColorScheme}
-                  links={navLinks}
                 />
               }
               footer={<Footer {...footerProps} />}

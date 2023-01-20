@@ -29,6 +29,8 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { showNotification } from "@mantine/notifications";
 import { useRandomTags } from "@/hooks/useTags";
 import { useProfile } from "@/hooks/useProfile";
+import { useAsync } from "react-use";
+import { useCustomer } from "@/hooks/useCustomer";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -97,12 +99,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface NavBarProps {
-  links: Array<{ link: string; label: string }>;
   colorScheme: string;
   setColorScheme: (value: string) => void;
 }
 
-function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
+function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   const [burgerOpen, setBurgerOpen] = useState(false);
   const { classes } = useStyles();
   const router = useRouter();
@@ -110,19 +111,23 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
   const user = useUser();
   const { tags } = useRandomTags(5);
   const { profile } = useProfile(user?.id);
+  const { customer } = useCustomer(user?.id);
 
-  const items = links.map((link) => (
-    <Link
-      style={{
-        fontWeight: "bold",
-      }}
-      key={link.label}
-      href={link.link}
-      className={classes.link}
-    >
-      {link.label}
-    </Link>
-  ));
+  useAsync(async () => {
+    if (!profile && user) {
+      // create a new profile
+      await supabase
+        .from("profiles")
+        .insert([{ id: user.id, username: user.email }]);
+    }
+  }, [profile, user]);
+
+  useAsync(async () => {
+    if (!customer && user) {
+      // create a new customer
+      await supabase.functions.invoke("new-customer");
+    }
+  }, [customer, user]);
 
   const logOutUser = async () => {
     const { error } = await supabase.auth.signOut();
@@ -142,6 +147,10 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
     } else {
       setColorScheme("dark");
     }
+  };
+
+  const toggleOpen = () => {
+    setBurgerOpen(!burgerOpen);
   };
 
   return (
@@ -166,11 +175,14 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
           }}
         />
 
-        <Menu shadow="md" width={300}>
+        <Menu
+          shadow="md"
+          width={300}
+          opened={burgerOpen}
+          onChange={setBurgerOpen}
+        >
           <Menu.Target>
-            <ActionIcon>
-              <IconMenu2 />
-            </ActionIcon>
+            <Burger onClick={toggleOpen} opened={burgerOpen} />
           </Menu.Target>
 
           <Menu.Dropdown>
