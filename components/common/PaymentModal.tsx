@@ -1,12 +1,18 @@
-import { useState, useEffect } from "react";
-import { ActionIcon, Button, Center, Group, Stack, TextInput, Tooltip } from "@mantine/core";
+import { useEffect, useState } from "react";
+import {
+  ActionIcon,
+  Button,
+  Center,
+  Group,
+  Stack,
+  TextInput,
+  Tooltip,
+} from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
 import { openModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 
 const PaymentModal = ({ id }: any) => {
-
-
   const [location, setLocation] = useState<any>(null);
   const clipboard = useClipboard();
 
@@ -33,12 +39,16 @@ const PaymentModal = ({ id }: any) => {
     <div>
       <h1>Payment Modal</h1>
       <Tooltip label="Dreambg Pro">
-        <Button onClick={() => {
+        <Button
+          onClick={() => {
             openModal({
               title: "Share",
               children: ModalContent,
             });
-          }}>Open payment</Button>
+          }}
+        >
+          Open payment
+        </Button>
       </Tooltip>
     </div>
   );

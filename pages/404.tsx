@@ -1,10 +1,10 @@
 import {
-  createStyles,
-  Title,
-  Text,
   Button,
   Container,
+  createStyles,
   Group,
+  Text,
+  Title,
 } from "@mantine/core";
 import { useRouter } from "next/router";
 

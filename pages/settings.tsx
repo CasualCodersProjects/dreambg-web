@@ -1,12 +1,12 @@
 import Head from "next/head";
 import {
-  Center,
-  Title,
-  Stack,
-  Button,
-  TextInput,
   Avatar,
+  Button,
+  Center,
   Loader,
+  Stack,
+  TextInput,
+  Title,
 } from "@mantine/core";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import emailToGravatar from "@/utils/emailToGravatar";

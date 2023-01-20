@@ -3,7 +3,6 @@ import { Center, SimpleGrid, Stack } from "@mantine/core";
 import PaymentModal from "../components/common/PaymentModal";
 
 export default function Home() {
-
   return (
     <div>
       <Head>
@@ -17,6 +16,4 @@ export default function Home() {
       </Center>
     </div>
   );
-
 }
-

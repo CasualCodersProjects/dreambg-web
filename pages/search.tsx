@@ -1,11 +1,11 @@
 import { useSearch } from "@/hooks/useSearch";
 import ImageCard from "@/components/common/ImageCard";
 import {
+  Button,
   Center,
+  Loader,
   SimpleGrid,
   Stack,
-  Loader,
-  Button,
   Title,
 } from "@mantine/core";
 import Head from "next/head";

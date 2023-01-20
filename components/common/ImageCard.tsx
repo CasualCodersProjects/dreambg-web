@@ -1,10 +1,10 @@
 import {
   ActionIcon,
   Card,
+  Center,
   Group,
   Image,
   Text,
-  Center,
   Tooltip,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
@@ -21,7 +21,7 @@ import { useRouter } from "next/router";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useImage } from "@/hooks/useImages";
 import { useSavedImage } from "@/hooks/useSavedImages";
-import { useUserLiked, useLikes } from "@/hooks/useLikes";
+import { useLikes, useUserLiked } from "@/hooks/useLikes";
 import { showNotification } from "@mantine/notifications";
 import { createImageURL } from "@/utils/createImageURL";
 import ShareButton from "./ShareButton";

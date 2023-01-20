@@ -1,8 +1,10 @@
-import { Database } from '@/types/database.types';
+import { Database } from "@/types/database.types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-export async function profileFetcher(supabase: SupabaseClient<Database>, user_id: string | undefined) {
-  
+export async function profileFetcher(
+  supabase: SupabaseClient<Database>,
+  user_id: string | undefined
+) {
   if (!user_id) {
     return {
       id: null,

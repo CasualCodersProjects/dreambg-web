@@ -1,27 +1,27 @@
 import {
-  createStyles,
-  Header,
-  Group,
-  Title,
-  Menu,
   ActionIcon,
   Autocomplete,
   Burger,
+  createStyles,
+  Group,
+  Header,
   Image,
-  Text
+  Menu,
+  Text,
+  Title,
 } from "@mantine/core";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import {
-  IconLogout,
-  IconSettings,
-  IconSearch,
-  IconSun,
-  IconLogin,
-  IconMoon,
+  IconAdjustments,
   IconDeviceFloppy,
+  IconLogin,
+  IconLogout,
   IconMenu2,
-  IconAdjustments
+  IconMoon,
+  IconSearch,
+  IconSettings,
+  IconSun,
 } from "@tabler/icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -139,8 +139,7 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
   const toggleColorScheme = () => {
     if (colorScheme == "dark") {
       setColorScheme("light");
-    }
-    else{
+    } else {
       setColorScheme("dark");
     }
   };
@@ -170,36 +169,57 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
         <Menu shadow="md" width={300}>
           <Menu.Target>
             <ActionIcon>
-              <IconMenu2/>
+              <IconMenu2 />
             </ActionIcon>
           </Menu.Target>
 
           <Menu.Dropdown>
             <Menu.Label>DreamBG</Menu.Label>
-            
-            <Menu.Item icon={colorScheme === "dark" ? <IconSun/> : <IconMoon />} onClick={toggleColorScheme}>Toggle Theme</Menu.Item>
-            { !user && <Menu.Item
-            icon={<IconLogin/>}
-            onClick={() => {
-              router.push("/login");
-              }}>Sign In / Sign Up</Menu.Item>}
 
-            {user && <Menu.Item
-            icon={<IconDeviceFloppy/>}
-            onClick={() => {
-              router.push("/saved");
-              }}>Saved Images</Menu.Item>}
+            <Menu.Item
+              icon={colorScheme === "dark" ? <IconSun /> : <IconMoon />}
+              onClick={toggleColorScheme}
+            >
+              Toggle Theme
+            </Menu.Item>
+            {!user && (
+              <Menu.Item
+                icon={<IconLogin />}
+                onClick={() => {
+                  router.push("/login");
+                }}
+              >
+                Sign In / Sign Up
+              </Menu.Item>
+            )}
 
-            {user && <Menu.Item
-            icon={<IconSettings/>}
-            onClick={() => {
-              router.push("/settings");
-              }}>Settings</Menu.Item>}
+            {user && (
+              <Menu.Item
+                icon={<IconDeviceFloppy />}
+                onClick={() => {
+                  router.push("/saved");
+                }}
+              >
+                Saved Images
+              </Menu.Item>
+            )}
 
-            {user && <Menu.Item
-            icon={<IconLogout/>}
-            onClick={logOutUser}>Log Out</Menu.Item>}
-          
+            {user && (
+              <Menu.Item
+                icon={<IconSettings />}
+                onClick={() => {
+                  router.push("/settings");
+                }}
+              >
+                Settings
+              </Menu.Item>
+            )}
+
+            {user && (
+              <Menu.Item icon={<IconLogout />} onClick={logOutUser}>
+                Log Out
+              </Menu.Item>
+            )}
           </Menu.Dropdown>
         </Menu>
       </div>
