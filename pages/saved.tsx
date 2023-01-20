@@ -30,10 +30,7 @@ export default function Saved() {
       return images.map((image: any, i: number) => {
         return (
           <div key={i}>
-            <ImageCard
-              imageURL={createImageURL("ai-images", image.link || "")}
-              href={`/image/${image.uuid}`}
-            />
+            <ImageCard id={image.uuid as string} />
           </div>
         );
       });
