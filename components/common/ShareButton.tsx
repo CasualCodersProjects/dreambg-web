@@ -33,7 +33,9 @@ const ShareButton = ({ id }: ShareButtonProps) => {
       <Stack>
         <TextInput
           onClick={() => {
-            clipboard.copy(location?.href);
+            clipboard.copy(
+              id ? `${location?.origin}/image/${id}` : location?.href
+            );
             showNotification({
               title: "Link copied",
               message: "The link has been copied to your clipboard.",
