@@ -1,4 +1,4 @@
-import { redditShareLink, twitterShareLink } from "@/utils/share";
+import { useState, useEffect } from "react";
 import {
   ActionIcon,
   Button,
@@ -8,28 +8,39 @@ import {
   TextInput,
   Tooltip,
 } from "@mantine/core";
-import { TooltipFloating } from "@mantine/core/lib/Tooltip/TooltipFloating/TooltipFloating";
 import { useClipboard } from "@mantine/hooks";
 import { openModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { IconBrandReddit, IconBrandTwitter, IconShare } from "@tabler/icons";
+import { redditShareLink, twitterShareLink } from "@/utils/share";
 
-const ShareButton = () => {
+interface ShareButtonProps {
+  id?: string;
+}
+
+const ShareButton = ({ id }: ShareButtonProps) => {
+  const [location, setLocation] = useState<any>(null);
   const clipboard = useClipboard();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setLocation(window?.location);
+    }
+  }, [location]);
 
   const ModalContent = (
     <>
       <Stack>
         <TextInput
           onClick={() => {
-            clipboard.copy(window?.location.href);
+            clipboard.copy(location?.href);
             showNotification({
               title: "Link copied",
               message: "The link has been copied to your clipboard.",
             });
           }}
           label={"Click to copy link"}
-          value={window?.location.href}
+          value={id ? `${location?.origin}/image/${id}` : location?.href}
         />
 
         <Center>
@@ -37,7 +48,7 @@ const ShareButton = () => {
             <Button
               component="a"
               href={twitterShareLink(
-                `Check out this DreamBG image! ${window?.location.href}`
+                `Check out this DreamBG image! ${location?.href}`
               )}
               target="_blank"
               leftIcon={<IconBrandTwitter size={18} />}
@@ -51,7 +62,7 @@ const ShareButton = () => {
               component="a"
               target="_blank"
               href={redditShareLink(
-                window?.location.href,
+                location?.href,
                 "Check out this DreamBG image"
               )}
             >

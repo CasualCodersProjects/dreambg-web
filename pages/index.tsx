@@ -35,11 +35,7 @@ export default function Home() {
         const vertical = image.height > image.width;
         return (
           <div key={i}>
-            <ImageCard
-              vertical={vertical}
-              imageURL={createImageURL("ai-images", image.link)}
-              href={`/image/${image.image}`}
-            />
+            <ImageCard vertical={vertical} id={image.image as string} />
           </div>
         );
       });
