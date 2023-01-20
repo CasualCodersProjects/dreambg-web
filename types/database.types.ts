@@ -138,18 +138,24 @@ export interface Database {
       profiles: {
         Row: {
           id: string
+          stripe_customer_id: string | null
+          subscription: string | null
           updated_at: string | null
           username: string | null
           website: string | null
         }
         Insert: {
           id: string
+          stripe_customer_id?: string | null
+          subscription?: string | null
           updated_at?: string | null
           username?: string | null
           website?: string | null
         }
         Update: {
           id?: string
+          stripe_customer_id?: string | null
+          subscription?: string | null
           updated_at?: string | null
           username?: string | null
           website?: string | null

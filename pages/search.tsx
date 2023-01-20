@@ -1,17 +1,10 @@
 import { useSearch } from "@/hooks/useSearch";
 import ImageCard from "@/components/common/ImageCard";
-import {
-  Button,
-  Center,
-  Loader,
-  SimpleGrid,
-  Stack,
-  Title,
-} from "@mantine/core";
+import { Center, SimpleGrid, Stack, Button, Title } from "@mantine/core";
 import Head from "next/head";
-import { createImageURL } from "@/utils/createImageURL";
 import { useState } from "react";
 import { useSearchParam } from "react-use";
+import genLoaders from "@/utils/genLoaders";
 
 export default function Search() {
   const [page, setPage] = useState(0);
@@ -38,7 +31,7 @@ export default function Search() {
       });
     }
 
-    return <Loader />;
+    return genLoaders(24);
   };
 
   return (

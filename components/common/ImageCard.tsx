@@ -6,6 +6,9 @@ import {
   Image,
   Text,
   Tooltip,
+  Menu,
+  Badge,
+  ThemeIcon,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import { useState } from "react";
@@ -14,6 +17,8 @@ import {
   IconArrowBigTop,
   IconDeviceFloppy,
   IconDownload,
+  IconPhoto,
+  IconPhotoPlus,
   IconTrash,
 } from "@tabler/icons";
 import abbrNum from "@/utils/abbrNumber";
@@ -41,6 +46,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
   const { hovered, ref } = useHover();
   const [loadingSaved, setLoadingSaved] = useState<boolean>(false);
   const [loadingLiked, setLoadingLiked] = useState<boolean>(false);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const router = useRouter();
   const supabase = useSupabaseClient();
   const user = useUser();
@@ -49,11 +55,13 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
   const { liked, mutate: mutateLike } = useUserLiked(id as string);
   const { likes, mutate: mutateLikes } = useLikes(id as string);
 
+  const imageLink720p = createImageURL("ai-images", image?.link as string);
+
   const hoverStyle =
     hovered && !disableHover
       ? {
           ...sx,
-          transform: "scale(1.05)",
+          transform: "scale(1.01)",
         }
       : { ...sx };
 
@@ -157,7 +165,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       <Card.Section>
         <Link href={`/image/${id}`}>
           <Image
-            src={createImageURL("ai-images", image?.link as string)}
+            src={imageLink720p}
             alt={image?.link}
             height={height}
             width={width}
@@ -180,16 +188,53 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
               <IconArrowBigTop />
             </ActionIcon>
           </Tooltip>
-          <Tooltip label="Download">
-            <ActionIcon
-              color="violet"
-              component="a"
-              href={createImageURL("ai-images", image?.link as string)}
-              target="_blank"
-            >
-              <IconDownload />
-            </ActionIcon>
-          </Tooltip>
+          <Menu
+            opened={menuOpen}
+            onChange={setMenuOpen}
+            position="bottom-start"
+          >
+            <Menu.Target>
+              <Tooltip label="Download">
+                <ActionIcon
+                  color="violet"
+                  variant={menuOpen ? "filled" : "subtle"}
+                >
+                  <IconDownload />
+                </ActionIcon>
+              </Tooltip>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Label>Download Image</Menu.Label>
+              <Menu.Item fw={700} icon={<IconPhoto size={14} />}>
+                720p
+              </Menu.Item>
+              <Menu.Item fw={700} icon={<IconPhoto size={14} />}>
+                1080p
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Item fw={700} icon={<IconPhotoPlus size={14} />}>
+                1440p{" "}
+                <Badge
+                  ml="sm"
+                  variant="gradient"
+                  gradient={{ from: "lime", to: "green" }}
+                >
+                  Pro
+                </Badge>
+              </Menu.Item>
+              <Menu.Item fw={700} icon={<IconPhotoPlus size={14} />}>
+                4K{" "}
+                <Badge
+                  ml="sm"
+                  variant="gradient"
+                  gradient={{ from: "lime", to: "green" }}
+                >
+                  Pro
+                </Badge>
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
 
           <Tooltip label={savedImage ? "Unsave image" : "Save Image"}>
             <ActionIcon
