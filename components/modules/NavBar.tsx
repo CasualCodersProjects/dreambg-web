@@ -7,23 +7,19 @@ import {
   Header,
   Image,
   Menu,
-  Text,
   Title,
 } from "@mantine/core";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import {
-  IconAdjustments,
   IconDeviceFloppy,
   IconLogin,
   IconLogout,
-  IconMenu2,
   IconMoon,
   IconSearch,
   IconSettings,
   IconSun,
 } from "@tabler/icons";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { showNotification } from "@mantine/notifications";
@@ -45,16 +41,8 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
   },
 
-  links: {
-    // [theme.fn.smallerThan("md")]: {
-    //   display: "none",
-    // },
-  },
-
-  search: {
-    // [theme.fn.smallerThan("xs")]: {
-    //   display: "none",
-    // },
+  leftHeader: {
+    cursor: "pointer",
   },
 
   title: {
@@ -156,15 +144,18 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   return (
     <Header height={56} className={classes.header} mb={120}>
       <div className={classes.inner}>
-        <ActionIcon
+        <Group
           onClick={() => {
             router.push("/");
           }}
+          className={classes.leftHeader}
         >
-          <Image src="/favicon.ico" alt="DreamBG" />
-        </ActionIcon>
+          <ActionIcon>
+            <Image src="/favicon.ico" alt="DreamBG" />
+          </ActionIcon>
+          <Title className={classes.title}>DreamBG</Title>
+        </Group>
         <Autocomplete
-          className={classes.search}
           placeholder="Search"
           icon={<IconSearch size={16} stroke={1.5} />}
           data={tags}
