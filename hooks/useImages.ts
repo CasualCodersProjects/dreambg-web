@@ -1,18 +1,12 @@
-import {
-  imageFetcher,
-  imagesFetcher,
-  infiniteImagesFetcher,
-} from "@/services/imageFetcher";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import useSWRInfinite from "swr/infinite";
-import useSWR from "swr";
-import { Database } from "@/types/database.types";
+import { downloadImageFetcher, imageFetcher, imagesFetcher, infiniteImagesFetcher } from '@/services/imageFetcher';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import useSWRInfinite from 'swr/infinite';
+import useSWR from 'swr';
+import { Database } from '@/types/database.types';
 
 export const useImage = (uuid: string) => {
-  const supabase = useSupabaseClient();
-  const { data, error } = useSWR([uuid], ([uuid]) =>
-    imageFetcher(supabase, uuid)
-  );
+    const supabase = useSupabaseClient();
+    const { data, error } = useSWR([uuid, 'image'], ([uuid]) => imageFetcher(supabase, uuid));
 
   return {
     image: data,
@@ -39,6 +33,21 @@ export const useImages = (
     isError: !!error,
     error,
   };
+};
+
+export const useDownloadImage = (uuid: string) => {
+    const supabase = useSupabaseClient();
+    // logic here to determine if the user is 
+    // logged in and if they have a subscription
+    // for now we will assume they don't have a subscription
+    const { data, error } = useSWR([uuid, 'download'], ([uuid]) => downloadImageFetcher(supabase, uuid, false));
+
+    return {
+        images: data,
+        isLoading: !error && !data,
+        isError: !!error,
+        error,
+    }
 };
 
 const getKey = (pageIndex: number, previousPageData: any) => {

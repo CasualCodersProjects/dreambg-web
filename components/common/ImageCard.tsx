@@ -24,7 +24,7 @@ import {
 import abbrNum from "@/utils/abbrNumber";
 import { useRouter } from "next/router";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useImage } from "@/hooks/useImages";
+import { useDownloadImage } from "@/hooks/useImages";
 import { useSavedImage } from "@/hooks/useSavedImages";
 import { useLikes, useUserLiked } from "@/hooks/useLikes";
 import { showNotification } from "@mantine/notifications";
@@ -46,16 +46,25 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
   const { hovered, ref } = useHover();
   const [loadingSaved, setLoadingSaved] = useState<boolean>(false);
   const [loadingLiked, setLoadingLiked] = useState<boolean>(false);
+  const [isDownloadingImage, setIsDownloadingImage] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const router = useRouter();
   const supabase = useSupabaseClient();
   const user = useUser();
-  const { image } = useImage(id as string);
+  const { images } = useDownloadImage(id as string);
   const { image: savedImage, mutate } = useSavedImage(id as string);
   const { liked, mutate: mutateLike } = useUserLiked(id as string);
   const { likes, mutate: mutateLikes } = useLikes(id as string);
 
-  const imageLink720p = createImageURL("ai-images", image?.link as string);
+  const imageLink720p = createImageURL(
+    "ai-images",
+    images?.[0]?.link as string
+  );
+
+  const imageLink1080p = createImageURL(
+    "ai-images",
+    images?.[1]?.link as string
+  );
 
   const hoverStyle =
     hovered && !disableHover
@@ -166,7 +175,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
         <Link href={`/image/${id}`}>
           <Image
             src={imageLink720p}
-            alt={image?.link}
+            alt={"image"}
             height={height}
             width={width}
             withPlaceholder
@@ -198,6 +207,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
                 <ActionIcon
                   color="violet"
                   variant={menuOpen ? "filled" : "subtle"}
+                  loading={isDownloadingImage}
                 >
                   <IconDownload />
                 </ActionIcon>
@@ -206,10 +216,26 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
 
             <Menu.Dropdown>
               <Menu.Label>Download Image</Menu.Label>
-              <Menu.Item fw={700} icon={<IconPhoto size={14} />}>
+              <Menu.Item
+                onClick={async () => {
+                  setIsDownloadingImage(true);
+                  await downloadFile(imageLink720p, "720p.jpg");
+                  setIsDownloadingImage(false);
+                }}
+                fw={700}
+                icon={<IconPhoto size={14} />}
+              >
                 720p
               </Menu.Item>
-              <Menu.Item fw={700} icon={<IconPhoto size={14} />}>
+              <Menu.Item
+                onClick={async () => {
+                  setIsDownloadingImage(true);
+                  await downloadFile(imageLink1080p, "1080p.jpg");
+                  setIsDownloadingImage(false);
+                }}
+                fw={700}
+                icon={<IconPhoto size={14} />}
+              >
                 1080p
               </Menu.Item>
               <Menu.Divider />
