@@ -11,10 +11,26 @@ import {
 import { useClipboard } from "@mantine/hooks";
 import { openModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
 
 const PaymentModal = ({ id }: any) => {
   const [location, setLocation] = useState<any>(null);
   const clipboard = useClipboard();
+  const supabase = useSupabaseClient();
+  const router = useRouter();
+
+  const handleClick = async () => {
+    const { data, error } = await supabase.functions.invoke("checkout-customer");
+    if (error) {
+      console.log(error);
+    }
+    if (!data?.url) {
+      alert("Missing checkout url.");
+    }
+    //redirect to checkout session on stripe
+    router.push(data.url)
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -28,7 +44,11 @@ const PaymentModal = ({ id }: any) => {
         <Center>
           <Group>
             <h1>Become a DreamBG Pro Member!</h1>
-            <button>Subscribe</button>
+            {/* <form action="/create-checkout-session" method="POST">
+            <input type="hidden" name="priceId" value="price_G0FvDp6vZvdwRZ" />
+            <button type="submit">Checkout</button>
+          </form> */}
+          <Button  onClick={handleClick}>Checkout</Button>
           </Group>
         </Center>
       </Stack>
@@ -42,7 +62,7 @@ const PaymentModal = ({ id }: any) => {
         <Button
           onClick={() => {
             openModal({
-              title: "Share",
+              title: "Subscribe",
               children: ModalContent,
             });
           }}

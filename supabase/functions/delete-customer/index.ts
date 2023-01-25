@@ -4,6 +4,12 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { stripe } from "../_utils/stripe.ts";
 
 serve(async (req: Request) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", {
+      headers: {...corsHeaders},
+      status: 200
+    })
+  }
   try {
     // Create a Supabase client with the Auth context of the logged in user.
     const supabaseClient = createClient(

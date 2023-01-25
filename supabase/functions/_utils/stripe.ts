@@ -7,3 +7,5 @@ export const stripe = Stripe(Deno.env.get("STRIPE_API_KEY") ?? "", {
   httpClient: Stripe.createFetchHttpClient(),
   apiVersion: "2022-08-01",
 });
+
+export const cryptoProvider = Stripe.createSubtleCryptoProvider();
