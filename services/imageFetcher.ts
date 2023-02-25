@@ -73,11 +73,8 @@ export async function infiniteImagesFetcher(
   return data;
 }
 
-export async function downloadImageFetcher(supabase: SupabaseClient<Database>, uuid: string, premium: boolean = false) {
+export async function downloadImageFetcher(supabase: SupabaseClient<Database>, uuid: string) {
     let or = 'height.eq.1280,width.eq.1280,width.eq.1920,height.eq.1920';
-    if (premium) {
-      or += ',height.eq.2560,width.eq.2560,height.eq.3840,width.eq.3840';
-    }
 
     const { data, error } = await supabase
         .from("image_links")
@@ -87,7 +84,7 @@ export async function downloadImageFetcher(supabase: SupabaseClient<Database>, u
         .or(or)
         .order('height', { ascending: false })
         .order('width', { ascending: false })
-        .limit(4);
+        .limit(2);
 
     if (error) {
         throw error;

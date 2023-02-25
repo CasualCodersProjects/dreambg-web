@@ -63,7 +63,7 @@ export default function App({ Component, pageProps }: AppProps) {
           },
         }}
       >
-        <NotificationsProvider>
+        <NotificationsProvider position="top-center">
           <ModalsProvider>
             <AppShell
               header={

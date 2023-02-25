@@ -9,6 +9,7 @@ import {
   Menu,
   Badge,
   ThemeIcon,
+  Loader,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import { useState } from "react";
@@ -20,16 +21,18 @@ import {
   IconPhoto,
   IconPhotoPlus,
   IconTrash,
+  IconX,
 } from "@tabler/icons";
 import abbrNum from "@/utils/abbrNumber";
 import { useRouter } from "next/router";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useDownloadImage } from "@/hooks/useImages";
+import { useDownloadImage, useImage } from "@/hooks/useImages";
 import { useSavedImage } from "@/hooks/useSavedImages";
 import { useLikes, useUserLiked } from "@/hooks/useLikes";
 import { showNotification } from "@mantine/notifications";
 import { createImageURL } from "@/utils/createImageURL";
 import ShareButton from "./ShareButton";
+import { useActiveCustomer } from "@/hooks/useCustomer";
 
 export interface ImageCardProps {
   id: string;
@@ -39,32 +42,70 @@ export interface ImageCardProps {
   sx?: any;
 }
 
+interface ImagesState {
+  link: string;
+  width: number;
+  height: number;
+}
+
 export const DEFAULT_WIDTH = 356;
 export const DEFAULT_HEIGHT = 200;
 
 const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
+  const { image } = useImage(id);
+  const [images, setImages] = useState<ImagesState[]>([]);
   const { hovered, ref } = useHover();
   const [loadingSaved, setLoadingSaved] = useState<boolean>(false);
   const [loadingLiked, setLoadingLiked] = useState<boolean>(false);
+  const [isLoadingImage, setIsLoadingImage] = useState<boolean>(false);
   const [isDownloadingImage, setIsDownloadingImage] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const router = useRouter();
   const supabase = useSupabaseClient();
   const user = useUser();
-  const { images } = useDownloadImage(id as string);
   const { image: savedImage, mutate } = useSavedImage(id as string);
   const { liked, mutate: mutateLike } = useUserLiked(id as string);
   const { likes, mutate: mutateLikes } = useLikes(id as string);
+  const { active } = useActiveCustomer();
 
-  const imageLink720p = createImageURL(
-    "ai-images",
-    images?.[0]?.link as string
-  );
+  const imageLink720p = createImageURL("ai-images", image?.link as string);
 
   const imageLink1080p = createImageURL(
     "ai-images",
     images?.[1]?.link as string
   );
+
+  const imageLink1440p = createImageURL(
+    "ai-images",
+    images?.[2]?.link as string
+  );
+
+  const imageLink2160p = createImageURL(
+    "ai-images",
+    images?.[3]?.link as string
+  );
+
+  const downloadImage = async (imageLink: string) => {
+    setIsDownloadingImage(true);
+    // if we are gonna add advertisements, we should
+    // add a check here to see if the user is a paid customer
+    // if they are not, we should show a modal with an advertisement
+    // and tell them if they are a member they can download the image with no ads
+
+    // fetch the image
+    const response = await fetch(imageLink);
+    // get the response as a blob
+    const blob = await response.blob();
+    // create an invisible link
+    const link = document.createElement("a");
+    // attach the object to it
+    link.href = URL.createObjectURL(blob);
+    // set the name (we should change this later to be tags but for now its fine)
+    link.download = id + ".jpg";
+    // download the image to their disk
+    link.click();
+    setIsDownloadingImage(false);
+  };
 
   const hoverStyle =
     hovered && !disableHover
@@ -169,6 +210,36 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
     setLoadingSaved(false);
   };
 
+  const getImageDownload = async () => {
+    if (!user) {
+      showNotification({
+        title: "Not Logged In",
+        message: "Please log in to download images. (Its free! 😄 )",
+        color: "yellow",
+      });
+      router.push("/login");
+    }
+    setIsLoadingImage(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("get-images", {
+        body: { uuid: id },
+      });
+      if (error) {
+        throw error;
+      }
+      setImages(data as ImagesState[]);
+    } catch (e) {
+      console.error(e);
+      showNotification({
+        color: "red",
+        title: "Error",
+        icon: <IconX />,
+        message: "There was an error getting the image download.",
+      });
+    }
+    setIsLoadingImage(false);
+  };
+
   return (
     <Card ref={ref} radius="md" sx={hoverStyle}>
       <Card.Section>
@@ -200,6 +271,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
           <Menu
             opened={menuOpen}
             onChange={setMenuOpen}
+            onOpen={getImageDownload}
             position="bottom-start"
           >
             <Menu.Target>
@@ -208,6 +280,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
                   color="violet"
                   variant={menuOpen ? "filled" : "subtle"}
                   loading={isDownloadingImage}
+                  disabled={isDownloadingImage}
                 >
                   <IconDownload />
                 </ActionIcon>
@@ -217,27 +290,46 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
             <Menu.Dropdown>
               <Menu.Label>Download Image</Menu.Label>
               <Menu.Item
-                component="a"
-                download
-                target="_blank"
-                href={imageLink720p}
+                disabled={isLoadingImage}
                 fw={700}
-                icon={<IconPhoto size={14} />}
+                onClick={() => downloadImage(imageLink720p)}
+                icon={
+                  isLoadingImage ? (
+                    <Loader color="pink" size="xs" />
+                  ) : (
+                    <IconPhoto size={14} />
+                  )
+                }
               >
                 720p
               </Menu.Item>
               <Menu.Item
-                component="a"
-                download
-                target="_blank"
-                href={imageLink1080p}
+                onClick={() => downloadImage(imageLink1080p)}
+                disabled={isLoadingImage}
                 fw={700}
-                icon={<IconPhoto size={14} />}
+                icon={
+                  isLoadingImage ? (
+                    <Loader color="pink" size="xs" />
+                  ) : (
+                    <IconPhoto size={14} />
+                  )
+                }
               >
                 1080p
               </Menu.Item>
               <Menu.Divider />
-              <Menu.Item disabled fw={700} icon={<IconPhotoPlus size={14} />}>
+              <Menu.Item
+                onClick={() => downloadImage(imageLink1440p)}
+                disabled={!active || isLoadingImage}
+                fw={700}
+                icon={
+                  isLoadingImage ? (
+                    <Loader color="pink" size="xs" />
+                  ) : (
+                    <IconPhoto size={14} />
+                  )
+                }
+              >
                 1440p{" "}
                 <Badge
                   ml="sm"
@@ -247,7 +339,18 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
                   Pro
                 </Badge>
               </Menu.Item>
-              <Menu.Item disabled fw={700} icon={<IconPhotoPlus size={14} />}>
+              <Menu.Item
+                onClick={() => downloadImage(imageLink2160p)}
+                disabled={!active || isLoadingImage}
+                fw={700}
+                icon={
+                  isLoadingImage ? (
+                    <Loader color="pink" size="xs" />
+                  ) : (
+                    <IconPhoto size={14} />
+                  )
+                }
+              >
                 4K{" "}
                 <Badge
                   ml="sm"

@@ -1,3 +1,4 @@
+import { useActiveCustomer } from '@/hooks/useCustomer';
 import { downloadImageFetcher, imageFetcher, imagesFetcher, infiniteImagesFetcher } from '@/services/imageFetcher';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSWRInfinite from 'swr/infinite';
@@ -37,10 +38,7 @@ export const useImages = (
 
 export const useDownloadImage = (uuid: string) => {
     const supabase = useSupabaseClient();
-    // logic here to determine if the user is 
-    // logged in and if they have a subscription
-    // for now we will assume they don't have a subscription
-    const { data, error } = useSWR([uuid, 'download'], ([uuid]) => downloadImageFetcher(supabase, uuid, false));
+    const { data, error } = useSWR([uuid, 'download'], ([uuid]) => downloadImageFetcher(supabase, uuid));
 
     return {
         images: data,

@@ -1,0 +1,48 @@
+default:
+  just --list --unsorted
+
+new name:
+  supabase functions new {{name}}
+
+deploy name:
+  #!/bin/bash
+  name="{{name}}"
+  if [[ $name =~ "stripe" ]]; then
+    echo "Skipping JWT verification for $name"
+    supabase functions deploy "$name" --no-verify-jwt
+  else
+    supabase functions deploy "$name"
+  fi
+
+deploy-all:
+  #!/bin/bash
+  for dir in $(find functions -mindepth 1 -maxdepth 1 -type d -not -name '.*' -not -name '_*')
+  do
+    dir_name=$(basename "$dir")
+    if [[ $dir_name =~ "stripe" ]]; then
+      echo "Skipping JWT verification for $dir_name"
+      supabase functions deploy "$dir_name" --no-verify-jwt
+    else
+      supabase functions deploy "$dir_name"
+    fi
+  done
+
+rm name:
+  supabase functions delete {{name}}
+
+delete name:
+  supabase functions delete {{name}}
+
+serve name:
+  supabase functions serve {{name}}
+
+download name:
+  supabase functions download 
+
+download-all:
+  #!/bin/bash
+  for dir in $(find functions -mindepth 1 -maxdepth 1 -type d -not -name '.*' -not -name '_*')
+  do
+      dir_name=$(basename "$dir")
+      supabase functions download "$dir_name"
+  done

@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "fmt": "prettier --write .",
-    "gen-db-types": "supabase gen types typescript --project-id zvzfhpnaemagutabottd > types/database.types.ts",
-    "deploy-webhooks": "supabase functions deploy stripe-webhooks --project-id zvzfhpnaemagutabottd "
+    "gen-db-types": "supabase gen types typescript --project-id zvzfhpnaemagutabottd > types/database.types.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.245.0",
