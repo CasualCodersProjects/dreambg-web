@@ -112,6 +112,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       ? {
           ...sx,
           transform: "scale(1.01)",
+          transition: "transform 125ms ease",
         }
       : { ...sx };
 
