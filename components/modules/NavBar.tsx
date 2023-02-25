@@ -1,34 +1,31 @@
 import {
-  createStyles,
-  Header,
-  Group,
-  Title,
-  Menu,
   ActionIcon,
   Autocomplete,
   Burger,
+  createStyles,
+  Group,
+  Header,
   Image,
-  Text
+  Menu,
+  Title,
 } from "@mantine/core";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import {
-  IconLogout,
-  IconSettings,
-  IconSearch,
-  IconSun,
-  IconLogin,
-  IconMoon,
   IconDeviceFloppy,
-  IconMenu2,
-  IconAdjustments
+  IconLogin,
+  IconLogout,
+  IconMoon,
+  IconSearch,
+  IconSettings,
+  IconSun,
 } from "@tabler/icons";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { showNotification } from "@mantine/notifications";
 import { useRandomTags } from "@/hooks/useTags";
 import { useProfile } from "@/hooks/useProfile";
+import { useAsync } from "react-use";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -43,16 +40,8 @@ const useStyles = createStyles((theme) => ({
     alignItems: "center",
   },
 
-  links: {
-    // [theme.fn.smallerThan("md")]: {
-    //   display: "none",
-    // },
-  },
-
-  search: {
-    // [theme.fn.smallerThan("xs")]: {
-    //   display: "none",
-    // },
+  leftHeader: {
+    cursor: "pointer",
   },
 
   title: {
@@ -97,12 +86,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface NavBarProps {
-  links: Array<{ link: string; label: string }>;
   colorScheme: string;
   setColorScheme: (value: string) => void;
 }
 
-function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
+function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   const [burgerOpen, setBurgerOpen] = useState(false);
   const { classes } = useStyles();
   const router = useRouter();
@@ -111,18 +99,14 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
   const { tags } = useRandomTags(5);
   const { profile } = useProfile(user?.id);
 
-  const items = links.map((link) => (
-    <Link
-      style={{
-        fontWeight: "bold",
-      }}
-      key={link.label}
-      href={link.link}
-      className={classes.link}
-    >
-      {link.label}
-    </Link>
-  ));
+  useAsync(async () => {
+    if (!profile && user) {
+      // create a new profile
+      await supabase
+        .from("profiles")
+        .insert([{ id: user.id, username: user.email }]);
+    }
+  }, [profile, user]);
 
   const logOutUser = async () => {
     const { error } = await supabase.auth.signOut();
@@ -139,24 +123,30 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
   const toggleColorScheme = () => {
     if (colorScheme == "dark") {
       setColorScheme("light");
-    }
-    else{
+    } else {
       setColorScheme("dark");
     }
+  };
+
+  const toggleOpen = () => {
+    setBurgerOpen(!burgerOpen);
   };
 
   return (
     <Header height={56} className={classes.header} mb={120}>
       <div className={classes.inner}>
-        <ActionIcon
+        <Group
           onClick={() => {
             router.push("/");
           }}
+          className={classes.leftHeader}
         >
-          <Image src="/favicon.ico" alt="DreamBG" />
-        </ActionIcon>
+          <ActionIcon>
+            <Image src="/favicon.ico" alt="DreamBG" />
+          </ActionIcon>
+          <Title className={classes.title}>DreamBG</Title>
+        </Group>
         <Autocomplete
-          className={classes.search}
           placeholder="Search"
           icon={<IconSearch size={16} stroke={1.5} />}
           data={tags}
@@ -167,39 +157,63 @@ function NavBar({ links, colorScheme, setColorScheme }: NavBarProps) {
           }}
         />
 
-        <Menu shadow="md" width={300}>
+        <Menu
+          shadow="md"
+          width={300}
+          opened={burgerOpen}
+          onChange={setBurgerOpen}
+        >
           <Menu.Target>
-            <ActionIcon>
-              <IconMenu2/>
-            </ActionIcon>
+            <Burger onClick={toggleOpen} opened={burgerOpen} />
           </Menu.Target>
 
           <Menu.Dropdown>
             <Menu.Label>DreamBG</Menu.Label>
-            
-            <Menu.Item icon={colorScheme === "dark" ? <IconSun/> : <IconMoon />} onClick={toggleColorScheme}>Toggle Theme</Menu.Item>
-            { !user && <Menu.Item
-            icon={<IconLogin/>}
-            onClick={() => {
-              router.push("/login");
-              }}>Sign In / Sign Up</Menu.Item>}
 
-            {user && <Menu.Item
-            icon={<IconDeviceFloppy/>}
-            onClick={() => {
-              router.push("/saved");
-              }}>Saved Images</Menu.Item>}
+            <Menu.Item
+              icon={colorScheme === "dark" ? <IconSun /> : <IconMoon />}
+              onClick={toggleColorScheme}
+            >
+              Toggle Theme
+            </Menu.Item>
+            {!user && (
+              <Menu.Item
+                icon={<IconLogin />}
+                onClick={() => {
+                  router.push("/login");
+                }}
+              >
+                Sign In / Sign Up
+              </Menu.Item>
+            )}
 
-            {user && <Menu.Item
-            icon={<IconSettings/>}
-            onClick={() => {
-              router.push("/settings");
-              }}>Settings</Menu.Item>}
+            {user && (
+              <Menu.Item
+                icon={<IconDeviceFloppy />}
+                onClick={() => {
+                  router.push("/saved");
+                }}
+              >
+                Saved Images
+              </Menu.Item>
+            )}
 
-            {user && <Menu.Item
-            icon={<IconLogout/>}
-            onClick={logOutUser}>Log Out</Menu.Item>}
-          
+            {user && (
+              <Menu.Item
+                icon={<IconSettings />}
+                onClick={() => {
+                  router.push("/settings");
+                }}
+              >
+                Settings
+              </Menu.Item>
+            )}
+
+            {user && (
+              <Menu.Item icon={<IconLogout />} onClick={logOutUser}>
+                Log Out
+              </Menu.Item>
+            )}
           </Menu.Dropdown>
         </Menu>
       </div>

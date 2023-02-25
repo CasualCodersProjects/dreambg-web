@@ -1,4 +1,4 @@
-import { Paper, createStyles } from "@mantine/core";
+import { createStyles, Paper } from "@mantine/core";
 import { useEffect } from "react";
 import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 

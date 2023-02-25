@@ -9,6 +9,32 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      customers: {
+        Row: {
+          email: string
+          id: number
+          last_paid: string
+          stripe_id: string
+          subscribed_on: string | null
+          subscription: string
+        }
+        Insert: {
+          email: string
+          id?: number
+          last_paid?: string
+          stripe_id: string
+          subscribed_on?: string | null
+          subscription?: string
+        }
+        Update: {
+          email?: string
+          id?: number
+          last_paid?: string
+          stripe_id?: string
+          subscribed_on?: string | null
+          subscription?: string
+        }
+      }
       descriptions: {
         Row: {
           description: string
@@ -261,6 +287,9 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
       [_ in never]: never
     }
   }

@@ -1,7 +1,11 @@
 import { Database } from "@/types/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
 
-export async function userLikedFetcher(supabaseClient: SupabaseClient<Database>, user_id: string | undefined, image_id: string) {
+export async function userLikedFetcher(
+  supabaseClient: SupabaseClient<Database>,
+  user_id: string | undefined,
+  image_id: string
+) {
   if (!user_id) {
     return null;
   }
@@ -25,7 +29,10 @@ export async function userLikedFetcher(supabaseClient: SupabaseClient<Database>,
   return !!data.length;
 }
 
-export async function likeCountFetcher(supabaseClient: SupabaseClient<Database>, image_id: string) {
+export async function likeCountFetcher(
+  supabaseClient: SupabaseClient<Database>,
+  image_id: string
+) {
   const { data, error } = await supabaseClient
     .from("likes_count")
     .select("*")

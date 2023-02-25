@@ -1,4 +1,4 @@
-import { Paper, createStyles, Skeleton } from "@mantine/core";
+import { createStyles, Paper, Skeleton } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({

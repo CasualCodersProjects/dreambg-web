@@ -1,7 +1,11 @@
 import { Database } from "@/types/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
 
-export async function savedImageFetcher(supabaseClient: SupabaseClient<Database>, uuid: string, user_id: string | undefined) {
+export async function savedImageFetcher(
+  supabaseClient: SupabaseClient<Database>,
+  uuid: string,
+  user_id: string | undefined
+) {
   const { data, error } = await supabaseClient
     .from("user_saved_images")
     .select("*")
@@ -18,11 +22,14 @@ export async function savedImageFetcher(supabaseClient: SupabaseClient<Database>
   if (!data) {
     return null;
   }
-    
+
   return data?.[0];
 }
 
-export async function savedImagesFetcher(supabaseClient: SupabaseClient<Database>, user_id: string | undefined) {
+export async function savedImagesFetcher(
+  supabaseClient: SupabaseClient<Database>,
+  user_id: string | undefined
+) {
   if (!user_id) {
     return null;
   }
@@ -39,6 +46,6 @@ export async function savedImagesFetcher(supabaseClient: SupabaseClient<Database
   if (!data) {
     return null;
   }
-    
+
   return data;
 }

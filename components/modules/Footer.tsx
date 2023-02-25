@@ -1,8 +1,8 @@
-import { createStyles, Anchor, Group, ActionIcon, Title } from "@mantine/core";
+import { ActionIcon, Anchor, createStyles, Group, Title } from "@mantine/core";
 import {
+  IconBrandInstagram,
   IconBrandTwitter,
   IconBrandYoutube,
-  IconBrandInstagram,
 } from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
