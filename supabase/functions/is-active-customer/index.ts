@@ -58,14 +58,10 @@ serve(async (req: Request) => {
     if (customers.length > 0) {
       // check to see if their subscription is active
       // if their last paid was greater than 31 days ago, they are not active
-      const { last_paid } = customers[0];
-      const lastPaid = new Date(last_paid);
+      const { expire_date } = customers[0];
+      const expireDate = new Date(expire_date);
       const now = new Date();
-      const diff = now.getTime() - lastPaid.getTime();
-      const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
-      if (diffDays <= 31) {
-        isActive = true;
-      }
+      isActive = expireDate >= now;
     }
 
     return new Response(JSON.stringify({ active: isActive }), {

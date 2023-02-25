@@ -17,15 +17,19 @@ import { useEffect, useState } from "react";
 import { useAsync } from "react-use";
 import { useRouter } from "next/router";
 import { showNotification } from "@mantine/notifications";
+import { Database } from "@/types/database.types";
+import { useActiveCustomer } from "@/hooks/useCustomer";
+import PaymentModal from "../components/common/PaymentModal";
 
 export default function Settings() {
-  const supabase = useSupabaseClient();
+  const supabase = useSupabaseClient<Database>();
   const [loading, setLoading] = useState<boolean>(false);
   const [displayName, setDisplayName] = useDebouncedState("", 500);
   const [website, setWebsite] = useDebouncedState("", 500);
   const user = useUser();
   const { profile } = useProfile(user?.id);
   const router = useRouter();
+  const { active } = useActiveCustomer();
 
   console.log({ profile });
 
@@ -41,7 +45,8 @@ export default function Settings() {
     const { error } = await supabase.from("profiles").upsert({
       username: displayName,
       website,
-      id: user?.id, // important, they can only update the row with their id
+      id: user?.id as string, // important, they can only update the row with their id
+      // @ts-ignore
       updated_at: new Date(),
     });
     if (error) {
@@ -53,6 +58,11 @@ export default function Settings() {
       message: "Your profile has been updated.",
     });
   }, [displayName, website]);
+
+  const handleCancelSubscription = async () => {
+    const { error } = await supabase.functions.invoke("delete-customer");
+    // do something with error
+  };
 
   return (
     <>
@@ -97,6 +107,13 @@ export default function Settings() {
             }}
             rightSection={loading ? <Loader size="sm" color="blue" /> : null}
           />
+          {active ? (
+            <Button onClick={handleCancelSubscription} color="red">
+              Cancel Subscription
+            </Button>
+          ) : (
+            <PaymentModal></PaymentModal>
+          )}
         </Stack>
       </Center>
     </>

@@ -6,9 +6,9 @@ import { stripe } from "../_utils/stripe.ts";
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", {
-      headers: { ...corsHeaders },
-      status: 200,
-    });
+      headers: {...corsHeaders},
+      status: 200
+    })
   }
   try {
     // Create a Supabase client with the Auth context of the logged in user.
@@ -23,7 +23,7 @@ serve(async (req: Request) => {
         global: {
           headers: { Authorization: req.headers.get("Authorization")! },
         },
-      },
+      }
     );
 
     // Now we can get the session or user object
@@ -40,7 +40,7 @@ serve(async (req: Request) => {
     const { data: customers, error: customerError } = await supabaseClient
       .from("customers")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("email", user.email)
       .limit(1);
 
     if (customerError) {
@@ -55,9 +55,20 @@ serve(async (req: Request) => {
         status: 404,
       });
     } else {
-      // get the customer's Stripe ID, and delete their data from the customers table
-      const { stripe_id } = customers[0];
 
+      // get the customer's Stripe ID, and delete their data from the customers table
+      const { stripe_id, subscription_id } = customers[0];
+
+      console.log("Deleting subscription...")
+      //get the customers subscription ID, and cancel their subscription
+      const deleted = await stripe.subscriptions.del(subscription_id)
+      if (deleted.status == 'canceled'){
+        console.log('Subscription canceled');
+      } else {
+        throw new Error("Subscription not canceled");
+      }
+
+      console.log("Deleting customer...")
       const stripeResp = await stripe.customers.del(stripe_id);
       if (!stripeResp.deleted) {
         throw new Error("Stripe customer not deleted");
