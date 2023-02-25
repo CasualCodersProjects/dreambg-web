@@ -12,27 +12,33 @@ export interface Database {
       customers: {
         Row: {
           email: string
+          expire_date: string
           id: number
           last_paid: string
           stripe_id: string
           subscribed_on: string | null
           subscription: string
+          subscription_id: string
         }
         Insert: {
           email: string
+          expire_date: string
           id?: number
           last_paid?: string
           stripe_id: string
           subscribed_on?: string | null
           subscription?: string
+          subscription_id: string
         }
         Update: {
           email?: string
+          expire_date?: string
           id?: number
           last_paid?: string
           stripe_id?: string
           subscribed_on?: string | null
           subscription?: string
+          subscription_id?: string
         }
       }
       descriptions: {

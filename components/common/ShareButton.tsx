@@ -28,21 +28,21 @@ const ShareButton = ({ id }: ShareButtonProps) => {
     }
   }, [location]);
 
+  const contentLink = id ? `${location?.origin}/image/${id}` : location?.href;
+
   const ModalContent = (
     <>
       <Stack>
         <TextInput
           onClick={() => {
-            clipboard.copy(
-              id ? `${location?.origin}/image/${id}` : location?.href
-            );
+            clipboard.copy(contentLink);
             showNotification({
               title: "Link copied",
               message: "The link has been copied to your clipboard.",
             });
           }}
           label={"Click to copy link"}
-          value={id ? `${location?.origin}/image/${id}` : location?.href}
+          value={contentLink}
         />
 
         <Center>
@@ -50,7 +50,7 @@ const ShareButton = ({ id }: ShareButtonProps) => {
             <Button
               component="a"
               href={twitterShareLink(
-                `Check out this DreamBG image! ${location?.href}`
+                `Check out this DreamBG image! ${contentLink}`
               )}
               target="_blank"
               leftIcon={<IconBrandTwitter size={18} />}
@@ -64,7 +64,7 @@ const ShareButton = ({ id }: ShareButtonProps) => {
               component="a"
               target="_blank"
               href={redditShareLink(
-                location?.href,
+                contentLink,
                 "Check out this DreamBG image"
               )}
             >

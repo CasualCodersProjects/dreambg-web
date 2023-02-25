@@ -60,7 +60,7 @@ serve(async (req: Request) => {
         const { customer } = invoice;
         const email = invoice?.customer_email;
         const lines = invoice.lines.data;
-        console.log(lines)
+        console.log(lines);
         const subscription_id = lines?.[0]?.subscription;
         const end_time = lines?.[0]?.period.end;
         const expire_date = new Date(end_time * 1000);
@@ -77,7 +77,12 @@ serve(async (req: Request) => {
         }
 
         const data = customerData?.[0]?.subscribed_on
-          ? { subscription: "pro", last_paid: new Date(), subscription_id, expire_date }
+          ? {
+            subscription: "pro",
+            last_paid: new Date(),
+            subscription_id,
+            expire_date,
+          }
           : {
             subscription: "pro",
             last_paid: new Date(),
