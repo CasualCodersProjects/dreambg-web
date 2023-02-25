@@ -1,18 +1,19 @@
-@default:
-  just --list --unsorted
+# show this help text
+default:
+  @just --list --unsorted
 
-# yarn dev
-@dev:
-  yarn dev
+# start dev server
+dev:
+  @yarn dev
 
-# yarn build
-@build:
-  yarn build
+# build production version
+build:
+  @yarn build
 
-# yarn start
-@start:
-  yarn start
+# start production version
+start:
+  @yarn start
 
-# yarn export
-@export:
-  yarn export
+# static page export
+export:
+  @yarn export
