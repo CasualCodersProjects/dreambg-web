@@ -218,6 +218,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
               <Menu.Label>Download Image</Menu.Label>
               <Menu.Item
                 component="a"
+                download
                 target="_blank"
                 href={imageLink720p}
                 fw={700}
@@ -227,6 +228,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
               </Menu.Item>
               <Menu.Item
                 component="a"
+                download
                 target="_blank"
                 href={imageLink1080p}
                 fw={700}
