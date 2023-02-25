@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Center } from "@mantine/core";
+import { Center, Loader } from "@mantine/core";
 import ImageCard from "@/components/common/ImageCard";
 import { useImageParams } from "@/hooks/useQueryParams";
 
@@ -14,7 +14,8 @@ export default function ImagePage() {
         <title>DreamBG - Image</title>
       </Head>
       <Center>
-        <ImageCard disableHover id={id as string} />
+        {id && <ImageCard disableHover id={id as string} />}
+        {!id && <Loader size="xl" />}
       </Center>
     </>
   );
