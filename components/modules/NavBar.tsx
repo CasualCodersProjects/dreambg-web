@@ -7,6 +7,7 @@ import {
   Header,
   Image,
   Menu,
+  ThemeIcon,
   Title,
 } from "@mantine/core";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -19,6 +20,7 @@ import {
   IconSearch,
   IconSettings,
   IconSun,
+  IconUpload,
 } from "@tabler/icons";
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -26,6 +28,9 @@ import { showNotification } from "@mantine/notifications";
 import { useRandomTags } from "@/hooks/useTags";
 import { useProfile } from "@/hooks/useProfile";
 import { useAsync } from "react-use";
+import { useActiveCustomer } from "@/hooks/useCustomer";
+import { usePaymentModal } from "@/hooks/usePaymentModal";
+import ProBadge from "../common/ProBadge";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -98,6 +103,8 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   const router = useRouter();
   const supabase = useSupabaseClient();
   const user = useUser();
+  const openPaymentModal = usePaymentModal();
+  const { active } = useActiveCustomer();
   const { tags } = useRandomTags(5);
   const { profile } = useProfile(user?.id);
 
@@ -190,6 +197,12 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
                 }}
               >
                 Sign In / Sign Up
+              </Menu.Item>
+            )}
+
+            {user && !active && (
+              <Menu.Item icon={<IconUpload />} onClick={openPaymentModal}>
+                Upgrade to Pro
               </Menu.Item>
             )}
 
