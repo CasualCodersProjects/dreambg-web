@@ -6,9 +6,9 @@ import { stripe } from "../_utils/stripe.ts";
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", {
-      headers: {...corsHeaders},
-      status: 200
-    })
+      headers: { ...corsHeaders },
+      status: 200,
+    });
   }
   try {
     // Create a Supabase client with the Auth context of the logged in user.
@@ -23,7 +23,7 @@ serve(async (req: Request) => {
         global: {
           headers: { Authorization: req.headers.get("Authorization")! },
         },
-      }
+      },
     );
 
     // Now we can get the session or user object
@@ -32,7 +32,7 @@ serve(async (req: Request) => {
     } = await supabaseClient.auth.getUser();
 
     if (!user) {
-      console.log("User not found");
+      console.error("User not found");
       throw new Error("User not found");
     }
 

@@ -11,17 +11,20 @@ import {
 import { useClipboard } from "@mantine/hooks";
 import { openModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
+import { useActiveCustomer } from "@/hooks/useCustomer";
 
 const PaymentModal = ({ id }: any) => {
   const [location, setLocation] = useState<any>(null);
-  const clipboard = useClipboard();
   const supabase = useSupabaseClient();
   const router = useRouter();
+  const { active } = useActiveCustomer();
 
   const handleClick = async () => {
-    const { data, error } = await supabase.functions.invoke("checkout-customer");
+    const { data, error } = await supabase.functions.invoke(
+      "checkout-customer"
+    );
     if (error) {
       console.log(error);
     }
@@ -29,7 +32,7 @@ const PaymentModal = ({ id }: any) => {
       alert("Missing checkout url.");
     }
     //redirect to checkout session on stripe
-    router.push(data.url)
+    router.push(data.url);
   };
 
   useEffect(() => {
@@ -48,7 +51,9 @@ const PaymentModal = ({ id }: any) => {
             <input type="hidden" name="priceId" value="price_G0FvDp6vZvdwRZ" />
             <button type="submit">Checkout</button>
           </form> */}
-          <Button  onClick={handleClick}>Checkout</Button>
+            <Button disabled={active} onClick={handleClick}>
+              Checkout
+            </Button>
           </Group>
         </Center>
       </Stack>

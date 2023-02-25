@@ -11,28 +11,28 @@ export interface Database {
     Tables: {
       customers: {
         Row: {
-          created_at: string
+          email: string
           id: number
+          last_paid: string
           stripe_id: string
-          stripe_product_id: string | null
-          subscription: string | null
-          user_id: string
+          subscribed_on: string | null
+          subscription: string
         }
         Insert: {
-          created_at?: string
+          email: string
           id?: number
+          last_paid?: string
           stripe_id: string
-          stripe_product_id?: string | null
-          subscription?: string | null
-          user_id: string
+          subscribed_on?: string | null
+          subscription?: string
         }
         Update: {
-          created_at?: string
+          email?: string
           id?: number
+          last_paid?: string
           stripe_id?: string
-          stripe_product_id?: string | null
-          subscription?: string | null
-          user_id?: string
+          subscribed_on?: string | null
+          subscription?: string
         }
       }
       descriptions: {
@@ -287,6 +287,9 @@ export interface Database {
       [_ in never]: never
     }
     Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
       [_ in never]: never
     }
   }

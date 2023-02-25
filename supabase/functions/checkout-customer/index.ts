@@ -2,17 +2,17 @@
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
 import { corsHeaders } from "./../_shared/corst.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { stripe } from "../_utils/stripe.ts";
-console.log("Hello from Functions!")
+console.log("Hello from Functions!");
 
 serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", {
-      headers: {...corsHeaders},
-      status: 200
-    })
+      headers: { ...corsHeaders },
+      status: 200,
+    });
   }
   try {
     // Create a Supabase client with the Auth context of the logged in user.
@@ -27,7 +27,7 @@ serve(async (req: Request) => {
         global: {
           headers: { Authorization: req.headers.get("Authorization")! },
         },
-      }
+      },
     );
 
     // Now we can get the session or user object
@@ -44,7 +44,7 @@ serve(async (req: Request) => {
     const { data: customers, error: customerError } = await supabaseClient
       .from("customers")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("email", user.email)
       .limit(1);
 
     if (customerError) {
@@ -52,12 +52,25 @@ serve(async (req: Request) => {
       throw customerError;
     }
 
+    if (customers.length > 0) {
+      // check to see if their subscription is active
+      // if their last paid was greater than 31 days ago, they are not active
+      const { last_paid } = customers[0];
+      const lastPaid = new Date(last_paid);
+      const now = new Date();
+      const diff = now.getTime() - lastPaid.getTime();
+      const diffDays = Math.ceil(diff / (1000 * 3600 * 24));
+      if (diffDays <= 31) {
+        throw new Error("You already have an active subscription");
+      }
+    }
+
     const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
+      mode: "subscription",
       customer_email: user.email,
       line_items: [
         {
-          price: 'price_1MRfzaEyCnDoocjCZkz22nVO',
+          price: "price_1MRfzaEyCnDoocjCZkz22nVO",
           // For metered billing, do not pass quantity
           quantity: 1,
         },
@@ -65,15 +78,15 @@ serve(async (req: Request) => {
       // {CHECKOUT_SESSION_ID} is a string literal; do not change it!
       // the actual Session ID is returned in the query parameter when your customer
       // is redirected to the success page.
-      success_url: 'http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: 'http://localhost:3000/test',
+      success_url:
+        "https://dreambg.cc/success?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://dreambg.cc/failed",
     });
 
     return new Response(JSON.stringify(session), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200
-    })
-
+      status: 200,
+    });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -81,7 +94,6 @@ serve(async (req: Request) => {
     });
   }
 });
-
 
 // To invoke:
 // curl -i --location --request POST 'http://localhost:54321/functions/v1/' \

@@ -26,7 +26,6 @@ import { showNotification } from "@mantine/notifications";
 import { useRandomTags } from "@/hooks/useTags";
 import { useProfile } from "@/hooks/useProfile";
 import { useAsync } from "react-use";
-import { useCustomer } from "@/hooks/useCustomer";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -99,7 +98,6 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   const user = useUser();
   const { tags } = useRandomTags(5);
   const { profile } = useProfile(user?.id);
-  const { customer } = useCustomer(user?.id);
 
   useAsync(async () => {
     if (!profile && user) {
@@ -109,13 +107,6 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
         .insert([{ id: user.id, username: user.email }]);
     }
   }, [profile, user]);
-
-  useAsync(async () => {
-    if (!customer && user) {
-      // create a new customer
-      await supabase.functions.invoke("new-customer");
-    }
-  }, [customer, user]);
 
   const logOutUser = async () => {
     const { error } = await supabase.auth.signOut();
