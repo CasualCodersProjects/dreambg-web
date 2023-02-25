@@ -241,7 +241,14 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
   };
 
   return (
-    <Card ref={ref} radius="md" sx={hoverStyle}>
+    <Card
+      onContextMenu={(e) => {
+        e.preventDefault();
+      }}
+      ref={ref}
+      radius="md"
+      sx={hoverStyle}
+    >
       <Card.Section>
         <Link href={`/image/${id}`}>
           <Image
