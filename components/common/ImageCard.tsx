@@ -250,7 +250,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       sx={hoverStyle}
     >
       <Card.Section>
-        <Link href={`/image/${id}`}>
+        <Link href={`/image?uuid=${id}`}>
           <Image
             src={imageLink720p}
             alt={"image"}
