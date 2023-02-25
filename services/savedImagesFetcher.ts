@@ -6,6 +6,9 @@ export async function savedImageFetcher(
   uuid: string,
   user_id: string | undefined
 ) {
+  if (!user_id) {
+    return null;
+  }
   const { data, error } = await supabaseClient
     .from("user_saved_images")
     .select("*")
