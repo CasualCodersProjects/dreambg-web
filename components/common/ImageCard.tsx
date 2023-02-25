@@ -217,44 +217,40 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
             <Menu.Dropdown>
               <Menu.Label>Download Image</Menu.Label>
               <Menu.Item
-                onClick={async () => {
-                  setIsDownloadingImage(true);
-                  await downloadFile(imageLink720p, "720p.jpg");
-                  setIsDownloadingImage(false);
-                }}
+                component="a"
+                target="_blank"
+                href={imageLink720p}
                 fw={700}
                 icon={<IconPhoto size={14} />}
               >
                 720p
               </Menu.Item>
               <Menu.Item
-                onClick={async () => {
-                  setIsDownloadingImage(true);
-                  await downloadFile(imageLink1080p, "1080p.jpg");
-                  setIsDownloadingImage(false);
-                }}
+                component="a"
+                target="_blank"
+                href={imageLink1080p}
                 fw={700}
                 icon={<IconPhoto size={14} />}
               >
                 1080p
               </Menu.Item>
               <Menu.Divider />
-              <Menu.Item fw={700} icon={<IconPhotoPlus size={14} />}>
+              <Menu.Item disabled fw={700} icon={<IconPhotoPlus size={14} />}>
                 1440p{" "}
                 <Badge
                   ml="sm"
                   variant="gradient"
-                  gradient={{ from: "lime", to: "green" }}
+                  gradient={{ from: "pink", to: "blue" }}
                 >
                   Pro
                 </Badge>
               </Menu.Item>
-              <Menu.Item fw={700} icon={<IconPhotoPlus size={14} />}>
+              <Menu.Item disabled fw={700} icon={<IconPhotoPlus size={14} />}>
                 4K{" "}
                 <Badge
                   ml="sm"
                   variant="gradient"
-                  gradient={{ from: "lime", to: "green" }}
+                  gradient={{ from: "pink", to: "blue" }}
                 >
                   Pro
                 </Badge>
