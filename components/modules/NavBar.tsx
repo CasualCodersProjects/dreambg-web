@@ -42,6 +42,8 @@ const useStyles = createStyles((theme) => ({
 
   leftHeader: {
     cursor: "pointer",
+    marginLeft: 5,
+    marginTop: 8,
   },
 
   title: {
@@ -133,7 +135,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   };
 
   return (
-    <Header height={56} className={classes.header} mb={120}>
+    <Header height={64} className={classes.header} mb={120}>
       <div className={classes.inner}>
         <Group
           onClick={() => {
@@ -142,7 +144,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
           className={classes.leftHeader}
         >
           <ActionIcon>
-            <Image src="/favicon.ico" alt="DreamBG" />
+            <Image height={48} width={48} src="/icon2.png" alt="DreamBG" />
           </ActionIcon>
           <Title className={classes.title}>DreamBG</Title>
         </Group>
@@ -164,7 +166,11 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
           onChange={setBurgerOpen}
         >
           <Menu.Target>
-            <Burger onClick={toggleOpen} opened={burgerOpen} />
+            <Burger
+              sx={{ margin: 5, marginTop: 12 }}
+              onClick={toggleOpen}
+              opened={burgerOpen}
+            />
           </Menu.Target>
 
           <Menu.Dropdown>

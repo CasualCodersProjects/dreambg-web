@@ -28,7 +28,9 @@ const ShareButton = ({ id }: ShareButtonProps) => {
     }
   }, [location]);
 
-  const contentLink = id ? `${location?.origin}/image/${id}` : location?.href;
+  const contentLink = id
+    ? `${location?.origin}/image?uuid=${id}`
+    : location?.href;
 
   const ModalContent = (
     <>

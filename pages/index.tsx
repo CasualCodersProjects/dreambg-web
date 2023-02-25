@@ -21,6 +21,7 @@ export default function Home() {
     if (entry?.isIntersecting) {
       loadMore();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry]);
 
   // flatten infinite images
