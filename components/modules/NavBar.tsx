@@ -14,9 +14,11 @@ import { useState } from "react";
 import {
   IconArrowRight,
   IconDeviceFloppy,
+  IconInfoCircle,
   IconLogin,
   IconLogout,
   IconMoon,
+  IconPhone,
   IconSearch,
   IconSettings,
   IconSun,
@@ -216,6 +218,22 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
 
           <Menu.Dropdown>
             <Menu.Label>DreamBG {active && <ProBadge />}</Menu.Label>
+
+            {/* <Menu.Item
+              icon={<IconInfoCircle />}
+              onClick={() => router.push("/about")}
+            >
+              About
+            </Menu.Item>
+
+            <Menu.Item
+              icon={<IconPhone />}
+              onClick={() => router.push("/contact")}
+            >
+              Contact Us
+            </Menu.Item>
+
+            <Menu.Divider /> */}
 
             <Menu.Item
               icon={colorScheme === "dark" ? <IconSun /> : <IconMoon />}
