@@ -9,7 +9,7 @@ import {
   Button,
   Title,
 } from "@mantine/core";
-import { openModal } from "@mantine/modals";
+import { useState } from "react";
 import { showNotification } from "@mantine/notifications";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { IconBrandDiscord, IconCircleCheck, IconClock } from "@tabler/icons";
@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { useActiveCustomer } from "../../hooks/useCustomer";
 
 const PricingCard = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const supabase = useSupabaseClient();
   const { active } = useActiveCustomer();
   const user = useUser();
@@ -32,6 +33,7 @@ const PricingCard = () => {
       });
       return;
     }
+    setIsLoading(true);
     const { data, error } = await supabase.functions.invoke(
       "checkout-customer"
     );
@@ -43,6 +45,7 @@ const PricingCard = () => {
     }
     //redirect to checkout session on stripe
     router.push(data.url);
+    setIsLoading(false);
   };
 
   return (
@@ -114,6 +117,7 @@ const PricingCard = () => {
         mt="md"
         radius="md"
         onClick={onClickBuy}
+        loading={isLoading}
       >
         {active ? "You're already a Pro!" : "Become a Pro!"}
       </Button>
