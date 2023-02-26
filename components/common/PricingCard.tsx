@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { showNotification } from "@mantine/notifications";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { IconBrandDiscord, IconCircleCheck, IconClock } from "@tabler/icons";
+import { IconCircleCheck, IconClock } from "@tabler/icons";
 import { useRouter } from "next/router";
 import { useActiveCustomer } from "../../hooks/useCustomer";
 
@@ -83,9 +83,10 @@ const PricingCard = () => {
         >
           <List.Item>No Ads!</List.Item>
           <List.Item>4K QHD Images!</List.Item>
+          <List.Item>Commercial Use!</List.Item>
           <List.Item>Early Access to New Features!</List.Item>
           <List.Item>Support DreamBG Development!</List.Item>
-          <List.Item
+          {/* <List.Item
             icon={
               <ThemeIcon color="grape" size={24} radius="xl">
                 <IconBrandDiscord size={16} />
@@ -93,7 +94,7 @@ const PricingCard = () => {
             }
           >
             Elevated Discord Role!
-          </List.Item>
+          </List.Item> */}
           <List.Item
             icon={
               <ThemeIcon color="yellow" size={24} radius="xl">

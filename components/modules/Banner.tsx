@@ -8,13 +8,16 @@ import {
   Stack,
   Group,
 } from "@mantine/core";
+import { useEffect, useState } from "react";
 
 const useStyles = createStyles((theme) => ({
   hero: {
     position: "relative",
     backgroundImage: "url(/images/cyberpunkMountains.jpg)",
     backgroundSize: "cover",
-    backgroundPosition: "center",
+    // backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundAttachment: "fixed",
   },
 
   container: {
@@ -76,9 +79,27 @@ interface BannerProps {
 
 export function Banner({ onClickLearnMore, onClickGetStarted }: BannerProps) {
   const { classes } = useStyles();
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    function handleScroll() {
+      setScrollY(window.scrollY);
+    }
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
-    <div className={classes.hero}>
+    <div
+      style={{
+        backgroundPosition: `center -${scrollY * 0.5 + 100}px`,
+      }}
+      className={classes.hero}
+    >
       <Overlay
         gradient="linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, .65) 40%)"
         opacity={1}

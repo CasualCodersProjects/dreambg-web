@@ -1,11 +1,14 @@
 import { Banner } from "@/components/modules/Banner";
 import { ComingSoon } from "@/components/modules/ComingSoon";
 import { Features } from "@/components/modules/Features";
+import { FAQ } from "@/components/modules/FAQ";
 import { scrollToDiv } from "@/utils/scrollToDiv";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
+import { Center } from "@mantine/core";
+import PricingCard from "@/components/common/PricingCard";
 
 export default function About() {
   const router = useRouter();
@@ -31,7 +34,11 @@ export default function About() {
         }}
       />
       <Features />
+      <Center mt={50}>
+        <PricingCard />
+      </Center>
       <ComingSoon />
+      <FAQ />
     </>
   );
 }

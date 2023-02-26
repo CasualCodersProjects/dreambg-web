@@ -157,7 +157,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
 
   return (
     <Header height={64} className={classes.header} mb={120}>
-      <div className={classes.inner}>
+      <div id="navbar" className={classes.inner}>
         <Group
           onClick={() => {
             router.push("/browse");

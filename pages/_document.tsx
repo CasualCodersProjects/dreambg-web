@@ -28,6 +28,7 @@ export default class _Document extends Document {
             href="/favicon-16x16.png"
           />
           <link rel="manifest" href="/site.webmanifest" />
+          {/* Tell dark reader that this is a dark mode site */}
           <meta name="darkreader" content="false" />
         </Head>
         <body>
