@@ -46,7 +46,7 @@ const PricingCard = () => {
   };
 
   return (
-    <Card>
+    <Card radius="lg">
       <Card.Section inheritPadding py="md">
         <Center>
           <Stack>
@@ -98,7 +98,10 @@ const PricingCard = () => {
               </ThemeIcon>
             }
           >
-            <Text fw={700}>Coming Soon:</Text> Create Your Own Backgrounds!
+            <Text span fw={700}>
+              Coming Soon:
+            </Text>{" "}
+            Create Your Own Backgrounds!
           </List.Item>
         </List>
       </Center>

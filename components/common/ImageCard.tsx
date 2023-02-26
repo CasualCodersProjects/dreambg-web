@@ -26,7 +26,7 @@ import {
 import abbrNum from "@/utils/abbrNumber";
 import { useRouter } from "next/router";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useDownloadImage, useImage } from "@/hooks/useImages";
+import { useImage } from "@/hooks/useImages";
 import { useSavedImage } from "@/hooks/useSavedImages";
 import { useLikes, useUserLiked } from "@/hooks/useLikes";
 import { showNotification } from "@mantine/notifications";
@@ -343,7 +343,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
                   )
                 }
               >
-                1440p <ProBadge />
+                1440p <ProBadge ml="sm" />
               </Menu.Item>
               <Menu.Item
                 onClick={() =>
@@ -359,7 +359,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
                   )
                 }
               >
-                4K <ProBadge />
+                4K <ProBadge ml="sm" />
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>

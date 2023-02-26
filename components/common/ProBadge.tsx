@@ -1,7 +1,11 @@
 import { Badge } from "@mantine/core";
 
-const ProBadge = () => (
-  <Badge ml="sm" variant="gradient" gradient={{ from: "blue", to: "pink" }}>
+interface ProBadgeProps {
+  ml?: string;
+}
+
+const ProBadge = ({ ml }: ProBadgeProps) => (
+  <Badge ml={ml} variant="gradient" gradient={{ from: "blue", to: "pink" }}>
     Pro
   </Badge>
 );

@@ -7,7 +7,6 @@ import {
   Header,
   Image,
   Menu,
-  ThemeIcon,
   Title,
 } from "@mantine/core";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -127,6 +126,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
       title: "Logged out",
       message: "You have been logged out.",
     });
+    router.push("/");
   };
 
   const toggleColorScheme = () => {
@@ -153,7 +153,9 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
           <ActionIcon>
             <Image height={48} width={48} src="/icon2.png" alt="DreamBG" />
           </ActionIcon>
-          <Title className={classes.title}>DreamBG</Title>
+          <Title ml="xs" className={classes.title}>
+            DreamBG
+          </Title>
         </Group>
         <Autocomplete
           placeholder="Search"
@@ -181,7 +183,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Label>DreamBG</Menu.Label>
+            <Menu.Label>DreamBG {active && <ProBadge />}</Menu.Label>
 
             <Menu.Item
               icon={colorScheme === "dark" ? <IconSun /> : <IconMoon />}
@@ -202,7 +204,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
 
             {user && !active && (
               <Menu.Item icon={<IconUpload />} onClick={openPaymentModal}>
-                Upgrade to Pro
+                Upgrade to <ProBadge />
               </Menu.Item>
             )}
 
