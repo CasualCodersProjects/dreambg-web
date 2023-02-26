@@ -7,12 +7,11 @@ import {
   Text,
   Tooltip,
   Menu,
-  Badge,
-  ThemeIcon,
   Loader,
+  createStyles,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   IconArrowBigTop,
@@ -36,6 +35,17 @@ import { useActiveCustomer } from "@/hooks/useCustomer";
 import { usePaymentModal } from "@/hooks/usePaymentModal";
 import ProBadge from "./ProBadge";
 
+const useStyles = createStyles((theme) => ({
+  card: {
+    minHeight: 372.65,
+    minWidth: 552,
+  },
+  image: {
+    minHeight: 312.65,
+    minWidth: 552,
+  },
+}));
+
 export interface ImageCardProps {
   id: string;
   width?: number | string;
@@ -53,7 +63,24 @@ interface ImagesState {
 export const DEFAULT_WIDTH = 356;
 export const DEFAULT_HEIGHT = 200;
 
+const LoadingPlaceholder = () => {
+  return (
+    <Center>
+      <Loader size="xl" />
+    </Center>
+  );
+};
+
+const FailedLoadingPlaceholder = () => {
+  return (
+    <Center>
+      <Text>Failed to load image</Text>
+    </Center>
+  );
+};
+
 const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
+  const { classes } = useStyles();
   const { image } = useImage(id);
   const [images, setImages] = useState<ImagesState[]>([]);
   const { hovered, ref } = useHover();
@@ -61,6 +88,9 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
   const [loadingLiked, setLoadingLiked] = useState<boolean>(false);
   const [isLoadingImage, setIsLoadingImage] = useState<boolean>(false);
   const [isDownloadingImage, setIsDownloadingImage] = useState<boolean>(false);
+  const [imagePlaceholder, setImagePlaceholder] = useState<JSX.Element>(
+    <LoadingPlaceholder />
+  );
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const router = useRouter();
   const supabase = useSupabaseClient();
@@ -244,6 +274,12 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
     setIsLoadingImage(false);
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      setImagePlaceholder(<FailedLoadingPlaceholder />);
+    }, 5000);
+  }, []);
+
   return (
     <Card
       onContextMenu={(e) => {
@@ -252,8 +288,9 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       ref={ref}
       radius="md"
       sx={hoverStyle}
+      className={classes.card}
     >
-      <Card.Section>
+      <Card.Section className={classes.image}>
         <Link href={`/image?uuid=${id}`}>
           <Image
             src={imageLink720p}
@@ -261,7 +298,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
             height={height}
             width={width}
             withPlaceholder
-            placeholder={<Text align="center">Image failed to load.</Text>}
+            placeholder={imagePlaceholder}
           />
         </Link>
       </Card.Section>

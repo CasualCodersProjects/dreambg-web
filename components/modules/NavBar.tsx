@@ -140,7 +140,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
       title: "Logged out",
       message: "You have been logged out.",
     });
-    router.push("/");
+    router.push("/browse");
   };
 
   const toggleColorScheme = () => {
@@ -160,7 +160,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
       <div className={classes.inner}>
         <Group
           onClick={() => {
-            router.push("/");
+            router.push("/browse");
           }}
           className={classes.leftHeader}
         >

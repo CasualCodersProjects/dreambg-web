@@ -29,7 +29,11 @@ export default function Home() {
           {isLoading && <Loader size="xl" />}
           {!user && <Title>Not signed in</Title>}
           {!isLoading && (
-            <Button onClick={() => router.push("/")} variant="subtle" size="md">
+            <Button
+              onClick={() => router.push("/browse")}
+              variant="subtle"
+              size="md"
+            >
               Start using DreamBG
             </Button>
           )}

@@ -52,7 +52,7 @@ export function Login() {
   const supabase = useSupabaseClient();
 
   useEffect(() => {
-    if (user) router.push("/");
+    if (user) router.push("/browse");
   }, [user, router]);
 
   return (

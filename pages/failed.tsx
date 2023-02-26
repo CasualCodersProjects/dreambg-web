@@ -12,7 +12,11 @@ export default function PaymentFailed() {
       <Center>
         <Stack align="center">
           <h1>Payment failed.</h1>
-          <Button onClick={() => router.push("/")} variant="subtle" size="md">
+          <Button
+            onClick={() => router.push("/browse")}
+            variant="subtle"
+            size="md"
+          >
             Take me back to home page
           </Button>
         </Stack>
