@@ -111,7 +111,7 @@ const PricingCard = () => {
       <Button
         disabled={active}
         variant="gradient"
-        gradient={{ from: "blue", to: "red" }}
+        gradient={{ from: "grape", to: "pink" }}
         color="blue"
         fullWidth
         mt="md"

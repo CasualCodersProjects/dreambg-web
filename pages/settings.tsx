@@ -161,7 +161,7 @@ export default function Settings() {
           ) : (
             <Button
               variant="gradient"
-              gradient={{ from: "blue", to: "red" }}
+              gradient={{ from: "grape", to: "pink" }}
               onClick={openPaymentModal}
               leftIcon={<IconUpload />}
               radius="md"
