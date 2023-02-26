@@ -12,16 +12,7 @@ import { NotificationsProvider } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
 
 const footerProps = {
-  links: [
-    {
-      label: "About Us",
-      link: "https://casualcoders.dev",
-    },
-    {
-      label: "Contact",
-      link: "mailto:info@casualcoders.dev",
-    },
-  ],
+  links: [],
   youtubeLink: "https://www.youtube.com/c/CasualCodersOfficial",
   instagramLink: "https://www.instagram.com/casualcodersprojects/",
   twitterLink: "https://twitter.com/casualcoders",

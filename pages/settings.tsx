@@ -7,6 +7,7 @@ import {
   Stack,
   TextInput,
   Title,
+  Text,
 } from "@mantine/core";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import emailToGravatar from "@/utils/emailToGravatar";
@@ -19,12 +20,22 @@ import { useRouter } from "next/router";
 import { showNotification } from "@mantine/notifications";
 import { Database } from "@/types/database.types";
 import { useActiveCustomer } from "@/hooks/useCustomer";
-import PaymentModal from "../components/common/PaymentModal";
 import { usePaymentModal } from "@/hooks/usePaymentModal";
+import { openConfirmModal } from "@mantine/modals";
+
+const ConfirmCancelSubscriptionText = () => (
+  <Text size="md">
+    You are about to cancel your subscription. Are you sure you want to proceed?
+    Please note that once you cancel, this action cannot be undone and your
+    subscription will be permanently deactivated. If you change your mind, you
+    will need to sign up for a new subscription.
+  </Text>
+);
 
 export default function Settings() {
   const supabase = useSupabaseClient<Database>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [cancelLoading, setCancelLoading] = useState<boolean>(false);
   const [displayName, setDisplayName] = useDebouncedState("", 500);
   const [website, setWebsite] = useDebouncedState("", 500);
   const user = useUser();
@@ -62,6 +73,7 @@ export default function Settings() {
   }, [displayName, website]);
 
   const handleCancelSubscription = async () => {
+    setCancelLoading(true);
     const { error } = await supabase.functions.invoke("delete-customer");
 
     if (error) {
@@ -71,7 +83,24 @@ export default function Settings() {
         message:
           "There was an error cancelling your subscription. Please contact support.",
       });
+    } else {
+      showNotification({
+        title: "Subscription cancelled",
+        message:
+          "Your subscription has been cancelled. We're sad to see you go! 😢",
+      });
     }
+
+    setCancelLoading(false);
+  };
+
+  const openConfirmCancelSubscriptionModal = () => {
+    openConfirmModal({
+      title: "Confirm Cancel Subscription",
+      children: <ConfirmCancelSubscriptionText />,
+      labels: { confirm: "Confirm", cancel: "Cancel" },
+      onConfirm: handleCancelSubscription,
+    });
   };
 
   return (
@@ -122,7 +151,11 @@ export default function Settings() {
           <Title order={2}>Billing</Title>
 
           {active ? (
-            <Button onClick={handleCancelSubscription} color="red">
+            <Button
+              loading={cancelLoading}
+              onClick={openConfirmCancelSubscriptionModal}
+              color="red"
+            >
               Cancel Subscription
             </Button>
           ) : (

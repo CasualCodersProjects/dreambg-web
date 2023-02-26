@@ -3,8 +3,8 @@ import { useHover } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
   card: {
-    height: 200,
-    width: 356,
+    height: 372.65,
+    width: 552,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -30,32 +30,15 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export interface LoaderCardProps {
-  vertical?: boolean;
-}
-
-const LoaderCard = ({ vertical }: LoaderCardProps) => {
+const LoaderCard = () => {
   const { classes } = useStyles();
   const { hovered, ref } = useHover();
-
-  let height = 200;
-  let width = 356;
-
-  if (vertical) {
-    height = 356;
-    width = 200;
-  }
 
   const sx = hovered
     ? {
         transform: "scale(1.05)",
-        height,
-        width,
       }
-    : {
-        height,
-        width,
-      };
+    : {};
 
   return (
     <Skeleton radius="md">

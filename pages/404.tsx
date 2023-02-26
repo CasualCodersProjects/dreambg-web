@@ -67,7 +67,11 @@ export function NotFound() {
         address, or the page has been moved to another URL.
       </Text>
       <Group position="center">
-        <Button onClick={() => router.push("/")} variant="subtle" size="md">
+        <Button
+          onClick={() => router.push("/browse")}
+          variant="subtle"
+          size="md"
+        >
           Take me back to home page
         </Button>
       </Group>
