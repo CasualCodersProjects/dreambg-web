@@ -7,6 +7,7 @@ import {
   Stack,
   TextInput,
   Tooltip,
+  useMantineTheme,
 } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
 import { openModal } from "@mantine/modals";
@@ -19,6 +20,7 @@ interface ShareButtonProps {
 }
 
 const ShareButton = ({ id }: ShareButtonProps) => {
+  const theme = useMantineTheme();
   const [location, setLocation] = useState<any>(null);
   const clipboard = useClipboard();
 
@@ -82,7 +84,7 @@ const ShareButton = ({ id }: ShareButtonProps) => {
     <Tooltip label="Share Image">
       <ActionIcon
         variant="subtle"
-        color="blue"
+        color={theme.colorScheme === "dark" ? "teal" : "blue"}
         onClick={() => {
           openModal({
             title: "Share",

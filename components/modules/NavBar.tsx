@@ -155,6 +155,14 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
     setBurgerOpen(!burgerOpen);
   };
 
+  const execSearch = (q: string) => {
+    if (router.basePath.includes("/search")) {
+      window.location.pathname = `/search?q=${q}`;
+    } else {
+      router.push(`/search?q=${q}`);
+    }
+  };
+
   return (
     <Header height={64} className={classes.header} mb={120}>
       <div className={classes.inner}>
@@ -183,7 +191,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
           value={searchValue}
           onKeyDown={(e) => {
             if (e.key === "Enter" && searchValue.length > 0) {
-              router.push(`/search?q=${searchValue}`);
+              execSearch(searchValue);
             }
           }}
           rightSection={
@@ -191,10 +199,10 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
               radius="xl"
               variant="filled"
               size={30}
-              color="teal"
+              color="primary"
               disabled={searchValue.length === 0}
               onClick={() => {
-                router.push(`/search?q=${searchValue}`);
+                execSearch(searchValue);
               }}
             >
               <IconArrowRight size={16} stroke={1.5} />

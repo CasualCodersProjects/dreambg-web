@@ -311,7 +311,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
               onClick={liked ? unlikeImage : likeImage}
               loading={loadingLiked}
               variant={liked ? "filled" : "subtle"}
-              color={"orange"}
+              color={"orange.5"}
             >
               <IconArrowBigTop />
             </ActionIcon>
@@ -325,7 +325,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
             <Menu.Target>
               <Tooltip label="Download">
                 <ActionIcon
-                  color="violet"
+                  color="grape"
                   variant={menuOpen ? "filled" : "subtle"}
                   loading={isDownloadingImage}
                   disabled={isDownloadingImage}
@@ -406,7 +406,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
               loading={loadingSaved}
               onClick={savedImage ? unSaveImage : saveImage}
               variant={savedImage ? "filled" : "subtle"}
-              color={savedImage ? "red" : "green"}
+              color={savedImage ? "red" : "green.4"}
             >
               {savedImage ? <IconTrash /> : <IconDeviceFloppy />}
             </ActionIcon>

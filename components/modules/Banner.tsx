@@ -95,6 +95,7 @@ export function Banner({ onClickLearnMore, onClickGetStarted }: BannerProps) {
         <Group>
           <Button
             variant="gradient"
+            gradient={{ from: "grape", to: "pink" }}
             size="xl"
             radius="xl"
             className={classes.control}

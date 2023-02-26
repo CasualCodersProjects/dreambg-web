@@ -5,7 +5,7 @@ interface ProBadgeProps {
 }
 
 const ProBadge = ({ ml }: ProBadgeProps) => (
-  <Badge ml={ml} variant="gradient" gradient={{ from: "blue", to: "pink" }}>
+  <Badge ml={ml} variant="gradient" gradient={{ from: "grape", to: "pink" }}>
     Pro
   </Badge>
 );
