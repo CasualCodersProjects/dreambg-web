@@ -155,14 +155,6 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
     setBurgerOpen(!burgerOpen);
   };
 
-  const execSearch = (q: string) => {
-    if (router.basePath.includes("/search")) {
-      window.location.pathname = `/search?q=${q}`;
-    } else {
-      router.push(`/search?q=${q}`);
-    }
-  };
-
   return (
     <Header height={64} className={classes.header} mb={120}>
       <div className={classes.inner}>
@@ -191,7 +183,12 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
           value={searchValue}
           onKeyDown={(e) => {
             if (e.key === "Enter" && searchValue.length > 0) {
-              execSearch(searchValue);
+              // this is a fix for issue #45
+              if (window.location.pathname.includes("search")) {
+                window.location.href = `${window.location.origin}/search?q=${searchValue}`;
+              } else {
+                router.push(`/search?q=${searchValue}`);
+              }
             }
           }}
           rightSection={
@@ -202,7 +199,12 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
               color="primary"
               disabled={searchValue.length === 0}
               onClick={() => {
-                execSearch(searchValue);
+                // this is a fix for issue #45
+                if (window.location.pathname.includes("search")) {
+                  window.location.href = `${window.location.origin}/search?q=${searchValue}`;
+                } else {
+                  router.push(`/search?q=${searchValue}`);
+                }
               }}
             >
               <IconArrowRight size={16} stroke={1.5} />
