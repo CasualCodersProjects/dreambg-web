@@ -71,8 +71,8 @@ export function Login() {
             variables: {
               default: {
                 colors: {
-                  brand: "#1971c2",
-                  brandAccent: "#1864ab",
+                  brand: "#F300F5",
+                  brandAccent: "#DB00DD",
                 },
               },
             },
