@@ -19,6 +19,7 @@ import {
   IconSearch,
   IconSettings,
   IconSun,
+  IconUpload,
 } from "@tabler/icons";
 import { useRouter } from "next/router";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -26,6 +27,9 @@ import { showNotification } from "@mantine/notifications";
 import { useRandomTags } from "@/hooks/useTags";
 import { useProfile } from "@/hooks/useProfile";
 import { useAsync } from "react-use";
+import { useActiveCustomer } from "@/hooks/useCustomer";
+import { usePaymentModal } from "@/hooks/usePaymentModal";
+import ProBadge from "../common/ProBadge";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -98,6 +102,8 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   const router = useRouter();
   const supabase = useSupabaseClient();
   const user = useUser();
+  const openPaymentModal = usePaymentModal();
+  const { active } = useActiveCustomer();
   const { tags } = useRandomTags(5);
   const { profile } = useProfile(user?.id);
 
@@ -120,6 +126,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
       title: "Logged out",
       message: "You have been logged out.",
     });
+    router.push("/");
   };
 
   const toggleColorScheme = () => {
@@ -146,7 +153,9 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
           <ActionIcon>
             <Image height={48} width={48} src="/icon2.png" alt="DreamBG" />
           </ActionIcon>
-          <Title className={classes.title}>DreamBG</Title>
+          <Title ml="xs" className={classes.title}>
+            DreamBG
+          </Title>
         </Group>
         <Autocomplete
           placeholder="Search"
@@ -174,7 +183,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Label>DreamBG</Menu.Label>
+            <Menu.Label>DreamBG {active && <ProBadge />}</Menu.Label>
 
             <Menu.Item
               icon={colorScheme === "dark" ? <IconSun /> : <IconMoon />}
@@ -190,6 +199,12 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
                 }}
               >
                 Sign In / Sign Up
+              </Menu.Item>
+            )}
+
+            {user && !active && (
+              <Menu.Item icon={<IconUpload />} onClick={openPaymentModal}>
+                Upgrade to <ProBadge />
               </Menu.Item>
             )}
 

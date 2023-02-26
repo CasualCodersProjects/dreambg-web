@@ -1,7 +1,9 @@
 import Head from "next/head";
-import { Center, Stack } from "@mantine/core";
+import { useRouter } from "next/router";
+import { Center, Stack, Button } from "@mantine/core";
 
 export default function PaymentFailed() {
+  const router = useRouter();
   return (
     <div>
       <Head>
@@ -10,6 +12,9 @@ export default function PaymentFailed() {
       <Center>
         <Stack align="center">
           <h1>Payment failed.</h1>
+          <Button onClick={() => router.push("/")} variant="subtle" size="md">
+            Take me back to home page
+          </Button>
         </Stack>
       </Center>
     </div>

@@ -26,13 +26,15 @@ import {
 import abbrNum from "@/utils/abbrNumber";
 import { useRouter } from "next/router";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useDownloadImage, useImage } from "@/hooks/useImages";
+import { useImage } from "@/hooks/useImages";
 import { useSavedImage } from "@/hooks/useSavedImages";
 import { useLikes, useUserLiked } from "@/hooks/useLikes";
 import { showNotification } from "@mantine/notifications";
 import { createImageURL } from "@/utils/createImageURL";
 import ShareButton from "./ShareButton";
 import { useActiveCustomer } from "@/hooks/useCustomer";
+import { usePaymentModal } from "@/hooks/usePaymentModal";
+import ProBadge from "./ProBadge";
 
 export interface ImageCardProps {
   id: string;
@@ -67,6 +69,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
   const { liked, mutate: mutateLike } = useUserLiked(id as string);
   const { likes, mutate: mutateLikes } = useLikes(id as string);
   const { active } = useActiveCustomer();
+  const openPaymentModal = usePaymentModal();
 
   const imageLink720p = createImageURL("ai-images", image?.link as string);
 
@@ -327,46 +330,36 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
               </Menu.Item>
               <Menu.Divider />
               <Menu.Item
-                onClick={() => downloadImage(imageLink1440p)}
-                disabled={!active || isLoadingImage}
+                onClick={() =>
+                  active ? downloadImage(imageLink1440p) : openPaymentModal()
+                }
+                disabled={isLoadingImage}
                 fw={700}
                 icon={
                   isLoadingImage ? (
                     <Loader color="pink" size="xs" />
                   ) : (
-                    <IconPhoto size={14} />
+                    <IconPhotoPlus size={14} />
                   )
                 }
               >
-                1440p{" "}
-                <Badge
-                  ml="sm"
-                  variant="gradient"
-                  gradient={{ from: "pink", to: "blue" }}
-                >
-                  Pro
-                </Badge>
+                1440p <ProBadge ml="sm" />
               </Menu.Item>
               <Menu.Item
-                onClick={() => downloadImage(imageLink2160p)}
-                disabled={!active || isLoadingImage}
+                onClick={() =>
+                  active ? downloadImage(imageLink2160p) : openPaymentModal()
+                }
+                disabled={isLoadingImage}
                 fw={700}
                 icon={
                   isLoadingImage ? (
                     <Loader color="pink" size="xs" />
                   ) : (
-                    <IconPhoto size={14} />
+                    <IconPhotoPlus size={14} />
                   )
                 }
               >
-                4K{" "}
-                <Badge
-                  ml="sm"
-                  variant="gradient"
-                  gradient={{ from: "pink", to: "blue" }}
-                >
-                  Pro
-                </Badge>
+                4K <ProBadge ml="sm" />
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
