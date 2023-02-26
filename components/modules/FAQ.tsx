@@ -140,6 +140,7 @@ export function FAQ() {
                 <IconPlus size={18} stroke={1.5} />
               </ThemeIcon>
             }
+            py="sm"
           >
             {faq.map((item, key) => {
               return (

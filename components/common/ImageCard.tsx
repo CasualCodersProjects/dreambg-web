@@ -8,7 +8,6 @@ import {
   Tooltip,
   Menu,
   Loader,
-  createStyles,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import { useState, useEffect } from "react";
@@ -35,17 +34,6 @@ import { useActiveCustomer } from "@/hooks/useCustomer";
 import { usePaymentModal } from "@/hooks/usePaymentModal";
 import ProBadge from "./ProBadge";
 
-const useStyles = createStyles((theme) => ({
-  card: {
-    minHeight: 372.65,
-    minWidth: 552,
-  },
-  image: {
-    minHeight: 312.65,
-    minWidth: 552,
-  },
-}));
-
 export interface ImageCardProps {
   id: string;
   width?: number | string;
@@ -65,8 +53,8 @@ export const DEFAULT_HEIGHT = 200;
 
 const LoadingPlaceholder = () => {
   return (
-    <Center>
-      <Loader size="xl" />
+    <Center m="xl">
+      <Loader m="xl" size="xl" />
     </Center>
   );
 };
@@ -80,7 +68,6 @@ const FailedLoadingPlaceholder = () => {
 };
 
 const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
-  const { classes } = useStyles();
   const { image } = useImage(id);
   const [images, setImages] = useState<ImagesState[]>([]);
   const { hovered, ref } = useHover();
@@ -288,9 +275,8 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       ref={ref}
       radius="md"
       sx={hoverStyle}
-      className={classes.card}
     >
-      <Card.Section className={classes.image}>
+      <Card.Section>
         <Link href={`/image?uuid=${id}`}>
           <Image
             src={imageLink720p}

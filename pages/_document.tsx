@@ -30,6 +30,15 @@ export default class _Document extends Document {
           <link rel="manifest" href="/site.webmanifest" />
           {/* Tell dark reader that this is a dark mode site */}
           <meta name="darkreader" content="false" />
+          <meta
+            name="name"
+            content="DreamBG | Unique AI Generated Backgrounds"
+          />
+          <meta
+            name="description"
+            content="The best backgrounds you've never seen."
+          />
+          <link rel="icon" href="/favicon.ico" />
         </Head>
         <body>
           <Main />

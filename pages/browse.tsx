@@ -2,16 +2,14 @@ import Head from "next/head";
 import { useEffect } from "react";
 import { useInfiniteImages } from "@/hooks/useImages";
 import ImageCard from "@/components/common/ImageCard";
-import LoaderCard from "@/components/common/LoaderCard";
 import { Center, SimpleGrid, Stack } from "@mantine/core";
-import { createImageURL } from "@/utils/createImageURL";
-import range from "@/utils/range";
-import { useIntersection } from "@mantine/hooks";
+import { useIntersection, useMediaQuery } from "@mantine/hooks";
 import genLoaders from "@/utils/genLoaders";
 
-export default function Home() {
+export default function Browse() {
   const { ref, entry } = useIntersection();
   const { images: infiniteImages, size, setSize } = useInfiniteImages();
+  const xl = useMediaQuery("(min-width: 1250px)");
 
   const loadMore = () => {
     setSize(size + 1);
@@ -58,10 +56,11 @@ export default function Home() {
           <SimpleGrid
             cols={4}
             spacing="xl"
+            px={xl ? "xl" : undefined}
             breakpoints={[
               { maxWidth: "sm", cols: 1, spacing: "sm" },
               { maxWidth: "lg", cols: 2, spacing: "md" },
-              { maxWidth: 2000, cols: 3, spacing: "lg" },
+              { maxWidth: 1500, cols: 3, spacing: "lg" },
             ]}
           >
             {generateImages()}
@@ -70,10 +69,11 @@ export default function Home() {
           <SimpleGrid
             cols={4}
             spacing="xl"
+            px={xl ? "xl" : undefined}
             breakpoints={[
               { maxWidth: "sm", cols: 1, spacing: "sm" },
               { maxWidth: "lg", cols: 2, spacing: "md" },
-              { maxWidth: 2000, cols: 3, spacing: "lg" },
+              { maxWidth: "xl", cols: 3, spacing: "lg" },
             ]}
           >
             {genLoaders(12)}
