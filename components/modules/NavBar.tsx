@@ -12,6 +12,7 @@ import {
 import { useUser } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import {
+  IconArrowRight,
   IconDeviceFloppy,
   IconLogin,
   IconLogout,
@@ -42,6 +43,16 @@ const useStyles = createStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+
+  autocomplete: {
+    position: "fixed",
+    left: "50%",
+    marginTop: 8,
+    transform: "translateX(-50%)",
+    [theme.fn.largerThan(1000)]: {
+      width: 400,
+    },
   },
 
   leftHeader: {
@@ -98,6 +109,7 @@ interface NavBarProps {
 
 function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   const [burgerOpen, setBurgerOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const { classes } = useStyles();
   const router = useRouter();
   const supabase = useSupabaseClient();
@@ -158,14 +170,34 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
           </Title>
         </Group>
         <Autocomplete
+          className={classes.autocomplete}
           placeholder="Search"
           icon={<IconSearch size={16} stroke={1.5} />}
           data={tags}
+          radius="xl"
+          onChange={(e) => {
+            setSearchValue(e);
+          }}
+          value={searchValue}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              router.push(`/search?q=${e.currentTarget.value}`);
+            if (e.key === "Enter" && searchValue.length > 0) {
+              router.push(`/search?q=${searchValue}`);
             }
           }}
+          rightSection={
+            <ActionIcon
+              radius="xl"
+              variant="filled"
+              size={30}
+              color="teal"
+              disabled={searchValue.length === 0}
+              onClick={() => {
+                router.push(`/search?q=${searchValue}`);
+              }}
+            >
+              <IconArrowRight size={16} stroke={1.5} />
+            </ActionIcon>
+          }
         />
 
         <Menu
