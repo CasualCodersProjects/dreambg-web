@@ -36,7 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
         withNormalizeCSS
         theme={{
           colorScheme: colorScheme as "dark" | "light",
-          fontFamily: "Open Sans, sans-serif",
+          fontFamily: "Greycliff CF, Open Sans, sans-serif",
           cursorType: "pointer",
           primaryColor: colorScheme === "dark" ? "pink" : "grape",
           colors: {

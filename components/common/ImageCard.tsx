@@ -239,6 +239,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
         color: "yellow",
       });
       router.push("/login");
+      return;
     }
     setIsLoadingImage(true);
     try {
