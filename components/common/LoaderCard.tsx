@@ -3,8 +3,8 @@ import { useHover } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
   card: {
-    height: 372.65,
-    width: 552,
+    minHeight: 372.65,
+    minWidth: 552,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
