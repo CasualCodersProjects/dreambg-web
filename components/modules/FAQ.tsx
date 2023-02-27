@@ -13,6 +13,7 @@ import {
   IconStar,
   IconPremiumRights,
   IconQuestionMark,
+  IconFlask,
 } from "@tabler/icons";
 
 const useStyles = createStyles((theme) => ({
@@ -85,13 +86,21 @@ const faq: {
     answer:
       "DreamBG Pro members are permitted to use the image for commercial purposes as long as they are not selling the image itself. For example, you can use the image as a background for a website or stock image in a YouTube video, but you cannot sell prints or digital downloads of the image itself. If you are not a Pro member, you can use the image for personal use only.",
   },
+  // {
+  //   icon: IconPlus,
+  //   color: "teal",
+  //   value: "make-my-own",
+  //   question: "Can I make my own backgrounds?",
+  //   answer:
+  //     "We plan on adding this feature in the future. There is no ETA at this time.",
+  // },
   {
-    icon: IconPlus,
+    icon: IconFlask,
     color: "teal",
-    value: "make-my-own",
-    question: "Can I make my own backgrounds?",
+    value: "other-services",
+    question: "Will you offer other AI services in the future?",
     answer:
-      "We plan on adding this feature in the future. There is no ETA at this time.",
+      "Yes! We are working on a few other projects that we will be announcing soon.",
   },
 ];
 

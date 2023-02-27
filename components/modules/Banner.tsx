@@ -95,6 +95,7 @@ export function Banner({ onClickLearnMore, onClickGetStarted }: BannerProps) {
 
   return (
     <div
+      onContextMenu={(e) => e.preventDefault()}
       style={{
         backgroundPosition: `center -${scrollY * 0.5 + 100}px`,
       }}

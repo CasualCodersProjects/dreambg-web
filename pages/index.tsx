@@ -9,6 +9,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
 import { Center } from "@mantine/core";
 import PricingCard from "@/components/common/PricingCard";
+import { CTA } from "@/components/modules/CTA";
 
 export default function About() {
   const router = useRouter();
@@ -39,6 +40,7 @@ export default function About() {
       </Center>
       <ComingSoon />
       <FAQ />
+      <CTA />
     </>
   );
 }
