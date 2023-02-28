@@ -6,7 +6,11 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 
-const IMAGE_LIST = ["cyberpunkMountains.jpg", "cyberpunkMountains2.jpg"];
+const IMAGE_LIST = [
+  "cyberpunkMountains.jpg",
+  "cyberpunkMountains2.jpg",
+  "cyberpunkMountains3.jpg",
+];
 
 const RANDOM_IMAGE = IMAGE_LIST[Math.floor(Math.random() * IMAGE_LIST.length)];
 
@@ -14,6 +18,7 @@ const useStyles = createStyles((theme) => ({
   wrapper: {
     minHeight: 900,
     backgroundSize: "cover",
+    backgroundPositionY: "center",
     backgroundImage: `url(/images/${RANDOM_IMAGE})`,
   },
 

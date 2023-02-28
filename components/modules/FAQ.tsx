@@ -123,6 +123,7 @@ export function FAQ() {
               transform: "rotate(45deg)",
               transition: "transform 250ms ease",
             },
+            paddingRight: "1rem",
           },
         }}
         chevron={
