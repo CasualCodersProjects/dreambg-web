@@ -113,16 +113,18 @@ export function LoginForm(props: LoginFormProps) {
                 ? "Already have an account? Login"
                 : "Don't have an account? Register"}
             </Anchor>
-            <Anchor
-              color="dimmed"
-              size="xs"
-              type="button"
-              onClick={() => {
-                props.onClickForgotPassword?.();
-              }}
-            >
-              Forgot password?
-            </Anchor>
+            {type !== "register" && (
+              <Anchor
+                color="dimmed"
+                size="xs"
+                type="button"
+                onClick={() => {
+                  props.onClickForgotPassword?.();
+                }}
+              >
+                Forgot password?
+              </Anchor>
+            )}
           </Stack>
           <Button radius="xl" type="submit">
             {upperFirst(type)}

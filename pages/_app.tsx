@@ -39,6 +39,28 @@ export default function App({ Component, pageProps }: AppProps) {
           fontFamily: "Greycliff CF, Open Sans, sans-serif",
           cursorType: "pointer",
           primaryColor: colorScheme === "dark" ? "pink" : "grape",
+          components: {
+            Button: {
+              defaultProps: {
+                radius: "xl",
+              },
+            },
+            ActionIcon: {
+              defaultProps: {
+                radius: "xl",
+              },
+            },
+            TextInput: {
+              defaultProps: {
+                radius: "xl",
+              },
+            },
+            PasswordInput: {
+              defaultProps: {
+                radius: "xl",
+              },
+            },
+          },
           colors: {
             "twitter-blue": [
               "#90C7E8",
