@@ -27,15 +27,11 @@ export async function imageFetcher(
 export async function latestImagesFetcher(
   supabase: SupabaseClient<Database>,
   page: number,
-  vertical: boolean = false,
 ) {
-  const or = vertical ? "height.eq.1280" : "height.eq.725";
   const { from, to } = getPagination(page, 23);
   const { data, error } = await supabase
     .from("image_info")
     .select("*")
-    // @ts-ignore
-    .or(or)
     .order("id", { ascending: false })
     .range(from, to);
 
@@ -53,15 +49,11 @@ export async function latestImagesFetcher(
 export async function mostLikedImageFetcher(
   supabase: SupabaseClient<Database>,
   page: number,
-  vertical: boolean = false,
 ) {
-  const or = vertical ? "height.eq.1280" : "height.eq.725";
   const { from, to } = getPagination(page, 23);
   const { data, error } = await supabase
     .from("image_info")
     .select("*")
-    // @ts-ignore
-    .or(or)
     .order("num_likes", { ascending: false })
     .range(from, to);
 

@@ -28,6 +28,8 @@ export default function ImagePage() {
             imageLink={img?.image_link as string}
             id={img?.image_uuid as string}
             likes={img?.num_likes as number}
+            height={img?.height as number}
+            width={img?.width as number}
           />
         )}
         {isLoading && <Loader size="xl" />}

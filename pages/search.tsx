@@ -29,6 +29,8 @@ export default function Search() {
               id={image?.image_uuid as string}
               imageLink={image?.image_link as string}
               likes={image?.num_likes as number}
+              height={image?.height as number}
+              width={image?.width as number}
             />
           </div>
         );

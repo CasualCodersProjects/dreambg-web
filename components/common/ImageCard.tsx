@@ -3,16 +3,18 @@ import { useUserLikes } from "@/hooks/useLikes";
 import { useSavedImages } from "@/hooks/useSavedImages";
 import { usePaymentModal } from "@/hooks/usePaymentModal";
 import { Database } from "@/types/database.types";
-import { useHover } from "@mantine/hooks";
+import { useElementSize, useHover, useViewportSize } from "@mantine/hooks";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import abbrNum from "@/utils/abbrNumber";
 import { createImageURL } from "@/utils/createImageURL";
 import { showNotification } from "@mantine/notifications";
 import {
   IconArrowBigTop,
   IconDeviceFloppy,
+  IconDeviceMobile,
+  IconDeviceDesktop,
   IconDownload,
   IconPhoto,
   IconPhotoPlus,
@@ -29,10 +31,12 @@ import {
   ActionIcon,
   Menu,
   Loader,
+  ThemeIcon,
 } from "@mantine/core";
 import Link from "next/link";
 import ShareButton from "./ShareButton";
 import ProBadge from "./ProBadge";
+import usePlatform from "@/hooks/usePlatform";
 
 export interface ImageCardProps {
   id: string;
@@ -73,11 +77,14 @@ const ImageCard = ({
   const router = useRouter();
   const user = useUser();
   const supabase = useSupabaseClient<Database>();
+  const { ref: sizeRef, width: refWidth } = useElementSize();
+  const { width: viewWidth } = useViewportSize();
 
   const openPaymentModal = usePaymentModal();
   const { active } = useActiveCustomer();
   const { likes: userLikes, mutate: mutateLikes } = useUserLikes();
   const { images: userSaves, mutate: mutateSaved } = useSavedImages(user?.id);
+  const { isMobile } = usePlatform();
 
   const liked = userLikes?.some((like) => like.image === id);
   const saved = userSaves?.some((save) => save.image_uuid === id);
@@ -88,12 +95,18 @@ const ImageCard = ({
           ...sx,
           transform: "scale(1.02)",
           transition: "transform 125ms ease",
+          maxHeight: isMobile ? undefined : 530,
+          minWidth: isMobile ? viewWidth * 0.9 : viewWidth * 0.2,
         }
       : {
           ...sx,
           transform: "scale(1)",
           transition: "transform 125ms ease",
+          maxHeight: isMobile ? undefined : 530,
+          minWidth: isMobile ? viewWidth * 0.9 : viewWidth * 0.2,
         };
+
+  const vertical = width && height ? height > width : false;
 
   const downloadImage = async (imageLink: string) => {
     setIsDownloadingImage(true);
@@ -187,6 +200,7 @@ const ImageCard = ({
     if (error) {
       console.error(error);
     }
+
     showNotification({
       title: "Image saved",
       message: "The image has been saved to your profile.",
@@ -254,11 +268,11 @@ const ImageCard = ({
       radius="md"
       sx={hoverStyle}
     >
-      <Card.Section>
+      <Card.Section ref={sizeRef}>
         <Link href={`/image?uuid=${id}`}>
           <Image
-            width={width}
-            height={height}
+            height={isMobile ? refWidth * 1.7 : refWidth * 0.6}
+            width={refWidth}
             src={createImageURL("ai-images", imageLink)}
             alt={"image"}
           />
@@ -380,6 +394,13 @@ const ImageCard = ({
             </ActionIcon>
           </Tooltip>
           <ShareButton id={id} />
+          {height && width && (
+            <Tooltip label={`Optimized for ${vertical ? "mobile" : "desktop"}`}>
+              <ThemeIcon variant="default">
+                {vertical ? <IconDeviceMobile /> : <IconDeviceDesktop />}
+              </ThemeIcon>
+            </Tooltip>
+          )}
         </Group>
       </Center>
     </Card>
