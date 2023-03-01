@@ -67,7 +67,9 @@ export function ForgotPassword({ onClickBack }: ForgotPasswordProps) {
             <Box ml={5}>Back to login page</Box>
           </Center>
         </Anchor>
-        <Button className={classes.control}>Reset password</Button>
+        <Button radius="xl" className={classes.control}>
+          Reset password
+        </Button>
       </Group>
     </Paper>
   );

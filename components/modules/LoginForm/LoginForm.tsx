@@ -124,7 +124,9 @@ export function LoginForm(props: LoginFormProps) {
               Forgot password?
             </Anchor>
           </Stack>
-          <Button type="submit">{upperFirst(type)}</Button>
+          <Button radius="xl" type="submit">
+            {upperFirst(type)}
+          </Button>
         </Group>
       </form>
     </Paper>

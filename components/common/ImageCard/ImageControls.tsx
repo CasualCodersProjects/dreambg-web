@@ -227,6 +227,7 @@ export const ImageControls = ({
       {typeof likes === "number" && <Text fw={700}>{abbrNum(imageLikes)}</Text>}
       <Tooltip label={liked ? "Unlike" : "Like"}>
         <ActionIcon
+          radius="xl"
           onClick={liked ? unlikeImage : likeImage}
           loading={loadingLike}
           variant={liked ? "filled" : "subtle"}
@@ -240,6 +241,7 @@ export const ImageControls = ({
         onChange={setMenuOpen}
         onOpen={getImageDownload}
         position="bottom-start"
+        shadow="md"
       >
         <Menu.Target>
           <Tooltip label="Download">
@@ -248,6 +250,7 @@ export const ImageControls = ({
               variant={menuOpen ? "filled" : "subtle"}
               loading={isDownloadingImage}
               disabled={isDownloadingImage}
+              radius="xl"
             >
               <IconDownload />
             </ActionIcon>
@@ -330,6 +333,7 @@ export const ImageControls = ({
           onClick={saved ? unSaveImage : saveImage}
           variant={saved ? "filled" : "subtle"}
           color={saved ? "red" : "green.4"}
+          radius="xl"
         >
           {saved ? <IconTrash /> : <IconDeviceFloppy />}
         </ActionIcon>

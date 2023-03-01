@@ -91,6 +91,7 @@ const ShareButton = ({ id }: ShareButtonProps) => {
             children: ModalContent,
           });
         }}
+        radius="xl"
       >
         <IconShare />
       </ActionIcon>
