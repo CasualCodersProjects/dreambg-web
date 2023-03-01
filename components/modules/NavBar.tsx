@@ -160,7 +160,11 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
       <div id="navbar" className={classes.inner}>
         <Group
           onClick={() => {
-            router.push("/browse");
+            if (user) {
+              router.push("/browse");
+            } else {
+              router.push("/");
+            }
           }}
           className={classes.leftHeader}
         >
