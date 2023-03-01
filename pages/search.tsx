@@ -1,5 +1,5 @@
 import { useSearch } from "@/hooks/useSearch";
-import ImageCard from "@/components/common/ImageCard";
+import ImageCard from "@/components/common/OldImageCard";
 import { Center, SimpleGrid, Stack, Button, Title } from "@mantine/core";
 import Head from "next/head";
 import { useState } from "react";

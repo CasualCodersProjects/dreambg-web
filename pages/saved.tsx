@@ -27,10 +27,14 @@ export default function Saved() {
 
   const generateImages = () => {
     if (images) {
-      return images.map((image: any, i: number) => {
+      return images.map((image, i: number) => {
         return (
           <div key={i}>
-            <ImageCard id={image.uuid as string} />
+            <ImageCard
+              id={image?.image_uuid as string}
+              imageLink={image?.image_link as string}
+              likes={image?.num_likes as number}
+            />
           </div>
         );
       });
