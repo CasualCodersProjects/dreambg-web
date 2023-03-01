@@ -31,7 +31,6 @@ export default function Browse() {
     if (images) {
       return images.map((image, i) => {
         if (!image) return null;
-        console.log({ image });
         return (
           <div key={i}>
             <ImageCard
@@ -79,7 +78,7 @@ export default function Browse() {
             breakpoints={[
               { maxWidth: "sm", cols: 1, spacing: "sm" },
               { maxWidth: "lg", cols: 2, spacing: "md" },
-              { maxWidth: "xl", cols: 3, spacing: "lg" },
+              { maxWidth: 1500, cols: 3, spacing: "lg" },
             ]}
           >
             {genLoaders(12)}

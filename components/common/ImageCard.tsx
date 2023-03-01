@@ -86,10 +86,14 @@ const ImageCard = ({
     hovered && !disableHover
       ? {
           ...sx,
-          transform: "scale(1.01)",
+          transform: "scale(1.02)",
           transition: "transform 125ms ease",
         }
-      : { ...sx };
+      : {
+          ...sx,
+          transform: "scale(1)",
+          transition: "transform 125ms ease",
+        };
 
   const downloadImage = async (imageLink: string) => {
     setIsDownloadingImage(true);
@@ -253,10 +257,10 @@ const ImageCard = ({
       <Card.Section>
         <Link href={`/image?uuid=${id}`}>
           <Image
+            width={width}
+            height={height}
             src={createImageURL("ai-images", imageLink)}
             alt={"image"}
-            height={height}
-            width={width}
           />
         </Link>
       </Card.Section>

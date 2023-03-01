@@ -26,3 +26,13 @@ export function useImageParams() {
 
   return { uuid, image };
 }
+
+export function useVerticalParam() {
+  const params = useQueryParameters();
+
+  if (!params) {
+    return false;
+  }
+
+  return params.get('vertical') !== null;
+}

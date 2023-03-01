@@ -31,7 +31,6 @@ export default function Browse() {
     if (images) {
       return images.map((image, i) => {
         if (!image) return null;
-        console.log({ image });
         return (
           <div key={i}>
             <ImageCard
