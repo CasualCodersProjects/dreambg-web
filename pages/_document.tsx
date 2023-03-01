@@ -34,10 +34,7 @@ export default class _Document extends Document {
             name="name"
             content="DreamBG | Unique AI Generated Backgrounds"
           />
-          <meta
-            name="description"
-            content="The best backgrounds you've never seen."
-          />
+          <meta name="description" content="Unique AI Generated Backgrounds" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <body>

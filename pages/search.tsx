@@ -1,5 +1,5 @@
 import { useSearch } from "@/hooks/useSearch";
-import ImageCard from "@/components/common/OldImageCard";
+import ImageCard from "@/components/common/ImageCard";
 import { Center, SimpleGrid, Stack, Button, Title } from "@mantine/core";
 import Head from "next/head";
 import { useState } from "react";
@@ -25,7 +25,11 @@ export default function Search() {
       return images.map((image, i) => {
         return (
           <div key={i}>
-            <ImageCard id={image.uuid as string} />
+            <ImageCard
+              id={image?.image_uuid as string}
+              imageLink={image?.image_link as string}
+              likes={image?.num_likes as number}
+            />
           </div>
         );
       });

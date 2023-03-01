@@ -11,10 +11,10 @@ export async function searchFetcher(
 ) {
   const { from, to } = getPagination(page, limit);
   const { data: prompts, error: promptsError } = await supabase
-    .from("single_images")
-    .select("prompt, prompt_id, uuid, link, id")
-    .textSearch("prompt", genFullTextQuery(query))
-    .order("prompt", { ascending: false })
+    .from("image_info")
+    .select("*")
+    .textSearch("image_prompt", genFullTextQuery(query))
+    .order("image_prompt", { ascending: false })
     .range(from, to);
 
   if (promptsError) {
