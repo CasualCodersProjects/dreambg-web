@@ -1,17 +1,15 @@
-import {
-  ActionIcon,
-  Card,
-  Center,
-  Group,
-  Image,
-  Text,
-  Tooltip,
-  Menu,
-  Loader,
-} from "@mantine/core";
+import { useActiveCustomer } from "@/hooks/useCustomer";
+import { useUserLikes } from "@/hooks/useLikes";
+import { useSavedImages } from "@/hooks/useSavedImages";
+import { usePaymentModal } from "@/hooks/usePaymentModal";
+import { Database } from "@/types/database.types";
 import { useHover } from "@mantine/hooks";
-import { useState, useEffect } from "react";
-import Link from "next/link";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import abbrNum from "@/utils/abbrNumber";
+import { createImageURL } from "@/utils/createImageURL";
+import { showNotification } from "@mantine/notifications";
 import {
   IconArrowBigTop,
   IconDeviceFloppy,
@@ -21,25 +19,30 @@ import {
   IconTrash,
   IconX,
 } from "@tabler/icons";
-import abbrNum from "@/utils/abbrNumber";
-import { useRouter } from "next/router";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useImage } from "@/hooks/useImages";
-import { useSavedImage } from "@/hooks/useSavedImages";
-import { useLikes, useUserLiked } from "@/hooks/useLikes";
-import { showNotification } from "@mantine/notifications";
-import { createImageURL } from "@/utils/createImageURL";
+import {
+  Card,
+  Image,
+  Text,
+  Center,
+  Group,
+  Tooltip,
+  ActionIcon,
+  Menu,
+  Loader,
+} from "@mantine/core";
+import Link from "next/link";
 import ShareButton from "./ShareButton";
-import { useActiveCustomer } from "@/hooks/useCustomer";
-import { usePaymentModal } from "@/hooks/usePaymentModal";
 import ProBadge from "./ProBadge";
 
 export interface ImageCardProps {
   id: string;
-  width?: number | string;
-  height?: number | string;
+  width?: number;
+  height?: number;
   disableHover?: boolean;
   sx?: any;
+  imageLink: string;
+  likes?: number;
+  views?: number;
 }
 
 interface ImagesState {
@@ -48,62 +51,45 @@ interface ImagesState {
   height: number;
 }
 
-export const DEFAULT_WIDTH = 356;
-export const DEFAULT_HEIGHT = 200;
+const ImageCard = ({
+  id,
+  width,
+  height,
+  disableHover,
+  sx,
+  imageLink,
+  likes,
+  views,
+}: ImageCardProps) => {
+  const [imageLikes, setImageLikes] = useState(likes || 0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isDownloadingImage, setIsDownloadingImage] = useState(false);
+  const [imageDownloads, setImageDownloads] = useState<ImagesState[]>([]);
+  const [loadingImageLinks, setLoadingImageLinks] = useState(false);
+  const [loadingLike, setLoadingLiked] = useState(false);
+  const [loadingSaved, setLoadingSaved] = useState(false);
 
-const LoadingPlaceholder = () => {
-  return (
-    <Center m="xl">
-      <Loader m="xl" size="xl" />
-    </Center>
-  );
-};
-
-const FailedLoadingPlaceholder = () => {
-  return (
-    <Center>
-      <Text>Failed to load image</Text>
-    </Center>
-  );
-};
-
-const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
-  const { image } = useImage(id);
-  const [images, setImages] = useState<ImagesState[]>([]);
   const { hovered, ref } = useHover();
-  const [loadingSaved, setLoadingSaved] = useState<boolean>(false);
-  const [loadingLiked, setLoadingLiked] = useState<boolean>(false);
-  const [isLoadingImage, setIsLoadingImage] = useState<boolean>(false);
-  const [isDownloadingImage, setIsDownloadingImage] = useState<boolean>(false);
-  const [imagePlaceholder, setImagePlaceholder] = useState<JSX.Element>(
-    <LoadingPlaceholder />
-  );
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const router = useRouter();
-  const supabase = useSupabaseClient();
   const user = useUser();
-  const { image: savedImage, mutate } = useSavedImage(id as string);
-  const { liked, mutate: mutateLike } = useUserLiked(id as string);
-  const { likes, mutate: mutateLikes } = useLikes(id as string);
-  const { active } = useActiveCustomer();
+  const supabase = useSupabaseClient<Database>();
+
   const openPaymentModal = usePaymentModal();
+  const { active } = useActiveCustomer();
+  const { likes: userLikes, mutate: mutateLikes } = useUserLikes();
+  const { images: userSaves, mutate: mutateSaved } = useSavedImages(user?.id);
 
-  const imageLink720p = createImageURL("ai-images", image?.link as string);
+  const liked = userLikes?.some((like) => like.image === id);
+  const saved = userSaves?.some((save) => save.image_uuid === id);
 
-  const imageLink1080p = createImageURL(
-    "ai-images",
-    images?.[1]?.link as string
-  );
-
-  const imageLink1440p = createImageURL(
-    "ai-images",
-    images?.[2]?.link as string
-  );
-
-  const imageLink2160p = createImageURL(
-    "ai-images",
-    images?.[3]?.link as string
-  );
+  const hoverStyle =
+    hovered && !disableHover
+      ? {
+          ...sx,
+          transform: "scale(1.01)",
+          transition: "transform 125ms ease",
+        }
+      : { ...sx };
 
   const downloadImage = async (imageLink: string) => {
     setIsDownloadingImage(true);
@@ -113,7 +99,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
     // and tell them if they are a member they can download the image with no ads
 
     // fetch the image
-    const response = await fetch(imageLink);
+    const response = await fetch(createImageURL("ai-images", imageLink));
     // get the response as a blob
     const blob = await response.blob();
     // create an invisible link
@@ -126,15 +112,6 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
     link.click();
     setIsDownloadingImage(false);
   };
-
-  const hoverStyle =
-    hovered && !disableHover
-      ? {
-          ...sx,
-          transform: "scale(1.01)",
-          transition: "transform 125ms ease",
-        }
-      : { ...sx };
 
   const likeImage = async () => {
     if (!user) {
@@ -160,8 +137,9 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       message: "The image has been liked.",
     });
 
+    setImageLikes(imageLikes + 1);
+
     mutateLikes();
-    await mutateLike();
     setLoadingLiked(false);
   };
 
@@ -182,8 +160,9 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       message: "The image has been unliked.",
     });
 
+    setImageLikes(imageLikes - 1);
+
     mutateLikes();
-    await mutateLike();
     setLoadingLiked(false);
   };
 
@@ -208,7 +187,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       title: "Image saved",
       message: "The image has been saved to your profile.",
     });
-    await mutate();
+    await mutateSaved();
     setLoadingSaved(false);
   };
 
@@ -227,7 +206,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       title: "Image unsaved",
       message: "The image has been unsaved from your profile.",
     });
-    await mutate();
+    await mutateSaved();
     setLoadingSaved(false);
   };
 
@@ -241,7 +220,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       router.push("/login");
       return;
     }
-    setIsLoadingImage(true);
+    setLoadingImageLinks(true);
     try {
       const { data, error } = await supabase.functions.invoke("get-images", {
         body: { uuid: id },
@@ -249,7 +228,7 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       if (error) {
         throw error;
       }
-      setImages(data as ImagesState[]);
+      setImageDownloads(data as ImagesState[]);
     } catch (e) {
       console.error(e);
       showNotification({
@@ -259,14 +238,8 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
         message: "There was an error getting the image download.",
       });
     }
-    setIsLoadingImage(false);
+    setLoadingImageLinks(false);
   };
-
-  useEffect(() => {
-    setTimeout(() => {
-      setImagePlaceholder(<FailedLoadingPlaceholder />);
-    }, 5000);
-  }, []);
 
   return (
     <Card
@@ -280,23 +253,23 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
       <Card.Section>
         <Link href={`/image?uuid=${id}`}>
           <Image
-            src={imageLink720p}
+            src={createImageURL("ai-images", imageLink)}
             alt={"image"}
             height={height}
             width={width}
-            withPlaceholder
-            placeholder={imagePlaceholder}
           />
         </Link>
       </Card.Section>
 
       <Center mt="md">
         <Group>
-          {typeof likes === "number" && <Text fw={700}>{abbrNum(likes)}</Text>}
+          {typeof likes === "number" && (
+            <Text fw={700}>{abbrNum(imageLikes)}</Text>
+          )}
           <Tooltip label={liked ? "Unlike" : "Like"}>
             <ActionIcon
               onClick={liked ? unlikeImage : likeImage}
-              loading={loadingLiked}
+              loading={loadingLike}
               variant={liked ? "filled" : "subtle"}
               color={"orange.5"}
             >
@@ -325,11 +298,11 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
             <Menu.Dropdown>
               <Menu.Label>Download Image</Menu.Label>
               <Menu.Item
-                disabled={isLoadingImage}
+                disabled={loadingImageLinks || imageDownloads.length === 0}
                 fw={700}
-                onClick={() => downloadImage(imageLink720p)}
+                onClick={() => downloadImage(imageDownloads[0].link)}
                 icon={
-                  isLoadingImage ? (
+                  loadingImageLinks ? (
                     <Loader color="pink" size="xs" />
                   ) : (
                     <IconPhoto size={14} />
@@ -339,11 +312,11 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
                 720p
               </Menu.Item>
               <Menu.Item
-                onClick={() => downloadImage(imageLink1080p)}
-                disabled={isLoadingImage}
+                disabled={loadingImageLinks || imageDownloads.length === 0}
+                onClick={() => downloadImage(imageDownloads[1].link)}
                 fw={700}
                 icon={
-                  isLoadingImage ? (
+                  loadingImageLinks ? (
                     <Loader color="pink" size="xs" />
                   ) : (
                     <IconPhoto size={14} />
@@ -354,13 +327,15 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
               </Menu.Item>
               <Menu.Divider />
               <Menu.Item
+                disabled={loadingImageLinks || imageDownloads.length === 0}
                 onClick={() =>
-                  active ? downloadImage(imageLink1440p) : openPaymentModal()
+                  active
+                    ? downloadImage(imageDownloads[2].link)
+                    : openPaymentModal()
                 }
-                disabled={isLoadingImage}
                 fw={700}
                 icon={
-                  isLoadingImage ? (
+                  loadingImageLinks ? (
                     <Loader color="pink" size="xs" />
                   ) : (
                     <IconPhotoPlus size={14} />
@@ -371,12 +346,14 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
               </Menu.Item>
               <Menu.Item
                 onClick={() =>
-                  active ? downloadImage(imageLink2160p) : openPaymentModal()
+                  active
+                    ? downloadImage(imageDownloads[3].link)
+                    : openPaymentModal()
                 }
-                disabled={isLoadingImage}
+                disabled={loadingImageLinks || imageDownloads.length === 0}
                 fw={700}
                 icon={
-                  isLoadingImage ? (
+                  loadingImageLinks ? (
                     <Loader color="pink" size="xs" />
                   ) : (
                     <IconPhotoPlus size={14} />
@@ -388,14 +365,14 @@ const ImageCard = ({ id, width, height, disableHover, sx }: ImageCardProps) => {
             </Menu.Dropdown>
           </Menu>
 
-          <Tooltip label={savedImage ? "Unsave image" : "Save Image"}>
+          <Tooltip label={saved ? "Unsave image" : "Save Image"}>
             <ActionIcon
               loading={loadingSaved}
-              onClick={savedImage ? unSaveImage : saveImage}
-              variant={savedImage ? "filled" : "subtle"}
-              color={savedImage ? "red" : "green.4"}
+              onClick={saved ? unSaveImage : saveImage}
+              variant={saved ? "filled" : "subtle"}
+              color={saved ? "red" : "green.4"}
             >
-              {savedImage ? <IconTrash /> : <IconDeviceFloppy />}
+              {saved ? <IconTrash /> : <IconDeviceFloppy />}
             </ActionIcon>
           </Tooltip>
           <ShareButton id={id} />

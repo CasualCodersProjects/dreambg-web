@@ -252,6 +252,16 @@ export interface Database {
       }
     }
     Views: {
+      image_info: {
+        Row: {
+          height: number | null
+          id: number | null
+          image_link: string | null
+          image_uuid: string | null
+          num_likes: number | null
+          width: number | null
+        }
+      }
       likes_count: {
         Row: {
           image: string | null
@@ -274,9 +284,12 @@ export interface Database {
       }
       saved_image_links: {
         Row: {
-          link: string | null
+          height: number | null
+          image_link: string | null
+          image_uuid: string | null
+          num_likes: number | null
           user_id: string | null
-          uuid: string | null
+          width: number | null
         }
       }
       single_images: {

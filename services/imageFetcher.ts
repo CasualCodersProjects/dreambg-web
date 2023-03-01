@@ -29,11 +29,10 @@ export async function imageFetcher(
   uuid: string
 ) {
   const { data, error } = await supabase
-    .from("image_links")
-    .select("link, width, height")
+    .from("image_info")
+    .select("*")
     // @ts-ignore
-    .eq("image", uuid)
-    .or("height.eq.1280,width.eq.1280")
+    .eq("image_uuid", uuid)
     .limit(1);
 
   if (error) {
@@ -60,6 +59,58 @@ export async function infiniteImagesFetcher(
     // @ts-ignore
     .or(or)
     .order("id", { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return data;
+}
+
+export async function latestImagesFetcher(
+  supabase: SupabaseClient<Database>,
+  page: number,
+  vertical: boolean = false,
+) {
+  const or = vertical ? "height.eq.1280" : "height.eq.725";
+  const { from, to } = getPagination(page, 23);
+  const { data, error } = await supabase
+    .from("image_info")
+    .select("*")
+    // @ts-ignore
+    .or(or)
+    .order("id", { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return data;
+}
+
+export async function mostLikedImageFetcher(
+  supabase: SupabaseClient<Database>,
+  page: number,
+  vertical: boolean = false,
+) {
+  const or = vertical ? "height.eq.1280" : "height.eq.725";
+  const { from, to } = getPagination(page, 23);
+  const { data, error } = await supabase
+    .from("image_info")
+    .select("*")
+    // @ts-ignore
+    .or(or)
+    .order("num_likes", { ascending: false })
     .range(from, to);
 
   if (error) {

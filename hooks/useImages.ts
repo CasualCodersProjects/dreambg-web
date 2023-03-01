@@ -1,5 +1,4 @@
-import { useActiveCustomer } from '@/hooks/useCustomer';
-import { downloadImageFetcher, imageFetcher, imagesFetcher, infiniteImagesFetcher } from '@/services/imageFetcher';
+import { downloadImageFetcher, imageFetcher, imagesFetcher, infiniteImagesFetcher, latestImagesFetcher, mostLikedImageFetcher } from '@/services/imageFetcher';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSWRInfinite from 'swr/infinite';
 import useSWR from 'swr';
@@ -57,6 +56,38 @@ export const useInfiniteImages = (vertical: boolean = false) => {
   const supabase = useSupabaseClient<Database>();
   const { data, error, size, setSize } = useSWRInfinite(getKey, (pageIndex) =>
     infiniteImagesFetcher(supabase, parseInt(pageIndex), vertical)
+  );
+
+  return {
+    images: data,
+    isLoading: !error && !data,
+    isError: !!error,
+    error,
+    size,
+    setSize,
+  };
+};
+
+export const useLatestImages = (vertical: boolean = false) => {
+  const supabase = useSupabaseClient<Database>();
+  const { data, error, size, setSize } = useSWRInfinite(getKey, (pageIndex) =>
+    latestImagesFetcher(supabase, parseInt(pageIndex), vertical)
+  );
+
+  return {
+    images: data,
+    isLoading: !error && !data,
+    isError: !!error,
+    error,
+    size,
+    setSize,
+  };
+};
+
+export const useMostLikedImages = (vertical: boolean = false) => {
+  const supabase = useSupabaseClient<Database>();
+  const { data, error, size, setSize } = useSWRInfinite(getKey, (pageIndex) =>
+    mostLikedImageFetcher(supabase, parseInt(pageIndex), vertical)
   );
 
   return {

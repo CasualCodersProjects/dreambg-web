@@ -2,11 +2,19 @@ import Head from "next/head";
 import { Center, Loader } from "@mantine/core";
 import ImageCard from "@/components/common/ImageCard";
 import { useImageParams } from "@/hooks/useQueryParams";
+import { useImage } from "@/hooks/useImages";
+import { useEffect, useState } from "react";
 
 export default function ImagePage() {
-  const { image, uuid } = useImageParams();
+  const [imageUUID, setImageUUID] = useState<string | null>(null);
+  const { uuid } = useImageParams();
+  const { image: img, isLoading } = useImage(imageUUID as string);
 
-  const id = image || uuid;
+  useEffect(() => {
+    if (uuid) {
+      setImageUUID(uuid);
+    }
+  }, [uuid]);
 
   return (
     <>
@@ -14,8 +22,15 @@ export default function ImagePage() {
         <title>DreamBG - Image</title>
       </Head>
       <Center>
-        {id && <ImageCard disableHover id={id as string} />}
-        {!id && <Loader size="xl" />}
+        {!isLoading && (
+          <ImageCard
+            disableHover
+            imageLink={img?.image_link as string}
+            id={img?.image_uuid as string}
+            likes={img?.num_likes as number}
+          />
+        )}
+        {isLoading && <Loader size="xl" />}
       </Center>
     </>
   );

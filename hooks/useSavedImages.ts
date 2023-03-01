@@ -23,7 +23,7 @@ export const useSavedImage = (uuid: string) => {
 
 export const useSavedImages = (user_id: string | undefined) => {
   const supabase = useSupabaseClient();
-  const { data, error } = useSWR([user_id, "saved_images"], ([user_id]) =>
+  const { data, error, mutate } = useSWR([user_id, "saved_images"], ([user_id]) =>
     savedImagesFetcher(supabase, user_id)
   );
 
@@ -32,5 +32,6 @@ export const useSavedImages = (user_id: string | undefined) => {
     isLoading: !error && !data,
     isError: !!error,
     error,
+    mutate,
   };
 };

@@ -17,3 +17,6 @@ start:
 # static page export
 export:
   @yarn export
+
+gen-db-types:
+  @yarn gen-db-types

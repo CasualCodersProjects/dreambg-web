@@ -12,15 +12,15 @@ import {
 import { useUser } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import {
+  IconArrowBigTop,
   IconArrowRight,
   IconDeviceFloppy,
-  IconInfoCircle,
   IconLogin,
   IconLogout,
   IconMoon,
-  IconPhone,
   IconSearch,
   IconSettings,
+  IconStar,
   IconSun,
   IconUpload,
 } from "@tabler/icons";
@@ -227,24 +227,28 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Label>DreamBG {active && <ProBadge />}</Menu.Label>
-
-            {/* <Menu.Item
-              icon={<IconInfoCircle />}
-              onClick={() => router.push("/about")}
-            >
-              About
-            </Menu.Item>
+            <Menu.Label>Categories</Menu.Label>
 
             <Menu.Item
-              icon={<IconPhone />}
-              onClick={() => router.push("/contact")}
+              onClick={() => {
+                router.push("/likes");
+              }}
+              icon={<IconArrowBigTop />}
             >
-              Contact Us
+              Most Liked Images
             </Menu.Item>
-
-            <Menu.Divider /> */}
-
+            <Menu.Item
+              onClick={() => {
+                router.push("/latest");
+              }}
+              icon={<IconStar />}
+            >
+              Latest Images
+            </Menu.Item>
+            <Menu.Label>
+              {" "}
+              Account & Settings {active && <ProBadge />}{" "}
+            </Menu.Label>
             <Menu.Item
               icon={colorScheme === "dark" ? <IconSun /> : <IconMoon />}
               onClick={toggleColorScheme}

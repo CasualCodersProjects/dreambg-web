@@ -29,6 +29,30 @@ export async function userLikedFetcher(
   return !!data.length;
 }
 
+export async function userLikesFetcher(
+  supabaseClient: SupabaseClient<Database>,
+  user_id: string | undefined
+) {
+  if (!user_id) {
+    return null;
+  }
+  const { data, error } = await supabaseClient
+    .from("likes")
+    .select("*")
+    // @ts-ignore
+    .eq("user_id", user_id);
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return data;
+}
+
 export async function likeCountFetcher(
   supabaseClient: SupabaseClient<Database>,
   image_id: string
