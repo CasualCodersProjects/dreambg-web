@@ -36,3 +36,24 @@ export async function randomTagsFetcher(
 
   return tags;
 }
+
+export async function imageTagsFetcher(
+  supabase: SupabaseClient<Database>,
+  uuid: string | undefined
+) {
+
+  if (!uuid) {
+    return [];
+  }
+
+  const { data: tags, error: tagsError } = await supabase
+    .from("image_tags")
+    .select("tag")
+    .eq("uuid", uuid);
+
+  if (tagsError) {
+    throw tagsError;
+  }
+
+  return tags.map((tag) => tag.tag as string);
+}

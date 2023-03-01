@@ -1,4 +1,4 @@
-import { randomTagsFetcher, tagsFetcher } from "@/services/tagFetcher";
+import { randomTagsFetcher, tagsFetcher, imageTagsFetcher } from "@/services/tagFetcher";
 import useSWR from "swr";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
@@ -26,6 +26,20 @@ export const useRandomTags = (limit: number = 10) => {
     tags: data
       ? data.map((tag) => tag.tag as string).sort(() => Math.random() - 0.5)
       : [],
+    isLoading: !error && !data,
+    isError: !!error,
+    error,
+  };
+};
+
+export const useImageTags = (uuid: string | undefined) => {
+  const supabase = useSupabaseClient();
+  const { data, error } = useSWR([uuid], ([uuid]) =>
+    imageTagsFetcher(supabase, uuid)
+  );
+
+  return {
+    tags: data || [],
     isLoading: !error && !data,
     isError: !!error,
     error,

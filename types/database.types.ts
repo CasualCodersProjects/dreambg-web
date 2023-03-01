@@ -263,6 +263,13 @@ export interface Database {
           width: number | null
         }
       }
+      image_tags: {
+        Row: {
+          id: number | null
+          tag: string | null
+          uuid: string | null
+        }
+      }
       likes_count: {
         Row: {
           image: string | null
