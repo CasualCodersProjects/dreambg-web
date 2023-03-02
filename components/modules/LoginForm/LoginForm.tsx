@@ -28,6 +28,7 @@ export function LoginForm(props: LoginFormProps) {
 
   const [type, toggle] = useToggle(["login", "register"]);
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm({
     initialValues: {
       email: "",
@@ -52,6 +53,7 @@ export function LoginForm(props: LoginFormProps) {
     password: string;
     terms: boolean;
   }) => {
+    setLoading(true);
     if (type === "register") {
       const { error } = await supabase.auth.signUp({
         email,
@@ -79,6 +81,7 @@ export function LoginForm(props: LoginFormProps) {
         });
       }
     }
+    setLoading(false);
   };
 
   const handleFacebookLogin = async () => {
@@ -137,6 +140,7 @@ export function LoginForm(props: LoginFormProps) {
               form.setFieldValue("email", event.currentTarget.value)
             }
             error={form.errors.email && "Invalid email"}
+            disabled={loading}
           />
 
           <PasswordInput
@@ -151,6 +155,7 @@ export function LoginForm(props: LoginFormProps) {
               form.errors.password &&
               "Password should include at least 6 characters"
             }
+            disabled={loading}
           />
 
           {type === "register" && (
@@ -167,6 +172,7 @@ export function LoginForm(props: LoginFormProps) {
                 confirmPassword.length > 0 &&
                 "Passwords do not match"
               }
+              disabled={loading}
             />
           )}
 
@@ -207,7 +213,7 @@ export function LoginForm(props: LoginFormProps) {
               </Anchor>
             )}
           </Stack>
-          <Button radius="xl" type="submit">
+          <Button loading={loading} radius="xl" type="submit">
             {upperFirst(type)}
           </Button>
         </Group>

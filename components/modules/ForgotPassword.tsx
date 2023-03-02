@@ -80,6 +80,7 @@ export function ForgotPassword({ onClickBack }: ForgotPasswordProps) {
         placeholder="me@example.com"
         required
         onChange={(event) => setEmail(event.currentTarget.value)}
+        disabled={loading}
       />
       <Group position="apart" mt="lg" className={classes.controls}>
         <Anchor

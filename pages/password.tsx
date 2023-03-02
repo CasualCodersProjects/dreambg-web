@@ -18,6 +18,7 @@ export default function PasswordReset() {
         color: "red",
       });
       router.push("/login");
+      return;
     }
   }, [user, router]);
 

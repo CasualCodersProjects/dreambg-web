@@ -87,6 +87,7 @@ export function ResetPassword() {
         placeholder="Your New Password"
         required
         onChange={(event) => setPassword(event.currentTarget.value)}
+        disabled={loading}
       />
       <PasswordInput
         my="xl"
@@ -99,6 +100,7 @@ export function ResetPassword() {
             ? "Passwords do not match"
             : undefined
         }
+        disabled={loading}
       />
       <Group position="apart" mt="lg" className={classes.controls}>
         <Button
