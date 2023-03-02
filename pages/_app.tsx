@@ -98,7 +98,7 @@ export default function App({ Component, pageProps }: AppProps) {
               "#00C3A8",
               "#00B097",
             ],
-            orange: [
+            red: [
               "#FFF4F1",
               "#FFC5B6",
               "#FF9C83",

@@ -108,8 +108,9 @@ export function ResetPassword() {
           onClick={onClickResetPassword}
           radius="xl"
           className={classes.control}
+          color="red"
         >
-          Reset password
+          Reset Password
         </Button>
       </Group>
     </Paper>
