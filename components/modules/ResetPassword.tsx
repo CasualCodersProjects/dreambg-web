@@ -8,6 +8,7 @@ import {
   Anchor,
   Center,
   Box,
+  PasswordInput,
 } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -35,19 +36,24 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface ForgotPasswordProps {
-  onClickBack(): void;
-}
-
-export function ForgotPassword({ onClickBack }: ForgotPasswordProps) {
+export function ResetPassword() {
   const { classes } = useStyles();
-  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const supabase = useSupabaseClient();
 
-  const onClickForgotPassword = async () => {
+  const onClickResetPassword = async () => {
+    if (password !== confirmPassword) {
+      showNotification({
+        title: "Error Resetting Password",
+        message: "Passwords do not match",
+        color: "red",
+      });
+      return;
+    }
     setLoading(true);
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    const { error } = await supabase.auth.updateUser({ password });
     if (error) {
       console.error(error);
       showNotification({
@@ -58,8 +64,8 @@ export function ForgotPassword({ onClickBack }: ForgotPasswordProps) {
       return;
     }
     showNotification({
-      title: "Password Reset",
-      message: "Please check your email for a password reset link.",
+      title: "Password Changed",
+      message: "Password changing successfully!",
       color: "green",
     });
     setLoading(false);
@@ -68,35 +74,36 @@ export function ForgotPassword({ onClickBack }: ForgotPasswordProps) {
   return (
     <Paper radius="md" p="xl" withBorder>
       <Text size="lg" weight={500}>
-        Forgot your password?
+        Reset Password
       </Text>
       <Text mt="xs" color="dimmed" size="sm" align="center">
-        Enter your email to get a reset link
+        Enter please enter your new password. Passwords should be longer than 8
+        characters.
       </Text>
 
-      <TextInput
+      <PasswordInput
         my="xl"
-        label="Your email"
-        placeholder="me@example.com"
+        label="New Password"
+        placeholder="Your New Password"
         required
-        onChange={(event) => setEmail(event.currentTarget.value)}
+        onChange={(event) => setPassword(event.currentTarget.value)}
+      />
+      <PasswordInput
+        my="xl"
+        label="Confirm Password"
+        placeholder="Confirm Your New Password"
+        required
+        onChange={(event) => setConfirmPassword(event.currentTarget.value)}
+        error={
+          password !== confirmPassword && confirmPassword.length > 0
+            ? "Passwords do not match"
+            : undefined
+        }
       />
       <Group position="apart" mt="lg" className={classes.controls}>
-        <Anchor
-          color="dimmed"
-          size="sm"
-          className={classes.control}
-          type="button"
-          onClick={onClickBack}
-        >
-          <Center inline>
-            <IconArrowLeft size={12} stroke={1.5} />
-            <Box ml={5}>Back to login page</Box>
-          </Center>
-        </Anchor>
         <Button
           loading={loading}
-          onClick={onClickForgotPassword}
+          onClick={onClickResetPassword}
           radius="xl"
           className={classes.control}
         >
