@@ -1,4 +1,5 @@
 import { useToggle, upperFirst } from "@mantine/hooks";
+import { useState } from "react";
 import { useForm } from "@mantine/form";
 import {
   TextInput,
@@ -14,17 +15,22 @@ import {
   Stack,
 } from "@mantine/core";
 import { GoogleButton, FacebookButton } from "./SocialButtons";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Database } from "@/types/database.types";
+import { showNotification } from "@mantine/notifications";
 
 interface LoginFormProps extends PaperProps {
   onClickForgotPassword?(): void;
 }
 
 export function LoginForm(props: LoginFormProps) {
+  const supabase = useSupabaseClient<Database>();
+
   const [type, toggle] = useToggle(["login", "register"]);
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const form = useForm({
     initialValues: {
       email: "",
-      name: "",
       password: "",
       terms: true,
     },
@@ -38,6 +44,71 @@ export function LoginForm(props: LoginFormProps) {
     },
   });
 
+  const handleSubmit = async ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+    terms: boolean;
+  }) => {
+    if (type === "register") {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (error) {
+        console.error(error);
+        showNotification({
+          title: "Error Registering",
+          message: error.message,
+          color: "red",
+        });
+      }
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        console.error(error);
+        showNotification({
+          title: "Error Logging In",
+          message: error.message,
+          color: "red",
+        });
+      }
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "facebook",
+    });
+    if (error) {
+      console.error(error);
+      showNotification({
+        title: "Error Logging In",
+        message: error.message,
+        color: "red",
+      });
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+    if (error) {
+      console.error(error);
+      showNotification({
+        title: "Error Logging In",
+        message: error.message,
+        color: "red",
+      });
+    }
+  };
+
   return (
     <Paper radius="md" p="xl" withBorder {...props}>
       <Text size="lg" weight={500}>
@@ -45,25 +116,18 @@ export function LoginForm(props: LoginFormProps) {
       </Text>
 
       <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl">Google</GoogleButton>
-        <FacebookButton radius="xl">Facebook</FacebookButton>
+        <GoogleButton radius="xl" onClick={handleGoogleLogin}>
+          Google
+        </GoogleButton>
+        <FacebookButton radius="xl" onClick={handleFacebookLogin}>
+          Facebook
+        </FacebookButton>
       </Group>
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack>
-          {type === "register" && (
-            <TextInput
-              label="Name"
-              placeholder="Your name"
-              value={form.values.name}
-              onChange={(event) =>
-                form.setFieldValue("name", event.currentTarget.value)
-              }
-            />
-          )}
-
           <TextInput
             required
             label="Email"
@@ -90,6 +154,23 @@ export function LoginForm(props: LoginFormProps) {
           />
 
           {type === "register" && (
+            <PasswordInput
+              required
+              label="Confirm password"
+              placeholder="Confirm your password"
+              value={confirmPassword}
+              onChange={(event) =>
+                setConfirmPassword(event.currentTarget.value)
+              }
+              error={
+                confirmPassword !== form.values.password &&
+                confirmPassword.length > 0 &&
+                "Passwords do not match"
+              }
+            />
+          )}
+
+          {/* {type === "register" && (
             <Checkbox
               label="I accept terms and conditions"
               checked={form.values.terms}
@@ -97,7 +178,7 @@ export function LoginForm(props: LoginFormProps) {
                 form.setFieldValue("terms", event.currentTarget.checked)
               }
             />
-          )}
+          )} */}
         </Stack>
 
         <Group position="apart" mt="xl">

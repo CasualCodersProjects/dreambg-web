@@ -2,7 +2,7 @@ import { Button, ButtonProps } from "@mantine/core";
 import { GoogleIcon } from "./GoogleIcon";
 import { FacebookIcon } from "./FacebookIcon";
 
-export function GoogleButton(props: ButtonProps) {
+export function GoogleButton(props: ButtonProps & { onClick?(): void }) {
   return (
     <Button
       leftIcon={<GoogleIcon />}
@@ -13,7 +13,7 @@ export function GoogleButton(props: ButtonProps) {
   );
 }
 
-export function FacebookButton(props: ButtonProps) {
+export function FacebookButton(props: ButtonProps & { onClick?(): void }) {
   return (
     <Button
       leftIcon={<FacebookIcon />}
