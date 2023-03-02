@@ -1,10 +1,12 @@
 import { createStyles, Paper } from "@mantine/core";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import LoginForm from "@/components/modules/LoginForm";
+import { ForgotPassword } from "@/components/modules/ForgotPassword";
 
 const IMAGE_LIST = [
   "cyberpunkMountains.jpg",
@@ -50,6 +52,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export function Login() {
+  const [forgotPassword, setForgotPassword] = useState(false);
   const { classes } = useStyles();
   const router = useRouter();
   const user = useUser();
@@ -66,23 +69,12 @@ export function Login() {
         <title>Login - DreamBG</title>
       </Head>
       <Paper className={classes.form} radius={0} p={30}>
-        <Auth
-          supabaseClient={supabase}
-          magicLink={true}
-          theme="dark"
-          // providers={["google", "facebook", "apple"]}
-          appearance={{
-            theme: ThemeSupa,
-            variables: {
-              default: {
-                colors: {
-                  brand: "#F300F5",
-                  brandAccent: "#DB00DD",
-                },
-              },
-            },
-          }}
-        />
+        {!forgotPassword && (
+          <LoginForm onClickForgotPassword={() => setForgotPassword(true)} />
+        )}
+        {forgotPassword && (
+          <ForgotPassword onClickBack={() => setForgotPassword(false)} />
+        )}
       </Paper>
     </div>
   );

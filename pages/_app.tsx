@@ -39,6 +39,28 @@ export default function App({ Component, pageProps }: AppProps) {
           fontFamily: "Greycliff CF, Open Sans, sans-serif",
           cursorType: "pointer",
           primaryColor: colorScheme === "dark" ? "pink" : "grape",
+          components: {
+            Button: {
+              defaultProps: {
+                radius: "xl",
+              },
+            },
+            ActionIcon: {
+              defaultProps: {
+                radius: "xl",
+              },
+            },
+            TextInput: {
+              defaultProps: {
+                radius: "xl",
+              },
+            },
+            PasswordInput: {
+              defaultProps: {
+                radius: "xl",
+              },
+            },
+          },
           colors: {
             "twitter-blue": [
               "#90C7E8",
@@ -75,6 +97,18 @@ export default function App({ Component, pageProps }: AppProps) {
               "#00D9BA",
               "#00C3A8",
               "#00B097",
+            ],
+            red: [
+              "#FFF4F1",
+              "#FFC5B6",
+              "#FF9C83",
+              "#FF7A59",
+              "#FF5327",
+              "#FF3300",
+              "#E82A00",
+              "#CA2400",
+              "#B02000",
+              "#991B00",
             ],
             pink: [
               "#FFD7FF",

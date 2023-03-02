@@ -44,8 +44,6 @@ export default function Settings() {
   const openPaymentModal = usePaymentModal();
   const { active } = useActiveCustomer();
 
-  console.log({ profile });
-
   useEffect(() => {
     if (!user) {
       router.push("/login");
@@ -120,7 +118,7 @@ export default function Settings() {
           </Center>
           <Center>
             <Button
-              radius="md"
+              radius="lg"
               component="a"
               target="_blank"
               href="https://gravatar.com"
@@ -147,6 +145,13 @@ export default function Settings() {
             }}
             rightSection={loading ? <Loader size="sm" color="blue" /> : null}
           />
+          {user?.app_metadata?.provider === "email" && (
+            <Center>
+              <Button color="red" onClick={() => router.push("/password")}>
+                Reset Password
+              </Button>
+            </Center>
+          )}
 
           <Title order={2}>Billing</Title>
 
@@ -164,7 +169,6 @@ export default function Settings() {
               gradient={{ from: "grape", to: "pink" }}
               onClick={openPaymentModal}
               leftIcon={<IconUpload />}
-              radius="md"
             >
               Upgrade to Pro
             </Button>

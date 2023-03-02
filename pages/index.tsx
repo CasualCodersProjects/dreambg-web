@@ -31,7 +31,7 @@ export default function About() {
           scrollToDiv("features");
         }}
         onClickGetStarted={() => {
-          router.push("/browse");
+          router.push("/login");
         }}
       />
       <Features />
