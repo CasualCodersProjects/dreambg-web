@@ -1,5 +1,6 @@
 import { createGetInitialProps } from "@mantine/next";
 import Document, { Head, Html, Main, NextScript } from "next/document";
+import Script from "next/script";
 
 const getInitialProps = createGetInitialProps();
 
@@ -36,6 +37,13 @@ export default class _Document extends Document {
           />
           <meta name="description" content="Unique AI Generated Backgrounds" />
           <link rel="icon" href="/favicon.ico" />
+          <Script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-2FPXE911CQ"
+          />
+          <Script id="">
+            {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-2FPXE911CQ');`}
+          </Script>
         </Head>
         <body>
           <Main />
