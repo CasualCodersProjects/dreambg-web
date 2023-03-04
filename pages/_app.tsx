@@ -10,6 +10,7 @@ import Footer from "@/components/modules/Footer";
 import { Database } from "@/types/database.types";
 import { NotificationsProvider } from "@mantine/notifications";
 import { ModalsProvider } from "@mantine/modals";
+import { VerticalProvider } from "@/hooks/useVertical";
 
 const footerProps = {
   links: [],
@@ -139,17 +140,19 @@ export default function App({ Component, pageProps }: AppProps) {
       >
         <NotificationsProvider position="top-center">
           <ModalsProvider>
-            <AppShell
-              header={
-                <NavBar
-                  colorScheme={colorScheme}
-                  setColorScheme={setColorScheme}
-                />
-              }
-              footer={<Footer {...footerProps} />}
-            >
-              <Component {...pageProps} />
-            </AppShell>
+            <VerticalProvider>
+              <AppShell
+                header={
+                  <NavBar
+                    colorScheme={colorScheme}
+                    setColorScheme={setColorScheme}
+                  />
+                }
+                footer={<Footer {...footerProps} />}
+              >
+                <Component {...pageProps} />
+              </AppShell>
+            </VerticalProvider>
           </ModalsProvider>
         </NotificationsProvider>
       </MantineProvider>

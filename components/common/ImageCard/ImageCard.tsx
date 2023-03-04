@@ -2,8 +2,9 @@ import { useElementSize, useHover, useViewportSize } from "@mantine/hooks";
 import { createImageURL } from "@/utils/createImageURL";
 import { Card, Image, Center } from "@mantine/core";
 import Link from "next/link";
-import usePlatform from "@/hooks/usePlatform";
 import ImageControls from "./ImageControls";
+import { useVertical } from "@/hooks/useVertical";
+import { useMediaQuery } from "@mantine/hooks";
 
 export interface ImageCardProps {
   id: string;
@@ -29,8 +30,8 @@ const ImageCard = ({
   const { hovered, ref } = useHover();
   const { ref: sizeRef, width: refWidth } = useElementSize();
   const { width: viewWidth } = useViewportSize();
-
-  const { isMobile } = usePlatform();
+  const { vertical: isMobile } = useVertical();
+  const xs = useMediaQuery("(max-width: 480px)");
 
   const hoverStyle =
     hovered && !disableHover
@@ -39,14 +40,14 @@ const ImageCard = ({
           transform: "scale(1.02)",
           transition: "transform 125ms ease",
           maxHeight: isMobile ? undefined : 530,
-          minWidth: isMobile ? viewWidth * 0.9 : viewWidth * 0.2,
+          minWidth: xs ? viewWidth * 0.9 : viewWidth * 0.2,
         }
       : {
           ...sx,
           transform: "scale(1)",
           transition: "transform 125ms ease",
           maxHeight: isMobile ? undefined : 530,
-          minWidth: isMobile ? viewWidth * 0.9 : viewWidth * 0.2,
+          minWidth: xs ? viewWidth * 0.9 : viewWidth * 0.2,
         };
 
   const vertical = width && height ? height > width : false;

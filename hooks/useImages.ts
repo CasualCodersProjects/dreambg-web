@@ -21,10 +21,13 @@ const getKey = (pageIndex: number, previousPageData: any) => {
   return `${pageIndex}`; // if this function returns a falsy value nothing will load.
 };
 
-export const useLatestImages = () => {
+export const useLatestImages = (vertical: boolean = false) => {
   const supabase = useSupabaseClient<Database>();
-  const { data, error, size, setSize } = useSWRInfinite(getKey, (pageIndex) =>
-    latestImagesFetcher(supabase, parseInt(pageIndex))
+  const { data, error, size, setSize } = useSWRInfinite((pageIndex: number, previousPageData: any) => {
+    const key = getKey(pageIndex, previousPageData);
+    return { key, vertical }
+  }, ({key}: {key: string}) =>
+    latestImagesFetcher(supabase, parseInt(key), vertical)
   );
 
   return {
@@ -37,10 +40,13 @@ export const useLatestImages = () => {
   };
 };
 
-export const useMostLikedImages = () => {
+export const useMostLikedImages = (vertical: boolean = false) => {
   const supabase = useSupabaseClient<Database>();
-  const { data, error, size, setSize } = useSWRInfinite(getKey, (pageIndex) =>
-    mostLikedImageFetcher(supabase, parseInt(pageIndex))
+  const { data, error, size, setSize } = useSWRInfinite((pageIndex: number, previousPageData: any) => {
+    const key = getKey(pageIndex, previousPageData);
+    return { key, vertical }
+  }, ({key}: {key: string}) =>
+    mostLikedImageFetcher(supabase, parseInt(key), vertical)
   );
 
   return {

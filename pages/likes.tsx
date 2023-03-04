@@ -5,10 +5,12 @@ import ImageCard from "@/components/common/ImageCard";
 import { Center, SimpleGrid, Stack } from "@mantine/core";
 import { useIntersection, useMediaQuery } from "@mantine/hooks";
 import genLoaders from "@/utils/genLoaders";
+import { useVertical } from "@/hooks/useVertical";
 
 export default function Browse() {
   const { ref, entry } = useIntersection();
-  const { images: latestImages, size, setSize } = useMostLikedImages();
+  const { vertical } = useVertical();
+  const { images: latestImages, size, setSize } = useMostLikedImages(vertical);
   const xl = useMediaQuery("(min-width: 1250px)");
 
   const loadMore = () => {

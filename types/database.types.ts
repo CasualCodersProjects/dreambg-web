@@ -105,6 +105,7 @@ export interface Database {
           id: number
           prompt: number
           uuid: string
+          vertical: number
         }
         Insert: {
           aspect_ratio: string
@@ -112,6 +113,7 @@ export interface Database {
           id?: number
           prompt: number
           uuid: string
+          vertical?: number
         }
         Update: {
           aspect_ratio?: string
@@ -119,6 +121,7 @@ export interface Database {
           id?: number
           prompt?: number
           uuid?: string
+          vertical?: number
         }
       }
       likes: {
@@ -184,6 +187,7 @@ export interface Database {
           created_at: string
           generated: number
           id: number
+          model: string
           prompt: string
           source: string
           steps: number
@@ -194,6 +198,7 @@ export interface Database {
           created_at?: string
           generated?: number
           id?: number
+          model?: string
           prompt: string
           source?: string
           steps?: number
@@ -204,6 +209,7 @@ export interface Database {
           created_at?: string
           generated?: number
           id?: number
+          model?: string
           prompt?: string
           source?: string
           steps?: number
@@ -259,6 +265,7 @@ export interface Database {
           image_link: string | null
           image_prompt: string | null
           image_uuid: string | null
+          is_vertical: number | null
           num_likes: number | null
           width: number | null
         }
@@ -267,6 +274,7 @@ export interface Database {
         Row: {
           id: number | null
           tag: string | null
+          tag_id: number | null
           uuid: string | null
         }
       }

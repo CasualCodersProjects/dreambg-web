@@ -7,14 +7,17 @@ import {
   Header,
   Image,
   Menu,
+  Switch,
   Title,
 } from "@mantine/core";
 import { useUser } from "@supabase/auth-helpers-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   IconArrowBigTop,
   IconArrowRight,
+  IconDeviceDesktop,
   IconDeviceFloppy,
+  IconDeviceMobile,
   IconLogin,
   IconLogout,
   IconMoon,
@@ -33,6 +36,8 @@ import { useAsync } from "react-use";
 import { useActiveCustomer } from "@/hooks/useCustomer";
 import { usePaymentModal } from "@/hooks/usePaymentModal";
 import ProBadge from "../common/ProBadge";
+import { useVertical } from "@/hooks/useVertical";
+import { useMediaQuery } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -112,6 +117,7 @@ interface NavBarProps {
 function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   const [burgerOpen, setBurgerOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const { vertical, setVertical } = useVertical();
   const { classes } = useStyles();
   const router = useRouter();
   const supabase = useSupabaseClient();
@@ -120,6 +126,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   const { active } = useActiveCustomer();
   const { tags } = useRandomTags(5);
   const { profile } = useProfile(user?.id);
+  const xs = useMediaQuery("(max-width: 480px)");
 
   useAsync(async () => {
     if (!profile && user) {
@@ -154,6 +161,14 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   const toggleOpen = () => {
     setBurgerOpen(!burgerOpen);
   };
+
+  useEffect(() => {
+    if (xs) {
+      setVertical(true);
+    }
+  }, [xs, setVertical]);
+
+  console.log(router.basePath);
 
   return (
     <Header height={64} className={classes.header} mb={120}>
@@ -232,6 +247,17 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
 
           <Menu.Dropdown>
             <Menu.Label>Categories</Menu.Label>
+
+            {router.pathname !== "/" && (
+              <Menu.Item
+                onClick={() => {
+                  setVertical(!vertical);
+                }}
+                icon={vertical ? <IconDeviceDesktop /> : <IconDeviceMobile />}
+              >
+                Switch to {vertical ? "Horizontal" : "Vertical"}
+              </Menu.Item>
+            )}
 
             <Menu.Item
               onClick={() => {
