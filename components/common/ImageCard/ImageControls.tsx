@@ -71,6 +71,8 @@ export const ImageControls = ({
   const liked = userLikes?.some((like) => like.image === id);
   const saved = userSaves?.some((save) => save.image_uuid === id);
 
+  const redirectURL = `/login?redirect=/images?uuid=${id}`;
+
   const downloadImage = async (imageLink: string) => {
     setIsDownloadingImage(true);
     // if we are gonna add advertisements, we should
@@ -99,7 +101,7 @@ export const ImageControls = ({
         title: "Not Logged In",
         message: "Please log in to like images.",
       });
-      router.push("/login");
+      router.push(redirectURL);
       return;
     }
 
@@ -152,7 +154,7 @@ export const ImageControls = ({
         title: "Not Logged In",
         message: "Please log in to save images.",
       });
-      router.push("/login");
+      router.push(redirectURL);
       return;
     }
     setLoadingSaved(true);
@@ -198,7 +200,7 @@ export const ImageControls = ({
         message: "Please log in to download images. (Its free! 😄 )",
         color: "yellow",
       });
-      router.push("/login");
+      router.push(redirectURL);
       return;
     }
     setLoadingImageLinks(true);

@@ -21,7 +21,7 @@ export default function Saved() {
         title: "Not logged in",
         message: "You must be logged in to view your saved images.",
       });
-      router.push("/login");
+      router.push("/login?redirect=/saved");
     }
   }, [user, router]);
 

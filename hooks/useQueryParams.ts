@@ -36,3 +36,15 @@ export function useVerticalParam() {
 
   return params.get('vertical') !== null;
 }
+
+export function useRedirectParams() {
+  const params = useQueryParameters();
+
+  if (!params) {
+    return null;
+  }
+
+  const redirect = params.get('redirect');
+
+  return redirect;
+}

@@ -1,12 +1,12 @@
 import { createStyles, Paper } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@supabase/auth-helpers-react";
 import LoginForm from "@/components/modules/LoginForm";
 import { ForgotPassword } from "@/components/modules/ForgotPassword";
+import { useRedirectParams } from "@/hooks/useQueryParams";
 
 const IMAGE_LIST = [
   "cyberpunkMountains.jpg",
@@ -56,12 +56,12 @@ export function Login() {
   const { classes } = useStyles();
   const router = useRouter();
   const user = useUser();
-
-  const supabase = useSupabaseClient();
+  const redirect = useRedirectParams();
 
   useEffect(() => {
-    if (user) router.push("/browse");
-  }, [user, router]);
+    console.log({ redirect });
+    if (user) router.push(redirect || "/browse");
+  }, [user, router, redirect]);
 
   return (
     <div className={classes.wrapper}>

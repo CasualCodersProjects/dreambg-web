@@ -25,7 +25,7 @@ const PricingCard = () => {
 
   const onClickBuy = async () => {
     if (!user) {
-      router.push("/login");
+      router.push("/login?redirect=/pricing");
       showNotification({
         title: "Please login or create an account to continue.",
         color: "red",
