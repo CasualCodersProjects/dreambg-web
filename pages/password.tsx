@@ -17,7 +17,7 @@ export default function PasswordReset() {
         message: "Please login to continue",
         color: "red",
       });
-      router.push("/login");
+      router.push("/login?redirect=/password");
       return;
     }
   }, [user, router]);

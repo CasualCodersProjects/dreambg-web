@@ -46,7 +46,7 @@ export default function Settings() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/login");
+      router.push("/login?redirect=/settings");
     }
   }, [user, router]);
 

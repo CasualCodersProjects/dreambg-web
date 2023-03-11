@@ -147,7 +147,6 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
       title: "Logged out",
       message: "You have been logged out.",
     });
-    router.push("/browse");
   };
 
   const toggleColorScheme = () => {
@@ -167,8 +166,6 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
       setVertical(true);
     }
   }, [xs, setVertical]);
-
-  console.log(router.basePath);
 
   return (
     <Header height={64} className={classes.header} mb={120}>
@@ -289,7 +286,15 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
               <Menu.Item
                 icon={<IconLogin />}
                 onClick={() => {
-                  router.push("/login");
+                  if (window.location.pathname !== "/") {
+                    router.push(
+                      `/login?redirect=${
+                        window.location.pathname + window.location.search
+                      }`
+                    );
+                  } else {
+                    router.push("/login");
+                  }
                 }}
               >
                 Sign In / Sign Up
