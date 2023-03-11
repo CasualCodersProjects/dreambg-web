@@ -1,24 +1,28 @@
-import { useSearch } from "@/hooks/useSearch";
+import { useInfiniteSearch } from "@/hooks/useSearch";
 import ImageCard from "@/components/common/ImageCard";
-import { Center, SimpleGrid, Stack, Button, Title } from "@mantine/core";
+import { Center, SimpleGrid, Stack, Title } from "@mantine/core";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useSearchParam } from "react-use";
 import genLoaders from "@/utils/genLoaders";
+import { useIntersection, useMediaQuery } from "@mantine/hooks";
 
 export default function Search() {
-  const [page, setPage] = useState(0);
+  const { ref, entry } = useIntersection();
   const query = useSearchParam("q");
-  const { images } = useSearch(query as string, page, 26);
+  const { images, size, setSize } = useInfiniteSearch(query || "");
+  const xl = useMediaQuery("(min-width: 1250px)");
 
-  const nextPage = () => {
-    setPage(page + 1);
+  const loadMore = () => {
+    setSize(size + 1);
   };
 
-  const prevPage = () => {
-    if (page === 0) return;
-    setPage(page - 1);
-  };
+  useEffect(() => {
+    if (entry?.isIntersecting) {
+      loadMore();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entry]);
 
   const generateImages = () => {
     if (images) {
@@ -52,16 +56,16 @@ export default function Search() {
           <SimpleGrid
             cols={4}
             spacing="xl"
+            px={xl ? "xl" : undefined}
             breakpoints={[
               { maxWidth: "sm", cols: 1, spacing: "sm" },
               { maxWidth: "lg", cols: 2, spacing: "md" },
-              { maxWidth: 2000, cols: 3, spacing: "lg" },
+              { maxWidth: 1500, cols: 3, spacing: "lg" },
             ]}
           >
             {generateImages()}
           </SimpleGrid>
-          <Button onClick={nextPage}>Load More</Button>
-          <Button onClick={prevPage}>Previous Page</Button>
+          <div ref={ref}></div>
         </Stack>
       </Center>
     </>

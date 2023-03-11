@@ -27,8 +27,10 @@ export const useLatestImages = (vertical: boolean = false) => {
     const key = getKey(pageIndex, previousPageData);
     return { key, vertical }
   }, ({key}: {key: string}) =>
-    latestImagesFetcher(supabase, parseInt(key), vertical)
-  );
+    (latestImagesFetcher(supabase, parseInt(key), vertical)),
+  {
+    parallel: true
+  });
 
   return {
     images: data,
