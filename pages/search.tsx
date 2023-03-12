@@ -1,4 +1,4 @@
-import { useInfiniteSearch } from "@/hooks/useSearch";
+import { useInfiniteSearch, useSearchCount } from "@/hooks/useSearch";
 import ImageCard from "@/components/common/ImageCard";
 import { Center, SimpleGrid, Stack, Title } from "@mantine/core";
 import Head from "next/head";
@@ -11,6 +11,7 @@ export default function Search() {
   const { ref, entry } = useIntersection();
   const query = useSearchParam("q");
   const { images, size, setSize } = useInfiniteSearch(query || "");
+  const { count } = useSearchCount(query || "");
   const xl = useMediaQuery("(min-width: 1250px)");
 
   const loadMore = () => {
@@ -24,11 +25,17 @@ export default function Search() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry]);
 
+  useEffect(() => {
+    console.log(count, images?.length);
+  }, [count, images]);
+
   const generateImages = () => {
     if (images) {
       return images.map((image, i) => {
+        // if its the last card,
+        // add the intersection observer
         return (
-          <div key={i}>
+          <div key={i} ref={i === images.length - 1 ? ref : undefined}>
             <ImageCard
               id={image?.image_uuid as string}
               imageLink={image?.image_link as string}
@@ -64,8 +71,9 @@ export default function Search() {
             ]}
           >
             {generateImages()}
+            {count === 0 && <Title>No results found</Title>}
+            {count && images && count >= images.length && genLoaders(12)}
           </SimpleGrid>
-          <div ref={ref}></div>
         </Stack>
       </Center>
     </>

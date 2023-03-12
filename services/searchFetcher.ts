@@ -27,3 +27,21 @@ export async function searchFetcher(
 
   return prompts;
 }
+
+export async function searchCountFetcher(supabase: SupabaseClient<Database>, query: string) {
+  const { count, error: countError } = await supabase
+    .from("image_info")
+    .select("*", { count: "exact", head: true })
+    .textSearch("image_prompt", genFullTextQuery(query));
+    
+
+  if (countError) {
+    throw countError;
+  }
+
+  if (!count) {
+    return 0;
+  }
+
+  return count;
+}
