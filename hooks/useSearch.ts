@@ -3,6 +3,7 @@ import { Database } from '@/types/database.types';
 import { searchFetcher, searchCountFetcher } from "@/services/searchFetcher";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import useSWR from "swr";
+import getKey from '@/utils/getKey';
 
 export const useSearch = (
   query: string,
@@ -20,11 +21,6 @@ export const useSearch = (
     isError: !!error,
     error,
   };
-};
-
-const getKey = (pageIndex: number, previousPageData: any) => {
-  if (previousPageData && !previousPageData.length) return null;
-  return `${pageIndex}`; // if this function returns a falsy value nothing will load.
 };
 
 export const useInfiniteSearch = (query: string) => {

@@ -2,6 +2,7 @@ import { imageFetcher, latestImagesFetcher, mostLikedImageFetcher } from '@/serv
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSWRInfinite from 'swr/infinite';
 import useSWR from 'swr';
+import getKey from '@/utils/getKey';
 import { Database } from '@/types/database.types';
 
 export const useImage = (uuid: string) => {
@@ -16,10 +17,7 @@ export const useImage = (uuid: string) => {
   };
 };
 
-const getKey = (pageIndex: number, previousPageData: any) => {
-  if (previousPageData && !previousPageData.length) return null;
-  return `${pageIndex}`; // if this function returns a falsy value nothing will load.
-};
+
 
 export const useLatestImages = (vertical: boolean = false) => {
   const supabase = useSupabaseClient<Database>();
