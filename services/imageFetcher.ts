@@ -30,7 +30,7 @@ export async function latestImagesFetcher(
   vertical: boolean = false,
 ) {
   const isVertical = vertical ? 1 : 0;
-  const { from, to } = getPagination(page, 23);
+  const { from, to } = getPagination(page, 24);
   const { data, error } = await supabase
     .from("image_info")
     .select("*")
@@ -55,13 +55,37 @@ export async function mostLikedImageFetcher(
   vertical: boolean = false,
 ) {
   const isVertical = vertical ? 1 : 0;
-  const { from, to } = getPagination(page, 23);
+  const { from, to } = getPagination(page, 24);
   const { data, error } = await supabase
     .from("image_info")
     .select("*")
     .eq("is_vertical", isVertical)
     .order("id", { ascending: false })
     .order("num_likes", { ascending: false })
+    .range(from, to);
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  return data;
+}
+
+export async function randomImagesFetcher(
+  supabase: SupabaseClient<Database>,
+  page: number,
+  vertical: boolean = false,
+) {
+  const isVertical = vertical ? 1 : 0;
+  const { from, to } = getPagination(page, 24);
+  const { data, error } = await supabase
+    .from("random_images")
+    .select("*")
+    .eq("is_vertical", isVertical)
     .range(from, to);
 
   if (error) {

@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useSearchParam } from "react-use";
 import genLoaders from "@/utils/genLoaders";
 import { useIntersection, useMediaQuery } from "@mantine/hooks";
+import { Image } from "@/types/imageInfo";
 
 export default function Search() {
   const { ref, entry } = useIntersection();
@@ -31,7 +32,7 @@ export default function Search() {
 
   const generateImages = () => {
     if (images) {
-      return images.map((image, i) => {
+      return images.map((image: Image, i) => {
         // if its the last card,
         // add the intersection observer
         return (

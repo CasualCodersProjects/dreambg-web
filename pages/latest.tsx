@@ -34,7 +34,7 @@ export default function Browse() {
       return images.map((image, i) => {
         if (!image) return null;
         return (
-          <div key={i}>
+          <div key={i} ref={i === images.length - 1 ? ref : undefined}>
             <ImageCard
               id={image?.image_uuid as string}
               imageLink={image?.image_link as string}
@@ -72,19 +72,6 @@ export default function Browse() {
             ]}
           >
             {generateImages()}
-          </SimpleGrid>
-          {/* this isn't working super well */}
-          <div ref={ref}></div>
-          <SimpleGrid
-            cols={4}
-            spacing="xl"
-            px={xl ? "xl" : undefined}
-            breakpoints={[
-              { maxWidth: "sm", cols: 1, spacing: "sm" },
-              { maxWidth: "lg", cols: 2, spacing: "md" },
-              { maxWidth: "xl", cols: 3, spacing: "lg" },
-            ]}
-          >
             {genLoaders(12)}
           </SimpleGrid>
         </Stack>

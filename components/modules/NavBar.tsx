@@ -18,6 +18,7 @@ import {
   IconDeviceDesktop,
   IconDeviceFloppy,
   IconDeviceMobile,
+  IconList,
   IconLogin,
   IconLogout,
   IconMoon,
@@ -255,6 +256,13 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
                 Switch to {vertical ? "Horizontal" : "Vertical"}
               </Menu.Item>
             )}
+
+            <Menu.Item
+              onClick={() => router.push("/browse")}
+              icon={<IconList />}
+            >
+              Browse Images
+            </Menu.Item>
 
             <Menu.Item
               onClick={() => {

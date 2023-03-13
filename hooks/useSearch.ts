@@ -2,6 +2,7 @@ import useSWRInfinite from 'swr/infinite';
 import { Database } from '@/types/database.types';
 import { searchFetcher, searchCountFetcher } from "@/services/searchFetcher";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import type { Image } from '@/types/imageInfo';
 import useSWR from "swr";
 import getKey from '@/utils/getKey';
 
@@ -35,7 +36,14 @@ export const useInfiniteSearch = (query: string) => {
   });
 
   return {
-    images: data?.flat(2),
+    images: data?.flat().reduce((acc, obj) => {
+      // @ts-ignore
+      if (!acc.find((i: Image) => i.image_uuid === obj.image_uuid)) {
+        // @ts-ignore
+        acc.push(obj);
+      } 
+      return acc;
+    }, []),
     isLoading: !error && !data,
     isError: !!error,
     error,

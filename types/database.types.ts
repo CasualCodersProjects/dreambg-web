@@ -284,6 +284,18 @@ export interface Database {
           likes_count: number | null
         }
       }
+      random_images: {
+        Row: {
+          height: number | null
+          id: number | null
+          image_link: string | null
+          image_prompt: string | null
+          image_uuid: string | null
+          is_vertical: number | null
+          num_likes: number | null
+          width: number | null
+        }
+      }
       random_tags: {
         Row: {
           id: number | null

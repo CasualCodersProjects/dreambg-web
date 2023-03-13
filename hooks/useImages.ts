@@ -1,8 +1,9 @@
-import { imageFetcher, latestImagesFetcher, mostLikedImageFetcher } from '@/services/imageFetcher';
+import { imageFetcher, latestImagesFetcher, mostLikedImageFetcher, randomImagesFetcher } from '@/services/imageFetcher';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSWRInfinite from 'swr/infinite';
 import useSWR from 'swr';
 import getKey from '@/utils/getKey';
+import type { Image } from '@/types/imageInfo';
 import { Database } from '@/types/database.types';
 
 export const useImage = (uuid: string) => {
@@ -31,7 +32,14 @@ export const useLatestImages = (vertical: boolean = false) => {
   });
 
   return {
-    images: data,
+    images: data?.reduce((acc, obj) => {
+      // @ts-ignore
+      if (!acc.find((i) => i.image_uuid === obj.image_uuid)) {
+        // @ts-ignore
+        acc.push(obj);
+      } 
+      return acc;
+    }, []),
     isLoading: !error && !data,
     isError: !!error,
     error,
@@ -50,7 +58,14 @@ export const useMostLikedImages = (vertical: boolean = false) => {
   );
 
   return {
-    images: data,
+    images: data?.reduce((acc, obj) => {
+      // @ts-ignore
+      if (!acc.find((i: Image) => i.image_uuid === obj.image_uuid)) {
+        // @ts-ignore
+        acc.push(obj);
+      } 
+      return acc;
+    }, []),
     isLoading: !error && !data,
     isError: !!error,
     error,
@@ -58,3 +73,31 @@ export const useMostLikedImages = (vertical: boolean = false) => {
     setSize,
   };
 };
+
+export const useRandomImages = (vertical: boolean = false) => {
+  const supabase = useSupabaseClient<Database>();
+  const { data, error, size, setSize } = useSWRInfinite((pageIndex: number, previousPageData: any) => {
+    const key = getKey(pageIndex, previousPageData);
+    return { key, vertical }
+  }, ({key}: {key: string}) =>
+    (randomImagesFetcher(supabase, parseInt(key), vertical)), {
+      revalidateOnFocus: false,
+    }
+  );
+
+  return {
+    images: data?.reduce((acc, obj) => {
+      // @ts-ignore
+      if (!acc.find((i: Image) => i.image_uuid === obj.image_uuid)) {
+        // @ts-ignore
+        acc.push(obj);
+      } 
+      return acc;
+    }, []),
+    isLoading: !error && !data,
+    isError: !!error,
+    error,
+    size,
+    setSize,
+  };
+}
