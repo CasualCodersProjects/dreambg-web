@@ -39,6 +39,7 @@ import { usePaymentModal } from "@/hooks/usePaymentModal";
 import ProBadge from "../common/ProBadge";
 import { useVertical } from "@/hooks/useVertical";
 import { useMediaQuery } from "@mantine/hooks";
+import { useSearchParam } from "react-use";
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -117,6 +118,7 @@ interface NavBarProps {
 
 function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
   const [burgerOpen, setBurgerOpen] = useState(false);
+  const query = useSearchParam("q");
   const [searchValue, setSearchValue] = useState("");
   const { vertical, setVertical } = useVertical();
   const { classes } = useStyles();
@@ -137,6 +139,12 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
         .insert([{ id: user.id, username: user.email }]);
     }
   }, [profile, user]);
+
+  useEffect(() => {
+    if (query) {
+      setSearchValue(query);
+    }
+  }, [query]);
 
   const logOutUser = async () => {
     const { error } = await supabase.auth.signOut();
