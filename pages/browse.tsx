@@ -10,12 +10,8 @@ import { useVertical } from "@/hooks/useVertical";
 export default function Browse() {
   const { ref, entry } = useIntersection();
   const { vertical } = useVertical();
-  const { images: randomImages, size, setSize } = useRandomImages(vertical);
+  const { images: randomImages, loadMore } = useRandomImages(vertical);
   const xl = useMediaQuery("(min-width: 1250px)");
-
-  const loadMore = () => {
-    setSize(size + 1);
-  };
 
   useEffect(() => {
     if (entry?.isIntersecting) {

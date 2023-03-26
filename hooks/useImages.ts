@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { imageFetcher, latestImagesFetcher, mostLikedImageFetcher, randomImagesFetcher } from '@/services/imageFetcher';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSWRInfinite from 'swr/infinite';
@@ -5,6 +6,7 @@ import useSWR from 'swr';
 import getKey from '@/utils/getKey';
 import type { Image } from '@/types/imageInfo';
 import { Database } from '@/types/database.types';
+import {useAsync} from 'react-use';
 
 export const useImage = (uuid: string) => {
     const supabase = useSupabaseClient();
@@ -17,8 +19,6 @@ export const useImage = (uuid: string) => {
     error,
   };
 };
-
-
 
 export const useLatestImages = (vertical: boolean = false) => {
   const supabase = useSupabaseClient<Database>();
@@ -74,30 +74,49 @@ export const useMostLikedImages = (vertical: boolean = false) => {
   };
 };
 
+type ImageInfo = Database['public']['Views']['image_info']['Row']
+
 export const useRandomImages = (vertical: boolean = false) => {
   const supabase = useSupabaseClient<Database>();
-  const { data, error, size, setSize } = useSWRInfinite((pageIndex: number, previousPageData: any) => {
-    const key = getKey(pageIndex, previousPageData);
-    return { key, vertical }
-  }, ({key}: {key: string}) =>
-    (randomImagesFetcher(supabase, parseInt(key), vertical)), {
-      revalidateOnFocus: false,
+  const [images, setImages] = useState<ImageInfo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState<any>(null);
+  const [page, setPage] = useState(1);
+
+  useAsync(async () => {
+    setIsLoading(true);
+    try {
+      const newData = await randomImagesFetcher(supabase, page, vertical);
+      const updatedImages = newData?.reduce((acc, obj) => {
+        // @ts-ignore
+        if (!acc.find((i: Image) => i.image_uuid === obj.image_uuid)) {
+          // @ts-ignore
+          acc.push(obj);
+        }
+        return acc;
+      }, []);
+  
+      setImages((prevImages) => [...prevImages, ...updatedImages as ImageInfo[]]);
+      setIsError(false);
+      setError(null);
+    } catch (err) {
+      setIsError(true);
+      setError(err);
+    } finally {
+      setIsLoading(false);
     }
-  );
+  }, [page]);
+
+  const loadMore = () => setPage(page + 1);
 
   return {
-    images: data?.reduce((acc, obj) => {
-      // @ts-ignore
-      if (!acc.find((i: Image) => i.image_uuid === obj.image_uuid)) {
-        // @ts-ignore
-        acc.push(obj);
-      } 
-      return acc;
-    }, []),
-    isLoading: !error && !data,
-    isError: !!error,
+    images,
+    isLoading,
+    isError,
     error,
-    size,
-    setSize,
+    page,
+    setPage,
+    loadMore,
   };
-}
+};
