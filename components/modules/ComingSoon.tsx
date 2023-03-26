@@ -86,13 +86,13 @@ function Feature({
 const mockdata = [
   {
     icon: IconApps,
-    title: "Desktop and Mobile Apps",
+    title: "Mobile App",
     description:
       "Automatically set your desktop or mobile background to a new image every day.",
   },
   {
     icon: IconPhotoPlus,
-    title: "Generate Your Backgrounds",
+    title: "CustomBG",
     description:
       "Create your own custom images with our easy to use image generator.",
   },
