@@ -268,6 +268,7 @@ export interface Database {
           is_vertical: number | null
           num_likes: number | null
           width: number | null
+          created_at: string
         }
       }
       image_tags: {

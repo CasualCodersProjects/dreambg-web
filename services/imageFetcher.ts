@@ -1,5 +1,5 @@
 import { Database } from "@/types/database.types";
-import { getPagination } from "@/utils/pagination";
+import { getDateRange, getPagination } from "@/utils/pagination";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export async function imageFetcher(
@@ -53,16 +53,24 @@ export async function mostLikedImageFetcher(
   supabase: SupabaseClient<Database>,
   page: number,
   vertical: boolean = false,
+  range: "day" | "week" | "month" | "none"
 ) {
-  const isVertical = vertical ? 1 : 0;
   const { from, to } = getPagination(page, 24);
-  const { data, error } = await supabase
+  let query = supabase
     .from("image_info")
     .select("*")
-    .eq("is_vertical", isVertical)
+    .eq("is_vertical", vertical ? 1 : 0)
+  
+  if(range !== "none") {
+    const { today, desiredDate } = getDateRange(range)
+    query = query.range(+today, +desiredDate, "created_at")
+  }
+
+  query = query
     .order("id", { ascending: false })
     .order("num_likes", { ascending: false })
     .range(from, to);
+  const { data, error } = await query;
 
   if (error) {
     throw error;
