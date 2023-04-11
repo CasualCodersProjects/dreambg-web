@@ -1,21 +1,25 @@
 import Head from "next/head";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMostLikedImages } from "@/hooks/useImages";
 import ImageCard from "@/components/common/ImageCard";
-import { Center, SimpleGrid, Stack } from "@mantine/core";
+import { Center, Select, SimpleGrid, Stack } from "@mantine/core";
 import { useIntersection, useMediaQuery } from "@mantine/hooks";
 import genLoaders from "@/utils/genLoaders";
 import { useVertical } from "@/hooks/useVertical";
 
 export default function Browse() {
+  const [range, setRange] = useState<"none" | "day" | "week" | "month">('none')
   const { ref, entry } = useIntersection();
   const { vertical } = useVertical();
-  const { images: latestImages, size, setSize } = useMostLikedImages(vertical);
+  const { images: latestImages, size, setSize } = useMostLikedImages(vertical, range);
   const xl = useMediaQuery("(min-width: 1250px)");
 
   const loadMore = () => {
     setSize(size + 1);
   };
+
+  useEffect(() => {
+  }, [range])
 
   useEffect(() => {
     if (entry?.isIntersecting) {
@@ -61,6 +65,14 @@ export default function Browse() {
 
       <Center>
         <Stack align="center">
+        <Select value={range}
+          defaultValue="all"
+          data={[
+            {value: 'none', label: 'all'},
+            {value: 'day', label: 'day'},
+            {value: 'week', label: 'week'},
+            {value: 'month', label: 'month'}
+          ]} onChange={(e) => setRange(e as "none" | "day" | "week" | "month")} />
           <SimpleGrid
             cols={4}
             spacing="xl"

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { imageFetcher, latestImagesFetcher, mostLikedImageFetcher, randomImagesFetcher } from '@/services/imageFetcher';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSWRInfinite from 'swr/infinite';
@@ -50,12 +50,14 @@ export const useLatestImages = (vertical: boolean = false) => {
 
 export const useMostLikedImages = (vertical: boolean = false, range: "day" | "week" | "month" | "none" = "none") => {
   const supabase = useSupabaseClient<Database>();
-  const { data, error, size, setSize } = useSWRInfinite((pageIndex: number, previousPageData: any) => {
+  const { data, error, size, setSize, mutate } = useSWRInfinite((pageIndex: number, previousPageData: any) => {
     const key = getKey(pageIndex, previousPageData);
     return { key, vertical }
   }, ({ key }: { key: string }) =>
     mostLikedImageFetcher(supabase, parseInt(key), vertical, range)
   );
+
+  useEffect(() => { mutate() }, [range])
 
   return {
     images: data?.reduce((acc, obj) => {

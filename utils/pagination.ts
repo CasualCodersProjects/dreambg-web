@@ -8,18 +8,18 @@ export const getPagination = (page: number, size: number) => {
   return { from, to };
 };
 
-export const getDateRange = (timeframe: "day" | "week" | "month") => {
+export const getDateFromRange = (timeframe: "day" | "week" | "month") => {
   const today = new Date();
   const desiredDate = new Date(today)
   switch(timeframe) {
-    case "day":
-      desiredDate.setDate(desiredDate.getDate() - 1)
-      break;
-    case "week":
-      desiredDate.setDate(desiredDate.getDate() - 7)
+    case "day": case "week":
+      desiredDate.setDate(
+        desiredDate.getDate() - (timeframe === "day" ? 1 : 7)
+      );
       break;
     case "month":
       desiredDate.setMonth(desiredDate.getMonth() - 1)
+      break;
   }
   
   // sterilize
@@ -27,5 +27,5 @@ export const getDateRange = (timeframe: "day" | "week" | "month") => {
   desiredDate.setMinutes(0)
   desiredDate.setSeconds(0)
   desiredDate.setMilliseconds(0)
-  return { today, desiredDate }
+  return { desiredDate }
 }

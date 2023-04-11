@@ -1,5 +1,5 @@
 import { Database } from "@/types/database.types";
-import { getDateRange, getPagination } from "@/utils/pagination";
+import { getDateFromRange as getDateFromRange, getPagination } from "@/utils/pagination";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export async function imageFetcher(
@@ -62,8 +62,8 @@ export async function mostLikedImageFetcher(
     .eq("is_vertical", vertical ? 1 : 0)
   
   if(range !== "none") {
-    const { today, desiredDate } = getDateRange(range)
-    query = query.range(today.toISOString(), desiredDate.toISOString(), "created_at")
+    const { desiredDate } = getDateFromRange(range)
+    query = query.gte("created_at", desiredDate.toISOString().slice(0, desiredDate.toISOString().length - 1))
   }
 
   query = query
