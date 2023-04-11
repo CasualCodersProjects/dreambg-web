@@ -63,7 +63,7 @@ export async function mostLikedImageFetcher(
   
   if(range !== "none") {
     const { today, desiredDate } = getDateRange(range)
-    query = query.range(+today, +desiredDate, "created_at")
+    query = query.range(today.toISOString(), desiredDate.toISOString(), "created_at")
   }
 
   query = query
