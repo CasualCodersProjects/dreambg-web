@@ -10,7 +10,7 @@ import {
   PaperProps,
   Button,
   Divider,
-  Checkbox,
+  Tooltip,
   Anchor,
   Stack,
 } from "@mantine/core";
@@ -118,14 +118,16 @@ export function LoginForm(props: LoginFormProps) {
         Welcome to DreamBG, {type} with
       </Text>
 
-      <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl" onClick={handleGoogleLogin}>
-          Google
-        </GoogleButton>
-        <FacebookButton radius="xl" onClick={handleFacebookLogin}>
-          Facebook
-        </FacebookButton>
-      </Group>
+      <Tooltip label="Coming soon" position="top">
+        <Group grow mb="md" mt="md">
+          <GoogleButton disabled radius="xl" onClick={handleGoogleLogin}>
+            Google
+          </GoogleButton>
+          <FacebookButton disabled radius="xl" onClick={handleFacebookLogin}>
+            Facebook
+          </FacebookButton>
+        </Group>
+      </Tooltip>
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
