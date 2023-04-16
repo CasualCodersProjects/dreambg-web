@@ -35,6 +35,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <MantineProvider
         withGlobalStyles
         withNormalizeCSS
+        // this should be moved to its own file
         theme={{
           colorScheme: colorScheme as "dark" | "light",
           fontFamily: "Greycliff CF, Open Sans, sans-serif",

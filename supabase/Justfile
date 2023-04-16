@@ -1,17 +1,24 @@
+set dotenv-load
+
+PROJECT_ID := env_var_or_default("PROJECT_ID", "zvzfhpnaemagutabottd")
+
+link:
+  supabase link --project-ref {{PROJECT_ID}}
+
 default:
   just --list --unsorted
 
 new name:
-  supabase functions new {{name}}
+  supabase functions new {{name}} 
 
 deploy name:
   #!/bin/bash
   name="{{name}}"
   if [[ $name =~ "stripe" ]]; then
     echo "Skipping JWT verification for $name"
-    supabase functions deploy "$name" --no-verify-jwt
+    supabase functions deploy "$name" --no-verify-jwt --project-ref {{PROJECT_ID}}
   else
-    supabase functions deploy "$name"
+    supabase functions deploy "$name" --project-ref {{PROJECT_ID}}
   fi
 
 deploy-all:
@@ -28,16 +35,16 @@ deploy-all:
   done
 
 rm name:
-  supabase functions delete {{name}}
+  supabase functions delete {{name}} --project-ref {{PROJECT_ID}}
 
 delete name:
-  supabase functions delete {{name}}
+  supabase functions delete {{name}} --project-ref {{PROJECT_ID}}
 
 serve name:
-  supabase functions serve {{name}}
+  supabase functions serve {{name}} --project-ref {{PROJECT_ID}}
 
 download name:
-  supabase functions download 
+  supabase functions download {{name}} --project-ref {{PROJECT_ID}}
 
 download-all:
   #!/bin/bash
