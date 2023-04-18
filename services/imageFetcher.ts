@@ -1,5 +1,8 @@
 import { Database } from "@/types/database.types";
-import { getDateFromRange as getDateFromRange, getPagination } from "@/utils/pagination";
+import {
+  getDateFromRange as getDateFromRange,
+  getPagination,
+} from "@/utils/pagination";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export async function imageFetcher(
@@ -27,7 +30,7 @@ export async function imageFetcher(
 export async function latestImagesFetcher(
   supabase: SupabaseClient<Database>,
   page: number,
-  vertical: boolean = false,
+  vertical: boolean = false
 ) {
   const isVertical = vertical ? 1 : 0;
   const { from, to } = getPagination(page, 24);
@@ -59,11 +62,14 @@ export async function mostLikedImageFetcher(
   let query = supabase
     .from("image_info")
     .select("*")
-    .eq("is_vertical", vertical ? 1 : 0)
-  
-  if(range !== "none") {
-    const { desiredDate } = getDateFromRange(range)
-    query = query.gte("created_at", desiredDate.toISOString().slice(0, desiredDate.toISOString().length - 1))
+    .eq("is_vertical", vertical ? 1 : 0);
+
+  if (range !== "none") {
+    const { desiredDate } = getDateFromRange(range);
+    query = query.gte(
+      "created_at",
+      desiredDate.toISOString().slice(0, desiredDate.toISOString().length - 1)
+    );
   }
 
   query = query
@@ -86,7 +92,7 @@ export async function mostLikedImageFetcher(
 export async function randomImagesFetcher(
   supabase: SupabaseClient<Database>,
   page: number,
-  vertical: boolean = false,
+  vertical: boolean = false
 ) {
   const isVertical = vertical ? 1 : 0;
   const { from, to } = getPagination(page, 24);
@@ -103,6 +109,40 @@ export async function randomImagesFetcher(
   if (!data) {
     return null;
   }
+
+  return data;
+}
+
+export async function userLikedImagesFetcher(
+  supabaseClient: SupabaseClient<Database>,
+  user_id: string | undefined
+) {
+  if (!user_id) return null;
+
+  const { data, error } = await supabaseClient
+    .from("liked_image_links")
+    .select("*")
+    .eq("user_id", user_id);
+
+  if (error) throw error;
+  if (!data) return null;
+
+  return data;
+}
+
+export async function userCreatededImagesFetcher(
+  supabaseClient: SupabaseClient<Database>,
+  user_id: string | undefined
+) {
+  if (!user_id) return null;
+
+  const { data, error } = await supabaseClient
+    .from("created_image_links")
+    .select("*")
+    .eq("user_id", user_id);
+
+  if (error) throw error;
+  if (!data) return null;
 
   return data;
 }
