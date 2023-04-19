@@ -330,7 +330,7 @@ function NavBar({ colorScheme, setColorScheme }: NavBarProps) {
                   router.push("/saved");
                 }}
               >
-                Saved Images
+                My Images
               </Menu.Item>
             )}
 

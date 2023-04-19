@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { imageFetcher, latestImagesFetcher, mostLikedImageFetcher, randomImagesFetcher } from '@/services/imageFetcher';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSWRInfinite from 'swr/infinite';
@@ -6,11 +6,11 @@ import useSWR from 'swr';
 import getKey from '@/utils/getKey';
 import type { Image } from '@/types/imageInfo';
 import { Database } from '@/types/database.types';
-import {useAsync} from 'react-use';
+import { useAsync } from 'react-use';
 
 export const useImage = (uuid: string) => {
-    const supabase = useSupabaseClient();
-    const { data, error } = useSWR([uuid, 'image'], ([uuid]) => imageFetcher(supabase, uuid));
+  const supabase = useSupabaseClient();
+  const { data, error } = useSWR([uuid, 'image'], ([uuid]) => imageFetcher(supabase, uuid));
 
   return {
     image: data,
@@ -25,11 +25,11 @@ export const useLatestImages = (vertical: boolean = false) => {
   const { data, error, size, setSize } = useSWRInfinite((pageIndex: number, previousPageData: any) => {
     const key = getKey(pageIndex, previousPageData);
     return { key, vertical }
-  }, ({key}: {key: string}) =>
+  }, ({ key }: { key: string }) =>
     (latestImagesFetcher(supabase, parseInt(key), vertical)),
-  {
-    parallel: true
-  });
+    {
+      parallel: true
+    });
 
   return {
     images: data?.reduce((acc, obj) => {
@@ -37,7 +37,7 @@ export const useLatestImages = (vertical: boolean = false) => {
       if (!acc.find((i) => i.image_uuid === obj.image_uuid)) {
         // @ts-ignore
         acc.push(obj);
-      } 
+      }
       return acc;
     }, []),
     isLoading: !error && !data,
@@ -48,14 +48,16 @@ export const useLatestImages = (vertical: boolean = false) => {
   };
 };
 
-export const useMostLikedImages = (vertical: boolean = false) => {
+export const useMostLikedImages = (vertical: boolean = false, range: "day" | "week" | "month" | "none" = "none") => {
   const supabase = useSupabaseClient<Database>();
-  const { data, error, size, setSize } = useSWRInfinite((pageIndex: number, previousPageData: any) => {
+  const { data, error, size, setSize, mutate } = useSWRInfinite((pageIndex: number, previousPageData: any) => {
     const key = getKey(pageIndex, previousPageData);
     return { key, vertical }
-  }, ({key}: {key: string}) =>
-    mostLikedImageFetcher(supabase, parseInt(key), vertical)
+  }, ({ key }: { key: string }) =>
+    mostLikedImageFetcher(supabase, parseInt(key), vertical, range)
   );
+
+  useEffect(() => { mutate() }, [range])
 
   return {
     images: data?.reduce((acc, obj) => {
@@ -63,7 +65,7 @@ export const useMostLikedImages = (vertical: boolean = false) => {
       if (!acc.find((i: Image) => i.image_uuid === obj.image_uuid)) {
         // @ts-ignore
         acc.push(obj);
-      } 
+      }
       return acc;
     }, []),
     isLoading: !error && !data,
@@ -96,7 +98,7 @@ export const useRandomImages = (vertical: boolean = false) => {
         }
         return acc;
       }, []);
-  
+
       setImages((prevImages) => [...prevImages, ...updatedImages as ImageInfo[]]);
       setIsError(false);
       setError(null);

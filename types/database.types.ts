@@ -260,6 +260,7 @@ export interface Database {
     Views: {
       image_info: {
         Row: {
+          created_at: string | null
           height: number | null
           id: number | null
           image_link: string | null
@@ -276,6 +277,16 @@ export interface Database {
           tag: string | null
           tag_id: number | null
           uuid: string | null
+        }
+      }
+      liked_image_links: {
+        Row: {
+          height: number | null
+          image_link: string | null
+          image_uuid: string | null
+          num_likes: number | null
+          user_id: string | null
+          width: number | null
         }
       }
       likes_count: {
@@ -331,7 +342,10 @@ export interface Database {
       }
     }
     Functions: {
-      [_ in never]: never
+      print_all_table_schemas: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
