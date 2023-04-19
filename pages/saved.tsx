@@ -62,14 +62,14 @@ export default function Saved() {
       <Tabs orientation="vertical" onTabChange={setCurrentTab}>
         <Tabs.List>
           {["saved", "liked"].map((i) => (
-            <Tabs.Tab value={i}>
+            <Tabs.Tab value={i} key={i}>
               {i.charAt(0).toUpperCase() + i.slice(1)} Images
             </Tabs.Tab>
           ))}
         </Tabs.List>
         <Center>
           {["saved", "liked"].map((i) => (
-            <Tabs.Panel value={i}>
+            <Tabs.Panel value={i} key={i}>
               <Stack>
                 <SimpleGrid
                   cols={4}

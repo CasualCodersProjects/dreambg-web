@@ -279,6 +279,16 @@ export interface Database {
           uuid: string | null
         }
       }
+      liked_image_links: {
+        Row: {
+          height: number | null
+          image_link: string | null
+          image_uuid: string | null
+          num_likes: number | null
+          user_id: string | null
+          width: number | null
+        }
+      }
       likes_count: {
         Row: {
           image: string | null
