@@ -57,7 +57,7 @@ export default function Saved() {
   return (
     <>
       <Head>
-        <title>Saved Images - DreamBG</title>
+        <title>My Images - DreamBG</title>
       </Head>
       <Tabs orientation="vertical" onTabChange={setCurrentTab}>
         <Tabs.List>
